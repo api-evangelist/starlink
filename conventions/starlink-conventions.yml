@@ -1,0 +1,135 @@
+generated: '2026-07-25'
+method: searched
+source: https://starlink.readme.io/docs/getting-started
+derived_from: openapi/starlink-public-api-v2-openapi.json
+api: Starlink Public API V2
+base_url: https://starlink.com/api/public/v2
+authentication:
+  style: OIDC client_credentials bearer token
+  header: 'Authorization: Bearer <access_token>'
+  token_url: https://starlink.com/api/auth/connect/token
+  token_lifetime: ~15 minutes; reuse until a 401, then re-mint
+  docs: https://starlink.readme.io/docs/authentication
+  artifact: authentication/starlink-authentication.yml
+authorization:
+  style: per-operation RBAC permissions on the V2 service account
+  declared_in: 'the operation description ("Required permission: <name>, <View|Edit>")'
+  artifact: scopes/starlink-scopes.yml
+idempotency:
+  supported: false
+  evidence: >-
+    No Idempotency-Key header, no idempotency parameter and no idempotency language appears
+    anywhere in the OpenAPI or in the published documentation. Retries of POST/PUT/PATCH
+    operations are not deduplicated by the platform. Some operations are naturally idempotent
+    by shape (PUT /public/v2/service-lines/{serviceLineNumber}/nickname, PUT
+    /public/v2/routers/configs/default) but this is a property of the verb, not a published
+    idempotency contract.
+  guidance: >-
+    Treat POST /public/v2/service-lines, POST /public/v2/service-lines/{serviceLineNumber}/data/top-up
+    and POST /public/v2/addresses as non-idempotent and guard them with client-side dedupe keys.
+pagination:
+  style: zero-indexed page number
+  request_params:
+  - name: page
+    in: query
+    default: 0
+    description: The index of the page, starting at 0
+  - name: limit
+    in: query
+    description: Page size where the operation accepts it; several collections have a fixed page size of 100
+  response_fields:
+  - pageIndex
+  - limit
+  - isLastPage
+  - totalCount
+  - results
+  envelope: content.{pageIndex,limit,isLastPage,results,totalCount}
+  caps:
+  - GET /public/v2/user-terminals returns pages of 100
+  - GET /public/v2/managed/accounts returns up to 100 accounts per request
+  - GET /public/v2/routers/sandbox/clients paginates 1000 at a time
+  known_issue: >-
+    A 2025-09-04 incident recorded inconsistent ordering before pagination on
+    GET /public/v2/user-terminals, causing missing and duplicated devices while iterating pages;
+    resolved 2025-09-05.
+filtering:
+  style: repeated query parameters plus a free-text searchString
+  examples:
+  - serviceLineNumbers (array) on GET /public/v2/user-terminals
+  - userTerminalIds (array) on GET /public/v2/user-terminals
+  - hasServiceLine (boolean) on GET /public/v2/user-terminals
+  - searchString (partial match on user terminal ID, serial number or kit serial number)
+  - dataPoolIds (array) on the data pool endpoints
+  - ancestorAccountNumber on the managed account endpoints
+response_envelope:
+  shape: every response is a ServiceResponse wrapper
+  fields:
+  - name: content
+    description: the typed payload (absent on the bare ServiceResponse used for errors)
+  - name: errors
+    description: array of ValidationResult {memberNames[], errorMessage}
+  - name: warnings
+    description: array of ValidationResult
+  - name: information
+    description: array of strings
+  - name: isValid
+    description: boolean success flag; false accompanies a 4xx
+  note: >-
+    This is NOT RFC 9457 problem+json. Errors ride inside the same application/json envelope
+    as success payloads, and a 422 with isValid=false is the normal validation failure shape.
+  artifact: errors/starlink-problem-types.yml
+error_semantics:
+  '400': Bad request; invalid or missing parameter
+  '401': Token expired or invalid; re-mint at /api/auth/connect/token
+  '403': The service account lacks the required permission (user_lacks_required_permission)
+  '404': Resource not found, or a deprecated/sunset endpoint after its removal date
+  '422': Operation failed validation or downstream processing; read errors[].errorMessage
+  '429': Rate limit exceeded
+versioning:
+  scheme: uri-path
+  current: v2
+  path_prefix: /api/public/v2
+  legacy: >-
+    V1 (/enterprise/, web-api.starlink.com) was deprecated 2026-06-01 and returns 404;
+    the legacy web-api.starlink.com/enterprise/ paths stop functioning 2026-07-01.
+  swagger_documents:
+  - https://starlink.com/api/public/swagger/v2/swagger.json
+  - https://starlink.com/api/public/swagger/v1/swagger.json
+  artifact: lifecycle/starlink-lifecycle.yml
+rate_limits:
+  api: 250 requests per minute per Starlink account (account-scoped since 2026-03-27)
+  token_endpoint: 1000 requests per 15 minutes per client IP
+  signal: HTTP 429 Too Many Requests
+  headers_published: false
+  docs: https://starlink.readme.io/docs/rate-limits-1
+  artifact: rate-limits/starlink-rate-limits.yml
+  guidance: >-
+    Starlink explicitly recommends periodically syncing API data into your own database rather
+    than querying the API at high frequency or with expressive queries.
+streaming:
+  style: poll-based JSON over HTTP with a server-side per-credential read index
+  endpoint: POST /public/v2/telemetry/stream
+  params:
+    batchSize: default 1000, max 65000
+    maxLingerMs: default 15000, max 65000
+  semantics: >-
+    Each successful response advances the consumer's read index; entries lost to a client crash
+    mid-batch are not re-delivered. Each service account is an independent consumer. Stream
+    retention is 8 hours.
+  cache_alternative: POST /public/v2/telemetry/query returns the most recent typed values per device
+  artifact: asyncapi/starlink-telemetry-asyncapi.yml
+request_tracing:
+  request_id_header: null
+  evidence: no correlation or request-id header is documented or declared in the spec
+metadata:
+  supported: false
+  note: >-
+    There is no free-form metadata bag on Starlink resources. The closest analogue is the
+    service line nickname (PUT /public/v2/service-lines/{serviceLineNumber}/nickname).
+content_types:
+  request: application/json; multipart/form-data for POST /public/v2/routers/local-content
+  response: application/json
+networking:
+  public_ip_feed: https://geoip.starlinkisp.net/feed.csv
+  peering: https://www.peeringdb.com/net/18747
+  note: new Starlink public IPs are published to the feed at least one month before use

@@ -1,0 +1,101 @@
+generated: '2026-07-25'
+method: searched
+source: npm registry search, PyPI, and the SpaceExplorationTechnologies GitHub organization
+official_sdks: 0
+summary: >-
+  SpaceX publishes NO first-party client library for the Starlink Public API V2 in any language.
+  The only first-party code SpaceX ships is a protobuf definition plus a Python gRPC example for
+  the local device API, and copy-paste Python request examples in the documentation. Everything
+  on npm and PyPI carrying the Starlink name is third-party. Because there is no official SDK,
+  this repo deliberately does NOT wire an apis.yml `SDKs` pointer.
+packages: []
+first_party_code:
+- kind: protobuf
+  name: device.proto
+  url: https://github.com/SpaceExplorationTechnologies/enterprise-api/tree/master/device-api
+  repo_file: proto/starlink-device.proto
+  official: true
+  description: >-
+    Official definition of the local device gRPC API (SpaceX.API.Device). Compile it with
+    grpc_tools.protoc into the language of your choice; SpaceX ships only a Python example.
+  build: make python  ->  python3 -m grpc_tools.protoc -I . --python_out=. --pyi_out=. --grpc_python_out=. device.proto
+  dependencies:
+  - grpcio==1.60.0
+  - grpcio-tools==1.60.0
+  - protobuf==4.24.4
+  minimum_device_software:
+    router: '> 2023.55'
+    user_terminal: '> 2023.51.0'
+- kind: example
+  name: device-api/demo.py
+  url: https://github.com/SpaceExplorationTechnologies/enterprise-api/blob/master/device-api/demo.py
+  official: true
+  description: Python example that calls GetDiagnostics on both the router (192.168.1.1:9000) and the dish (192.168.100.1:9200)
+- kind: example
+  name: Public API V2 authentication and data-usage snippet
+  url: https://starlink.readme.io/docs/authentication
+  official: true
+  description: Python requests example covering token minting, token caching, 401 retry and multi-account credentials
+- kind: example
+  name: Telemetry stream polling loop
+  url: https://starlink.readme.io/docs/telemetry-api
+  official: true
+  description: Python requests example that hot-loops POST /public/v2/telemetry/stream and resolves column indexes
+third_party_packages:
+- language: typescript
+  registry: npm
+  name: starlink-wrapper
+  url: https://www.npmjs.com/package/starlink-wrapper
+  install: npm install starlink-wrapper
+  official: false
+  description: Typesafe wrapper for the Starlink V2 API
+- language: typescript
+  registry: npm
+  name: '@gibme/starlink'
+  url: https://www.npmjs.com/package/@gibme/starlink
+  repository: https://github.com/gibme-npm/starlink
+  install: npm install @gibme/starlink
+  official: false
+  description: Package for interacting with various Starlink APIs
+- language: typescript
+  registry: npm
+  name: starlink-dish
+  url: https://www.npmjs.com/package/starlink-dish
+  repository: https://github.com/juliensimon/starlink-dish
+  install: npm install starlink-dish
+  official: false
+  description: Client library and CLI for the Starlink dish local gRPC API
+- language: javascript
+  registry: npm
+  name: starlink-node
+  url: https://www.npmjs.com/package/starlink-node
+  repository: https://github.com/jacobrsyntaxindustries/starlink-node
+  install: npm install starlink-node
+  official: false
+  description: Node.js package for local communication and control of Starlink terminals
+- language: javascript
+  registry: npm
+  name: signalk-starlink
+  url: https://www.npmjs.com/package/signalk-starlink
+  repository: https://github.com/itemir/signalk-starlink
+  install: npm install signalk-starlink
+  official: false
+  description: Signal K marine data plugin that surfaces Starlink terminal status
+- language: python
+  registry: pypi
+  name: starlink
+  version: 0.0.1
+  url: https://pypi.org/project/starlink/
+  repository: https://github.com/lordskyzw/starlink
+  install: pip install starlink
+  official: false
+  description: Self-described unofficial Python wrapper for the Starlink API
+registries_probed:
+- registry: npm
+  result: no first-party @starlink or @spacex scope; all matches are community projects
+- registry: pypi
+  result: the `starlink` project is a third-party wrapper; starlink-api, spacex-api and starlink-grpc-tools return 404
+- registry: github (SpaceExplorationTechnologies)
+  result: >-
+    7 public repos - sssd, linuxptp, u-boot, linux, starlink-wifi, starlink-wifi-gen2 and enterprise-api.
+    Only enterprise-api relates to the API surface, and it contains no packaged SDK.

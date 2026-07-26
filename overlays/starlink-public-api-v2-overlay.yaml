@@ -1,0 +1,137 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Starlink Public API V2
+  version: 1.0.0
+extends: openapi/starlink-public-api-v2-openapi.json
+x-generated: '2026-07-25'
+x-method: generated
+x-source: >-
+  Authored by API Evangelist from the published Starlink documentation. It captures the
+  contract facts Starlink documents in prose but omits from the machine-readable spec:
+  the real server URL, the OIDC client_credentials security scheme, the 429 rate-limit
+  response, and the RBAC permission each operation requires. It never mutates the
+  harvested original.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-enriched: '2026-07-25'
+    contact:
+      name: Starlink API documentation
+      url: https://starlink.readme.io/
+    x-status-page: https://starlink.readme.io/docs/starlink-api-status
+    x-changelog: https://starlink.readme.io/changelog
+    x-deprecation-policy: https://starlink.readme.io/docs/60-day-deprecation-policy
+- target: $.servers
+  description: >-
+    The published document declares only the relative server "/api", which is unresolvable for
+    any client outside the starlink.com origin. Replace it with the absolute production host
+    documented in the getting-started and authentication guides.
+  update:
+  - url: https://starlink.com/api
+    description: Starlink Public API production
+- target: $.components.securitySchemes
+  description: >-
+    The published document declares no securitySchemes at all, even though every operation
+    requires a bearer token minted through the OIDC client_credentials flow.
+  update:
+    StarlinkServiceAccount:
+      type: oauth2
+      description: >-
+        OIDC client_credentials. Mint a V2 service account (clientId + secret) in the Starlink
+        account settings page, exchange it at the token endpoint, and present the result as a
+        bearer token. Tokens live about 15 minutes; reuse until a 401.
+      flows:
+        clientCredentials:
+          tokenUrl: https://starlink.com/api/auth/connect/token
+          scopes: {}
+      x-openid-configuration: https://starlink.com/api/auth/.well-known/openid-configuration
+      x-issuer: https://api.starlink.com/auth
+- target: $
+  description: Apply the service-account security requirement globally, matching documented behaviour.
+  update:
+    security:
+    - StarlinkServiceAccount: []
+- target: $.info.description
+  description: Record the cross-cutting conventions the docs publish but the spec omits.
+  update: {}
+- target: $.info
+  update:
+    x-rate-limit:
+      requests: 250
+      period: minute
+      scope: per Starlink account
+      exceeded_status: 429
+      docs: https://starlink.readme.io/docs/rate-limits-1
+    x-pagination:
+      style: zero-indexed page number
+      request: [page, limit]
+      response: [pageIndex, limit, isLastPage, totalCount, results]
+    x-error-envelope:
+      schema: ServiceResponse
+      fields: [errors, warnings, information, isValid]
+      rfc9457: false
+    x-idempotency:
+      supported: false
+    x-undocumented-in-spec:
+    - POST /public/v2/telemetry/stream
+    - POST /public/v2/telemetry/query
+- target: $.paths['/public/v2/account'].get
+  update:
+    operationId: getAccount
+    x-required-permission: Account information, View
+- target: $.paths['/public/v2/service-lines'].get
+  update:
+    operationId: getServiceLines
+    x-required-permission: Service plan, View
+- target: $.paths['/public/v2/service-lines'].post
+  update:
+    operationId: createServiceLine
+    x-required-permission: Service plan, Edit
+    x-consequence: >-
+      Creates billable service. Requires an address reference and a product id, and can attach
+      data blocks immediately.
+- target: $.paths['/public/v2/service-lines/{serviceLineNumber}'].delete
+  update:
+    operationId: deactivateServiceLine
+    x-required-permission: Service plan, Edit
+    x-consequence: Terminates service on the line. Irreversible from the API.
+- target: $.paths['/public/v2/user-terminals'].get
+  update:
+    operationId: getUserTerminals
+    x-required-permission: Device management, View
+- target: $.paths['/public/v2/user-terminals'].post
+  update:
+    operationId: addUserTerminalToAccount
+    x-required-permission: Device management, Edit
+- target: $.paths['/public/v2/user-terminals/{deviceId}/reboot'].post
+  update:
+    operationId: rebootUserTerminal
+    x-required-permission: Device command and configuration, Edit
+    x-consequence: >-
+      Physical action on remote hardware. The terminal drops connectivity for the duration of
+      the reboot; do not issue it against a terminal carrying live traffic without a change window.
+- target: $.paths['/public/v2/routers/{routerId}/reboot'].post
+  update:
+    operationId: rebootRouter
+    x-required-permission: Device command and configuration, Edit
+    x-consequence: Physical action on remote hardware; drops every client attached to the router.
+- target: $.paths['/public/v2/routers/configs/assign'].put
+  update:
+    operationId: assignRouterConfig
+    x-required-permission: Device configuration assignment, Edit
+    x-consequence: >-
+      Pushes configuration to every named router within 1-2 minutes when online, or on next
+      connect. On error no assignment occurs.
+- target: $.paths['/public/v2/data-usage/query'].post
+  update:
+    operationId: queryDataUsage
+    x-required-permission: Service plan, View
+- target: $.paths['/public/v2/billing/invoices'].get
+  update:
+    operationId: getInvoiceSummaries
+    x-required-permission: Financial, View
+- target: $.paths['/public/v2/flights/status'].post
+  update:
+    operationId: postFlightStatus
+    x-required-permission: Aviation flight status management, Edit
+    x-availability: aviation accounts only

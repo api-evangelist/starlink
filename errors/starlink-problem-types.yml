@@ -1,0 +1,100 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/starlink-public-api-v2-openapi.json
+enriched_from: https://starlink.readme.io/docs/rate-limits-1
+format: proprietary-envelope
+format_note: >-
+  Starlink does NOT use RFC 9457 application/problem+json. Every error is returned as the same
+  ServiceResponse envelope used for success, with isValid=false and an errors[] array of
+  ValidationResult objects. Content-Type stays application/json.
+envelope:
+  media_type: application/json
+  schema: ServiceResponse
+  fields:
+    errors: array of ValidationResult
+    warnings: array of ValidationResult
+    information: array of string
+    isValid: boolean
+  validation_result:
+    memberNames: array of string naming the offending request members
+    errorMessage: human readable message
+  example:
+    errors:
+    - memberNames: []
+      errorMessage: not_found
+    warnings: []
+    information: []
+    isValid: false
+coverage:
+  operations: 63
+  responses_400: 56
+  responses_401: 63
+  responses_403: 63
+  responses_404: 3
+  responses_422: 62
+  responses_default: 3
+problems:
+- status: 400
+  title: Bad Request
+  detail: Bad request. Invalid or missing parameter.
+  schema: ServiceResponse
+  remediation: Correct the request body or query parameters named in errors[].memberNames.
+  occurrences: 56
+- status: 401
+  title: Unauthorized
+  detail: The bearer token is missing, expired or invalid.
+  remediation: >-
+    Discard the cached token and mint a new one at POST https://starlink.com/api/auth/connect/token
+    with the client_credentials grant, then retry once.
+  occurrences: 63
+  docs: https://starlink.readme.io/docs/authentication
+- status: 403
+  title: Forbidden
+  detail: Missing required permission for this endpoint or resource (user_lacks_required_permission).
+  remediation: >-
+    Grant the V2 service account the permission named in the operation description
+    ("Required permission: <name>, <View|Edit>"). Only an Admin or Service Account Management
+    user can change it, and only up to their own permission ceiling.
+  occurrences: 63
+  docs: https://starlink.readme.io/docs/api-v2-service-accounts
+  variants:
+  - Forbidden from creating customer accounts
+  - Forbidden from retrieving service lines for this account
+- status: 404
+  title: Not Found
+  detail: The resource does not exist, or the endpoint has passed its deprecation sunset date.
+  remediation: >-
+    Verify the identifier. If the path contains /enterprise/ or targets web-api.starlink.com,
+    migrate to https://starlink.com/api/public. All V1 endpoints return 404 as of 2026-06-01.
+  occurrences: 3
+  docs: https://starlink.readme.io/docs/60-day-deprecation-policy
+- status: 422
+  title: Unprocessable Entity
+  detail: >-
+    The request was well formed but the operation could not be completed. This is Starlink's
+    dominant failure code; the reason is in errors[].errorMessage.
+  schema: ServiceResponse
+  remediation: Read errors[].errorMessage; the message is operation-specific.
+  occurrences: 62
+  examples:
+  - Failed to retrieve account
+  - Failed to query data usage
+  - Failed to retrieve user terminals
+  - Failed to create the contact and add it to the account with the correct roles.
+  - Failed to delete TLS config
+  - Failed to get router
+- status: 429
+  title: Too Many Requests
+  detail: Rate limit exceeded (250 requests per minute per account; 1000 token requests per 15 minutes per IP).
+  remediation: Reduce the request rate. Reuse bearer tokens for their full ~15 minute lifetime.
+  source: https://starlink.readme.io/docs/rate-limits-1
+  note: documented in the rate-limits guide but not declared in the OpenAPI
+- status: 503
+  title: Service Unavailable
+  detail: Rate limit response used by the Starlink Space Traffic Coordination API.
+  source: https://docs.space-safety.starlink.com/docs/api-keys
+  scope: space-safety.starlink.com only
+gaps:
+- The OpenAPI declares no 429 response on any operation despite a published rate limit.
+- No machine-readable error code registry is published; errorMessage strings are free text.
+- No error type URIs, so errors cannot be programmatically classified beyond the HTTP status.

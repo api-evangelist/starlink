@@ -1,0 +1,518 @@
+generated: '2026-07-25'
+method: derived
+source: mcp/starlink-mcp.yml + openapi/starlink-public-api-v2-openapi.json
+note: 'Starlink ships no MCP server and no GraphQL endpoint. This crosswalk binds the API Evangelist CANDIDATE tool
+  surface (mcp/starlink-mcp.yml) back to the OpenAPI so each tool inherits a real input contract, and records the
+  genuine surface divergence: two telemetry operations are documented and reachable but are not in the downloadable
+  spec, and three whole APIs (local device gRPC, router local HTTPS, space traffic coordination) have no REST spec
+  at all.'
+surfaces:
+  openapi:
+    file: openapi/starlink-public-api-v2-openapi.json
+    version: 3.0.4
+    paths: 49
+    operations: 63
+    gated: false
+    note: downloadable anonymously from https://starlink.com/api/public/swagger/v2/swagger.json
+  graphql:
+    endpoint: null
+    note: no GraphQL surface exists
+  mcp:
+    url: null
+    gated: null
+    note: no hosted MCP server; tools/list was not probed because no server is published
+  grpc:
+    file: proto/starlink-device.proto
+    service: SpaceX.API.Device
+    gated: false
+    note: local-network only (192.168.1.1:9000 router, 192.168.100.1:9200 user terminal)
+  mtls_rest:
+    endpoint: https://space-safety.starlink.com/api/v1
+    gated: true
+    note: Space Traffic Coordination API; mTLS client cert signed by SpaceX, spec not published for download
+crosswalk:
+- tool: get_account_information
+  category: Account
+  rest:
+  - GET /public/v2/account
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_all_addresses
+  category: Addresses
+  rest:
+  - GET /public/v2/addresses
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: create_address
+  category: Addresses
+  rest:
+  - POST /public/v2/addresses
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_address
+  category: Addresses
+  rest:
+  - GET /public/v2/addresses/{addressReferenceId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: update_address
+  category: Addresses
+  rest:
+  - PUT /public/v2/addresses/{addressReferenceId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_account_balance
+  category: Billing
+  rest:
+  - GET /public/v2/billing/balance
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_invoice_summaries
+  category: Billing
+  rest:
+  - GET /public/v2/billing/invoices
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_invoice_details
+  category: Billing
+  rest:
+  - GET /public/v2/billing/invoices/{invoiceId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_contacts
+  category: Contacts
+  rest:
+  - GET /public/v2/contacts
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: create_contact
+  category: Contacts
+  rest:
+  - POST /public/v2/contacts
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: delete_contact
+  category: Contacts
+  rest:
+  - DELETE /public/v2/contacts/{subjectId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: update_contact
+  category: Contacts
+  rest:
+  - PUT /public/v2/contacts/{subjectId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_all_multi_service_line_enabled_data_pools
+  category: Data Pools
+  rest:
+  - GET /public/v2/data-pools
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: query_data_pool_usage_with_service_line_and_monthly_breakdow
+  category: Data Pools
+  rest:
+  - GET /public/v2/data-pools/usage
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: enable_or_disable_automatic_top_up_for_a_data_pool
+  category: Data Pools
+  rest:
+  - POST /public/v2/data-pools/{dataPoolId}/set-automatic-top-up
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: query_data_usage
+  category: Account
+  rest:
+  - POST /public/v2/data-usage/query
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: post_a_flight_event
+  category: Flights
+  rest:
+  - POST /public/v2/flights/status
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: query_managed_accounts
+  category: Managed Accounts
+  rest:
+  - GET /public/v2/managed/accounts
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_managed_account_tree
+  category: Managed Accounts
+  rest:
+  - GET /public/v2/managed/accounts/tree
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: create_a_managed_customer_account
+  category: Managed
+  rest:
+  - POST /public/v2/managed/customers
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_map_data
+  category: Mobile
+  rest:
+  - GET /public/v2/mobile/map/{timestamp}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_radio_access_network_data
+  category: Mobile
+  rest:
+  - GET /public/v2/mobile/radio-access-network/{timestamp}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_timeseries_data_of_starlink_mobile_usage_and_beam_reliab
+  category: Mobile
+  rest:
+  - GET /public/v2/mobile/timeseries/{timestamp}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_products
+  category: Account
+  rest:
+  - GET /public/v2/products
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_all_router_configs
+  category: Routers
+  rest:
+  - GET /public/v2/routers/configs
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: create_router_config
+  category: Routers
+  rest:
+  - POST /public/v2/routers/configs
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: router_config_assignment
+  category: Routers
+  rest:
+  - PUT /public/v2/routers/configs/assign
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_default_router_config
+  category: Routers
+  rest:
+  - GET /public/v2/routers/configs/default
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: set_default_router_config
+  category: Routers
+  rest:
+  - PUT /public/v2/routers/configs/default
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_tls_configs
+  category: Routers
+  rest:
+  - GET /public/v2/routers/configs/tls
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: create_tls_config
+  category: Routers
+  rest:
+  - POST /public/v2/routers/configs/tls
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: delete_tls_config
+  category: Routers
+  rest:
+  - DELETE /public/v2/routers/configs/tls
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_router_config
+  category: Routers
+  rest:
+  - GET /public/v2/routers/configs/{configId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: update_router_config
+  category: Routers
+  rest:
+  - PUT /public/v2/routers/configs/{configId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: upload_router_local_content_file
+  category: Routers
+  rest:
+  - POST /public/v2/routers/local-content
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_list_of_router_local_content_files
+  category: Routers
+  rest:
+  - GET /public/v2/routers/local-content
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_sandbox_clients
+  category: Routers
+  rest:
+  - GET /public/v2/routers/sandbox/clients
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: batch_update_sandbox_clients
+  category: Routers
+  rest:
+  - POST /public/v2/routers/sandbox/clients
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: update_sandbox_heartbeat
+  category: Routers
+  rest:
+  - PUT /public/v2/routers/sandbox/heartbeat
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_router
+  category: Routers
+  rest:
+  - GET /public/v2/routers/{routerId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: reboot_router
+  category: Routers
+  rest:
+  - POST /public/v2/routers/{routerId}/reboot
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_all_service_lines
+  category: Service Lines
+  rest:
+  - GET /public/v2/service-lines
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: create_service_line
+  category: Service Lines
+  rest:
+  - POST /public/v2/service-lines
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_service_line
+  category: Service Lines
+  rest:
+  - GET /public/v2/service-lines/{serviceLineNumber}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: deactivate_a_service_line
+  category: Service Lines
+  rest:
+  - DELETE /public/v2/service-lines/{serviceLineNumber}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_billing_partial_periods
+  category: Service Lines
+  rest:
+  - GET /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: set_whether_a_service_line_should_consume_from_a_data_pool
+  category: Service Lines
+  rest:
+  - PATCH /public/v2/service-lines/{serviceLineNumber}/consume-from-pool
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: opt_in_priority_data
+  category: Service Lines
+  rest:
+  - POST /public/v2/service-lines/{serviceLineNumber}/data/opt-in
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: opt_out_priority_data
+  category: Service Lines
+  rest:
+  - POST /public/v2/service-lines/{serviceLineNumber}/data/opt-out
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: set_recurring_data_blocks_on_service_line
+  category: Service Lines
+  rest:
+  - PUT /public/v2/service-lines/{serviceLineNumber}/data/recurring
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: adds_one_time_top_up_data_block_to_service_line
+  category: Service Lines
+  rest:
+  - POST /public/v2/service-lines/{serviceLineNumber}/data/top-up
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: set_service_line_nickname
+  category: Service Lines
+  rest:
+  - PUT /public/v2/service-lines/{serviceLineNumber}/nickname
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: update_service_line_product
+  category: Service Lines
+  rest:
+  - PUT /public/v2/service-lines/{serviceLineNumber}/product
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: set_service_line_public_ip_setting
+  category: Service Lines
+  rest:
+  - PUT /public/v2/service-lines/{serviceLineNumber}/public-ip
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: add_user_terminal_to_service_line
+  category: Service Lines
+  rest:
+  - POST /public/v2/service-lines/{serviceLineNumber}/user-terminals
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: remove_user_terminal_from_service_line
+  category: Service Lines
+  rest:
+  - DELETE /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_all_user_terminals
+  category: User Terminals
+  rest:
+  - GET /public/v2/user-terminals
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: add_user_terminal_to_account
+  category: User Terminals
+  rest:
+  - POST /public/v2/user-terminals
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: user_terminal_config_assignment
+  category: User Terminals
+  rest:
+  - PUT /public/v2/user-terminals/configs/assign
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: get_l2vpn_circuits_available_for_this_account
+  category: User Terminals
+  rest:
+  - GET /public/v2/user-terminals/l2vpn
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: remove_user_terminal_from_account
+  category: User Terminals
+  rest:
+  - DELETE /public/v2/user-terminals/{deviceId}
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: set_l2vpn_vlans_for_user_terminal
+  category: User Terminals
+  rest:
+  - PUT /public/v2/user-terminals/{deviceId}/l2vpn
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+- tool: reboot_user_terminal
+  category: User Terminals
+  rest:
+  - POST /public/v2/user-terminals/{deviceId}/reboot
+  binding: rest
+  confidence: high
+  note: one-to-one; the Starlink OpenAPI declares no operationIds so the binding key is METHOD + path
+mcp_only:
+- tool: get_telemetry_stream
+  category: Telemetry
+  rest:
+  - POST /public/v2/telemetry/stream
+  reason: operation is documented in the API reference and in llms.txt but is absent from the downloadable V2 OpenAPI,
+    so it has no spec-backed input schema
+  docs: https://starlink.readme.io/reference/post_public-v2-telemetry-stream
+- tool: query_telemetry_latest
+  category: Telemetry
+  rest:
+  - POST /public/v2/telemetry/query
+  reason: operation is documented in the API reference and in llms.txt but is absent from the downloadable V2 OpenAPI,
+    so it has no spec-backed input schema
+  docs: https://starlink.readme.io/reference/post_public-v2-telemetry-query
+rest_only: []
+rest_only_note: every operation in the published OpenAPI has a candidate tool, so there are no REST-only operations
+out_of_band_surfaces:
+- surface: Local Device gRPC API
+  binding: grpc
+  rest: []
+  reason: SpaceX.API.Device.Handle carries GetDiagnostics; there is no REST equivalent and it is only reachable
+    on the local network
+- surface: Router Local HTTPS API
+  binding: http
+  rest: []
+  reason: served by the router itself under /starlinkrouter/ on an operator-chosen domain; no OpenAPI is published
+  docs: https://starlink.readme.io/docs/router-api
+- surface: Space Traffic Coordination API
+  binding: rest-mtls
+  rest:
+  - GET /api/v1/operator
+  - GET /api/v1/object
+  - POST /api/v1/object
+  - POST /api/v1/trajectory
+  reason: documented operations confirmed in the API Patterns guide, but the OpenAPI source file is not published
+    for download
+  docs: https://docs.space-safety.starlink.com/docs/api-patterns
+coverage:
+  tools_named: 65
+  tools_bound: 63
+  mcp_only: 2
+  rest_ops_total: 63
+  rest_ops_with_a_tool: 63

@@ -1,0 +1,301 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/starlink-public-api-v2-openapi.json
+enriched_from: https://starlink.readme.io/reference
+note: >-
+  Derived from the 132 component schemas and the id-reference fields that link them. Starlink
+  uses no typed id prefixes on account-level objects; identifiers are opaque strings, except for
+  device identifiers which carry visible prefixes.
+root: Account
+id_formats:
+- entity: Account
+  field: accountNumber
+  format: 'ACC-nnnnnnnnn-nnnnnnnnn-nn (documented as a placeholder ACC-111 in the auth example)'
+- entity: UserTerminal
+  field: userTerminalId
+  format: 'ut<8hex>-<8hex>-<8hex+> (example ut12345678-a12b3456-123456c1)'
+- entity: Router
+  field: routerId
+  format: 'Router-<24 chars> (example Router-012300205003000000000000)'
+- entity: ServiceLine
+  field: serviceLineNumber
+  format: opaque string, used as a path parameter on 13 operations
+- entity: Address
+  field: addressReferenceId
+  format: opaque string
+- entity: Contact
+  field: subjectId
+  format: opaque subject identifier from the identity provider
+entities:
+- name: Account
+  schema: AccountResponseV2
+  operations: [GET /public/v2/account]
+  fields: [accountNumber, regionCode, accountName, activeSuspensions]
+- name: Address
+  schema: AddressResponse
+  operations:
+  - GET /public/v2/addresses
+  - POST /public/v2/addresses
+  - 'GET /public/v2/addresses/{addressReferenceId}'
+  - 'PUT /public/v2/addresses/{addressReferenceId}'
+  fields: [addressReferenceId, addressLines, locality, administrativeArea, region, regionCode, postalCode, formattedAddress, latitude, longitude, metadata]
+- name: Contact
+  schema: UserResponse
+  operations:
+  - GET /public/v2/contacts
+  - POST /public/v2/contacts
+  - 'PUT /public/v2/contacts/{subjectId}'
+  - 'DELETE /public/v2/contacts/{subjectId}'
+  fields: [subjectId, email, roles]
+- name: ServiceLine
+  schema: ServiceLineResponse
+  operations:
+  - GET /public/v2/service-lines
+  - POST /public/v2/service-lines
+  - 'GET /public/v2/service-lines/{serviceLineNumber}'
+  - 'DELETE /public/v2/service-lines/{serviceLineNumber}'
+  fields: [serviceLineNumber, addressReferenceId, nickname, productReferenceId, delayedProductId, optInProductId, startDate, endDate, publicIp, active, aviationMetadata, dataBlocks]
+- name: SubscriptionProduct
+  schema: SubscriptionProductResponse
+  operations: [GET /public/v2/products]
+  fields: [productReferenceId, name, price, isoCurrencyCode, isSla, maxNumberOfUserTerminals, dataProducts]
+- name: DataProduct
+  schema: DataProductResponse
+  fields: [productId, price, isoCurrencyCode, dataAmount, dataUnit]
+- name: DataBlock
+  schema: DataBlockResponseV2
+  fields: [productId, startDate, endDate, isPrepaid, blocksCount, type, dataAmountGB]
+- name: DataPool
+  schema: DataPoolResponseV2
+  operations:
+  - GET /public/v2/data-pools
+  - GET /public/v2/data-pools/usage
+  - 'POST /public/v2/data-pools/{dataPoolId}/set-automatic-top-up'
+  fields: [dataPoolId, nickname, automaticTopUpEnabled, restricted, dataProductType, dataBlocks, productId]
+  status: pre-release
+- name: UserTerminal
+  schema: UserTerminalResponseV2
+  operations:
+  - GET /public/v2/user-terminals
+  - POST /public/v2/user-terminals
+  - 'DELETE /public/v2/user-terminals/{deviceId}'
+  - 'POST /public/v2/user-terminals/{deviceId}/reboot'
+  fields: [userTerminalId, nickname, kitSerialNumber, dishSerialNumber, serviceLineNumber, l2VpnCircuits, routers]
+- name: Router
+  schema: RouterResponseV2
+  operations:
+  - 'GET /public/v2/routers/{routerId}'
+  - 'POST /public/v2/routers/{routerId}/reboot'
+  fields: [routerId, nickname, userTerminalId, configId, hardwareVersion, lastBonded]
+- name: RouterConfig
+  schema: RouterConfigResponseV2
+  operations:
+  - GET /public/v2/routers/configs
+  - POST /public/v2/routers/configs
+  - 'GET /public/v2/routers/configs/{configId}'
+  - 'PUT /public/v2/routers/configs/{configId}'
+  - PUT /public/v2/routers/configs/assign
+  - GET /public/v2/routers/configs/default
+  - PUT /public/v2/routers/configs/default
+  fields: [configId, nickname, routerConfigJson]
+- name: TlsConfig
+  schema: TlsConfigResponseV2
+  operations: [GET /public/v2/routers/configs/tls, POST /public/v2/routers/configs/tls, DELETE /public/v2/routers/configs/tls]
+  fields: [certificateBase64Pem, notBefore, notAfter]
+  key: the base64-encoded certificate string is the unique identifier on the account
+- name: RouterLocalContent
+  schema: RouterLocalContentResponse
+  operations: [GET /public/v2/routers/local-content, POST /public/v2/routers/local-content]
+  fields: [nickname, uploadDate, fileContentId, fileContentHash]
+- name: SandboxClient
+  schema: SandboxClientResponse
+  operations: [GET /public/v2/routers/sandbox/clients, POST /public/v2/routers/sandbox/clients, PUT /public/v2/routers/sandbox/heartbeat]
+  fields: [clientId, sandboxId, expiry]
+- name: L2VpnCircuit
+  schema: L2VpnCircuitResponse
+  operations:
+  - GET /public/v2/user-terminals/l2vpn
+  - 'PUT /public/v2/user-terminals/{deviceId}/l2vpn'
+  fields: [circuitId, circuitIds, popName]
+  note: circuitId is deprecated in favour of the circuitIds list
+- name: Invoice
+  schema: InvoiceSummaryResponse
+  operations:
+  - GET /public/v2/billing/invoices
+  - 'GET /public/v2/billing/invoices/{invoiceId}'
+  fields: [invoiceId, description, currency, amount, dueAmount, invoiceDate, dueDate, status]
+- name: InvoiceLine
+  schema: InvoiceLineDetailResponse
+  fields: [productReferenceId, productDescription, serviceName, serviceLineNumbers, quantity, unitPrice, taxAmount, subTotal, servicePeriodStartDate, servicePeriodEndDate]
+- name: AccountBalance
+  schema: AccountBalanceResponse
+  operations: [GET /public/v2/billing/balance]
+  fields: [balances]
+  note: one CurrencyBalanceResponse per currency; a single zero entry when everything is settled
+- name: ManagedAccount
+  schema: ManagedAccountTreeNodeResponseV2
+  operations: [GET /public/v2/managed/accounts, GET /public/v2/managed/accounts/tree, POST /public/v2/managed/customers]
+  fields: [accountNumber, accountName, managerAccountNumber, children]
+  status: pre-release
+- name: AviationMetadata
+  schema: AviationMetadataResponse
+  fields: [tailNumber, seatCount, airlineIataCode, aircraftIataCode, airlineIcaoCode, aircraftIcaoCode, stcNumber]
+- name: PartialPeriod
+  schema: PartialPeriodResponse
+  operations:
+  - 'GET /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods'
+  fields: [productReferenceId, periodStart, periodEnd]
+- name: MobileRanRecord
+  schema: MobileRanResponse
+  operations:
+  - 'GET /public/v2/mobile/radio-access-network/{timestamp}'
+  status: gated
+- name: MobileTimeSeriesRecord
+  schema: MobileTimeSeriesResponse
+  operations:
+  - 'GET /public/v2/mobile/timeseries/{timestamp}'
+  status: gated
+- name: MobileMapRecord
+  schema: MobileMapResponse
+  operations:
+  - 'GET /public/v2/mobile/map/{timestamp}'
+  status: gated
+relationships:
+- from: Account
+  to: Address
+  type: has_many
+  via: addressReferenceId
+- from: Account
+  to: Contact
+  type: has_many
+  via: subjectId
+- from: Account
+  to: ServiceLine
+  type: has_many
+  via: serviceLineNumber
+- from: Account
+  to: UserTerminal
+  type: has_many
+  via: userTerminalId
+  note: a terminal must exist on the account before it can join a service line
+- from: Account
+  to: RouterConfig
+  type: has_many
+  via: configId
+- from: Account
+  to: TlsConfig
+  type: has_many
+  via: certificateBase64Pem
+- from: Account
+  to: Invoice
+  type: has_many
+  via: invoiceId
+- from: Account
+  to: AccountBalance
+  type: has_one
+- from: Account
+  to: DataPool
+  type: has_many
+  via: dataPoolId
+- from: Account
+  to: ManagedAccount
+  type: has_many
+  via: managerAccountNumber
+- from: ServiceLine
+  to: Address
+  type: belongs_to
+  via: addressReferenceId
+- from: ServiceLine
+  to: SubscriptionProduct
+  type: belongs_to
+  via: productReferenceId
+- from: ServiceLine
+  to: UserTerminal
+  type: has_many
+  via: serviceLineNumber
+- from: ServiceLine
+  to: DataBlock
+  type: has_many
+  via: dataBlocks
+- from: ServiceLine
+  to: AviationMetadata
+  type: has_one
+  via: aviationMetadata
+- from: ServiceLine
+  to: PartialPeriod
+  type: has_many
+- from: UserTerminal
+  to: Router
+  type: has_many
+  via: routers
+- from: UserTerminal
+  to: L2VpnCircuit
+  type: has_many
+  via: l2VpnCircuits
+- from: Router
+  to: UserTerminal
+  type: belongs_to
+  via: userTerminalId
+- from: Router
+  to: RouterConfig
+  type: belongs_to
+  via: configId
+- from: RouterConfig
+  to: TlsConfig
+  type: has_one
+  via: certificateBase64Pem
+- from: RouterConfig
+  to: RouterLocalContent
+  type: has_one
+  via: fileContentId
+- from: RouterConfig
+  to: SandboxClient
+  type: has_many
+  via: sandboxId
+- from: SubscriptionProduct
+  to: DataProduct
+  type: has_many
+  via: dataProducts
+- from: DataPool
+  to: DataBlock
+  type: has_many
+  via: dataBlocks
+- from: DataPool
+  to: ServiceLine
+  type: has_many
+  via: consume-from-pool
+- from: Invoice
+  to: InvoiceLine
+  type: has_many
+  via: invoiceLines
+- from: InvoiceLine
+  to: ServiceLine
+  type: has_many
+  via: serviceLineNumbers
+- from: ManagedAccount
+  to: ManagedAccount
+  type: has_many
+  via: children
+  note: self-referential account hierarchy
+telemetry_entities:
+  source: https://starlink.readme.io/docs/telemetry-api
+  device_types:
+  - code: u
+    name: UserTerminal
+    keyed_by: DeviceId (ut prefix)
+  - code: r
+    name: Router
+    keyed_by: DeviceId (Router- prefix)
+  - code: i
+    name: IpAllocs
+    keyed_by: DeviceId (ut prefix), carries AccountNumber, Ipv4, Ipv6Ue, Ipv6Cpe
+  note: >-
+    Telemetry rows are column-indexed arrays, not objects. The columnNamesByDeviceType map in
+    each response is the schema and must be re-parsed per response.
+lifecycle_flow:
+- Create or reference an Address
+- Create a ServiceLine against that Address and a SubscriptionProduct
+- Add a UserTerminal to the Account
+- Attach the UserTerminal to the ServiceLine
+- Optionally assign a RouterConfig and L2VPN circuits
+- Consume telemetry and billing for the resulting devices

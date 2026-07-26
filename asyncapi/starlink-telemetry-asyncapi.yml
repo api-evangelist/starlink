@@ -1,0 +1,245 @@
+asyncapi: 3.0.0
+info:
+  title: Starlink Telemetry Stream and Device Alerts
+  version: '2'
+  description: >-
+    Event surface for Starlink enterprise device telemetry. Starlink exposes it as a poll-based
+    JSON-over-HTTP stream rather than a broker: the consumer makes continuous small-batch POST
+    requests to /public/v2/telemetry/stream and the server advances a per-credential read index
+    on every successful response. User terminals and routers aggregate and emit every 15 seconds;
+    IP allocation records emit at least every 5 minutes and immediately on change. Stream
+    retention is 8 hours, so a consumer offline longer than that loses data. Device alerts ride
+    inside the same response as an ActiveAlert column of enum codes resolved against the metadata
+    block.
+  contact:
+    name: Starlink API documentation
+    url: https://starlink.readme.io/docs/telemetry-api
+  x-generated: '2026-07-25'
+  x-method: generated
+  x-provenance: api-evangelist-derived
+  x-published-by-provider: false
+  x-source:
+  - https://starlink.readme.io/docs/telemetry-api
+  - https://starlink.readme.io/docs/alerts
+  - https://starlink.readme.io/reference/post_public-v2-telemetry-stream
+  x-note: >-
+    SpaceX publishes no AsyncAPI document. This description was authored by API Evangelist
+    faithfully from the published telemetry and alerts guides. Every field, enum code and timing
+    figure below is transcribed from those pages; nothing was invented.
+servers:
+  production:
+    host: starlink.com
+    pathname: /api/public/v2
+    protocol: https
+    description: Starlink Public API V2
+    security:
+    - $ref: '#/components/securitySchemes/serviceAccountBearer'
+channels:
+  telemetryStream:
+    address: /telemetry/stream
+    title: Telemetry stream
+    description: >-
+      Poll with POST. Returns up to batchSize entries collected over at most maxLingerMs
+      milliseconds for every device on the account. Requires the "Device telemetry, View"
+      permission. Not filterable by device.
+    messages:
+      telemetryBatchRequest:
+        $ref: '#/components/messages/TelemetryBatchRequest'
+      telemetryBatch:
+        $ref: '#/components/messages/TelemetryBatch'
+  telemetryQuery:
+    address: /telemetry/query
+    title: Telemetry cache query
+    description: >-
+      Returns the most recent typed telemetry values for each requested device, keyed by device
+      type then device id. Use this instead of the stream when only the latest state is needed.
+    messages:
+      telemetrySnapshot:
+        $ref: '#/components/messages/TelemetrySnapshot'
+operations:
+  pollTelemetryStream:
+    action: receive
+    channel:
+      $ref: '#/channels/telemetryStream'
+    title: Poll the telemetry stream
+    summary: Continuously poll for the next batch of device telemetry
+    description: >-
+      Recommended cadence is roughly 4 requests per minute (batchSize 1000, maxLingerMs 15000).
+      Each successful response advances this service account's read index; entries lost to a
+      client crash mid-batch are not re-delivered. A 401 means the bearer token expired.
+    messages:
+    - $ref: '#/channels/telemetryStream/messages/telemetryBatch'
+  queryTelemetryCache:
+    action: receive
+    channel:
+      $ref: '#/channels/telemetryQuery'
+    title: Query the latest telemetry values
+    summary: Read the most recent telemetry values per device without consuming the stream
+components:
+  securitySchemes:
+    serviceAccountBearer:
+      type: oauth2
+      description: OIDC client_credentials bearer token from a Starlink V2 service account
+      flows:
+        clientCredentials:
+          tokenUrl: https://starlink.com/api/auth/connect/token
+          availableScopes: {}
+  messages:
+    TelemetryBatchRequest:
+      name: TelemetryBatchRequest
+      title: Telemetry batch request
+      contentType: application/json
+      payload:
+        type: object
+        properties:
+          batchSize:
+            type: integer
+            default: 1000
+            maximum: 65000
+            description: Maximum number of entries to return
+          maxLingerMs:
+            type: integer
+            default: 15000
+            maximum: 65000
+            description: Maximum milliseconds to spend collecting entries
+        examples:
+        - batchSize: 1000
+          maxLingerMs: 15000
+    TelemetryBatch:
+      name: TelemetryBatch
+      title: Telemetry batch
+      contentType: application/json
+      description: >-
+        Column-indexed telemetry rows. columnNamesByDeviceType must be re-parsed on every
+        response; column order is not stable across releases.
+      payload:
+        type: object
+        properties:
+          data:
+            type: object
+            properties:
+              columnNamesByDeviceType:
+                type: object
+                description: Device type code to ordered column-name array
+              values:
+                type: array
+                description: Array of telemetry rows; element 0 of each row is the device type code
+                items:
+                  type: array
+          metadata:
+            type: object
+            properties:
+              enums:
+                type: object
+                properties:
+                  DeviceType:
+                    type: object
+                    description: 'Device type codes: u UserTerminal, r Router, i IpAllocs'
+                  AlertsByDeviceType:
+                    type: object
+                    description: Alert code to alert name, per device type. Authoritative per response.
+    TelemetrySnapshot:
+      name: TelemetrySnapshot
+      title: Telemetry snapshot
+      contentType: application/json
+      description: Most recent fully typed telemetry object per device, keyed by device type then device id
+      payload:
+        type: object
+x-device-types:
+- code: u
+  name: UserTerminal
+  emit_interval: 15 seconds
+  id_example: ut12345678-a12b3456-123456c1
+  columns:
+  - {name: DeviceType, description: Device type code}
+  - {name: UtcTimestampNs, description: Nanosecond precision timestamp generated by the device}
+  - {name: DeviceId, description: Device identifier}
+  - {name: DownlinkThroughput, unit: Mbps}
+  - {name: UplinkThroughput, unit: Mbps}
+  - {name: PingDropRateAvg, description: Average packet loss over the last 15 seconds, 0.0 to 1.0}
+  - {name: PingLatencyMsAvg, description: Average ping latency from terminal to the Starlink point of presence}
+  - {name: ObstructionPercentTime, description: Moving average percentage of time obstructed}
+  - {name: Uptime, unit: seconds}
+  - {name: SignalQuality, description: SNR extrapolation normalised 0-1 across 0-10 dB}
+  - {name: H3CellId, description: Terminal location as an H3 cell (h3geo.org)}
+  - {name: SecondsUntilSwupdateRebootPossible, description: Software deferral countdown; 259200 normally, -1 when deferral is off}
+  - {name: RunningSoftwareVersion}
+  - {name: CountryCode, description: ISO 3166-1 alpha-2; XZ in international waters}
+  - {name: InTerritorialWaters, description: True only in territorial waters of CountryCode}
+  - {name: ActiveAlert, description: Array of currently active alert codes}
+- code: r
+  name: Router
+  emit_interval: 15 seconds
+  id_example: Router-012300205003000000000000
+  columns_summary: >-
+    DeviceType, UtcTimestampNs, DeviceId, WifiUptimeS, WifiSoftwareVersion, WifiIsRepeater,
+    WifiHopsFromController, WifiIsBypassed, InternetPingDropRate, InternetPingLatencyMs,
+    WifiPopPingDropRate, WifiPopPingLatencyMs, DishPingDropRate, DishPingLatencyMs, Clients,
+    Clients2Ghz, Clients5Ghz, ClientsEth, WanTxBytes, WanRxBytes, per-band client Rx/Tx rate and
+    signal strength min/max/avg, DishId, ApiVersion, ActiveAlert
+- code: i
+  name: IpAllocs
+  emit_interval: at least every 5 minutes, immediately on change
+  columns:
+  - {name: DeviceType}
+  - {name: UtcTimestampNs}
+  - {name: DeviceId}
+  - {name: AccountNumber}
+  - {name: Ipv4, description: Public IPv4 addresses assigned over the last 6 minutes}
+  - {name: Ipv6Ue, description: Public IPv6 user-equipment /64 addresses}
+  - {name: Ipv6Cpe, description: Public IPv6 customer-provided-equipment /56 addresses}
+  tombstone: >-
+    When a terminal stops requiring public IPs a tombstone message is sent with Ipv4, Ipv6Ue and
+    Ipv6Cpe empty; afterwards no further IpAllocs messages are sent for that device.
+x-alerts:
+  docs: https://starlink.readme.io/docs/alerts
+  semantics: >-
+    An alert fires if its condition was met at least once in the previous 15 seconds and persists
+    for as long as it is active. The API is stateless and only reports current state. Alert code
+    to name mapping must be read from metadata.enums.AlertsByDeviceType on each response; codes
+    may be re-pointed at new names and the mapping is the source of truth.
+  user_terminal_alerts:
+  - {code: 50, name: ethernet_slow_10mbps, definition: Ethernet link negotiated to 10 Mbps}
+  - {code: 51, name: ethernet_slow_100mbps, definition: Ethernet link negotiated to 100 Mbps}
+  - {code: 52, name: power_supply_thermal_throttling, definition: Power supply is very hot and close to shutting down}
+  - {code: 53, name: actuator_motor_stuck, definition: The Starlink actuator motor is stuck}
+  - {code: 54, name: mast_not_vertical, definition: Mast is more than 30 degrees off vertical}
+  - {code: 55, name: disabled_no_active_account, definition: Account or associated service line is not active}
+  - {code: 56, name: disabled_too_far_from_service_address, definition: Terminal moved too far from the service address}
+  - {code: 57, name: disabled_no_service_in_ocean, definition: In the ocean without a service that supports maritime}
+  - {code: 58, name: disabled_invalid_country, definition: In an unsupported country}
+  - {code: 59, name: moving_while_not_mobile, definition: Moving above 10 MPH without a mobile service}
+  - {code: 60, name: disabled_moving_too_fast, definition: Moving faster than the plan allows}
+  - {code: 61, name: power_disconnect_detected, definition: Previous reboot was caused by loss of power}
+  - {code: 62, name: pop_change, definition: Point of presence changed; short disconnect and new IP address}
+  - {code: 63, name: unable_to_align, definition: Unable to align to the desired tilt direction}
+  - {code: 64, name: high_sky_obstruction, definition: More than 0.5 percent obstructed}
+  - {code: 65, name: high_sky_obstruction_mobile}
+  - {code: 66, name: high_time_obstruction, definition: Field of view obstructed more than 0.27 percent of the time}
+  - {code: 67, name: high_time_obstruction_mobile}
+  - {code: 79, name: software_update_reboot_pending, definition: Update downloaded; reboot scheduled for 3 AM local time plus or minus 30 minutes}
+  - {code: 80, name: thermal_shutdown, definition: Max temperature exceeded; service stopped to cool down}
+  - {code: 81, name: thermal_throttling, definition: High temperature threshold exceeded; performance reduced}
+  - {code: 83, name: disabled_blocked_country, definition: In a restricted service country}
+  - {code: 84, name: disabled_data_usage_exceeded_quota, definition: Data usage quota exceeded}
+  - {code: 89, name: disabled_cell_is_disabled, definition: In a cell that will not get beams}
+  - {code: 92, name: disabled_unlicensed_country, definition: In an unlicensed country}
+  - {code: 93, name: disabled_roam_restricted, definition: Roamed too long outside the home country}
+  - {code: 94, name: disabled_unknown_location, definition: Cannot determine its location}
+  - {code: 95, name: disabled_account_disabled, definition: The account is disabled}
+  - {code: 96, name: disabled_unsupported_version, definition: Software version is not supported}
+  - {code: 97, name: data_overage_rate_limited, definition: Rate limited because priority data is exhausted}
+  known_issue: >-
+    Any software version at or above 2025.06.05 incorrectly reports software_update_reboot_pending;
+    this affects proactive alerts, the dashboard and the telemetry stream
+    (https://starlink.readme.io/docs/starlink-api-status).
+x-other-event-channels:
+- name: Proactive alert emails
+  transport: email
+  description: >-
+    Starlink emails proactive alerts to account contacts. There is no API to subscribe, list or
+    acknowledge them; incident history records several outages where these emails did not send.
+  webhook: false
+x-webhooks:
+  supported: false
+  note: Starlink documents no webhook, callback or push-subscription surface of any kind.

@@ -1,0 +1,106 @@
+generated: '2026-07-25'
+method: searched
+source: https://starlink.readme.io/changelog
+feed: https://starlink.readme.io/llms.txt
+scheme: dated changelog posts on the ReadMe-hosted developer docs, one post per change
+current_version: v2
+window: 2026-03-27 to 2026-07-21 (the full set of posts published on the changelog as of the harvest)
+entries:
+- date: '2026-07-21'
+  slug: address-endpoints-deprecating-request-parameters
+  title: 'Address Endpoints: Deprecating Request Parameters'
+  type: deprecation
+  breaking: false
+  url: https://starlink.readme.io/changelog/address-endpoints-deprecating-request-parameters
+  highlights:
+  - regionCode and administrativeArea are deprecated on Create Address and Update Address
+  - required fields become addressLines, formattedAddress, latitude, longitude
+  - calls sending the deprecated fields still succeed but the fields are ignored
+- date: '2026-07-08'
+  slug: new-invoices-and-account-balance-api-endpoints
+  title: New Invoices and Account Balance API Endpoints
+  type: addition
+  breaking: false
+  url: https://starlink.readme.io/changelog/new-invoices-and-account-balance-api-endpoints
+  highlights:
+  - GET /public/v2/billing/invoices
+  - GET /public/v2/billing/invoices/{invoiceId}
+  - GET /public/v2/billing/balance
+- date: '2026-06-24'
+  slug: l2vpn-api-changes
+  title: L2VPN API Changes
+  type: change
+  breaking: false
+  url: https://starlink.readme.io/changelog/l2vpn-api-changes
+  highlights:
+  - single-active multi-homed L2VPN, two PNIs at one PoP as a redundant circuit group
+  - circuitId replaced by a circuitIds list on all L2VPN endpoints; circuitId now returns the first element
+  - new customerVlanRemap field on L2VPN configuration requests and responses
+  - removal of the deprecated circuitId field announced for a future release
+- date: '2026-06-17'
+  slug: upcoming-path-deprecation
+  title: Upcoming Legacy API Path Deprecation
+  type: deprecation
+  breaking: true
+  url: https://starlink.readme.io/changelog/upcoming-path-deprecation
+  highlights:
+  - web-api.starlink.com/enterprise/ paths stop functioning 2026-07-01
+  - all calls must move to https://starlink.com/api/public
+- date: '2026-06-02'
+  slug: starlink-v1-api-deprecated
+  title: Starlink V1 API Deprecated
+  type: deprecation
+  breaking: true
+  url: https://starlink.readme.io/changelog/starlink-v1-api-deprecated
+  highlights:
+  - as of 2026-06-01 the V1 public API is deprecated and all V1 endpoints return 404
+- date: '2026-04-14'
+  slug: telemetry-api-maintenance
+  title: Telemetry API Maintenance
+  type: maintenance
+  breaking: false
+  url: https://starlink.readme.io/changelog/telemetry-api-maintenance
+  highlights:
+  - maintenance 2026-04-15 02:00 UTC, up to 30 minutes of telemetry delay, no data loss for active consumers
+  - proactive alerts paused during the window; further maintenance 2026-04-17 15:30 UTC
+- date: '2026-04-06'
+  slug: changes-to-data-usage-api-overhaul-response-system
+  title: Data Usage Query V2 - Updates in Data Usage Responses
+  type: change
+  breaking: false
+  url: https://starlink.readme.io/changelog/changes-to-data-usage-api-overhaul-response-system
+  highlights:
+  - data blocks now always included even when blocksCount is 0
+  - servicePlan.dataCategoryMapping now always returns an empty object
+  - overage lines with no usage are no longer returned; separate overage lines on mid-cycle plan changes
+- date: '2026-04-02'
+  slug: service-line-v2-adding-recurring-data-to-current-month
+  title: Service Line V2 Recurring Data - New Apply to Current Month Request Parameter
+  type: addition
+  breaking: false
+  url: https://starlink.readme.io/changelog/service-line-v2-adding-recurring-data-to-current-month
+  highlights:
+  - ApplyToCurrentMonth added to RecurringDataBlocksRequest on PUT /public/v2/service-lines/{serviceLineNumber}/data/recurring
+  - when true, recurring data changes also apply to the current billing cycle
+- date: '2026-03-27'
+  slug: telemetry-stream-api-new-fields-added
+  title: 'Telemetry Stream API: New Fields Added'
+  type: addition
+  breaking: false
+  url: https://starlink.readme.io/changelog/telemetry-stream-api-new-fields-added
+  highlights:
+  - CountryCode and InTerritorialWaters added to the telemetry stream response
+- date: '2026-03-27'
+  slug: api-rate-limiting-by-account
+  title: API Rate Limiting By Account
+  type: change
+  breaking: false
+  url: https://starlink.readme.io/changelog/api-rate-limiting-by-account
+  highlights:
+  - V2 rate limiting moved from source IP to Starlink account
+  - 250 requests per minute per account for all V2 traffic
+  - V1 stayed on IP-based limiting until sunset
+notes:
+- Changelog posts carry no version numbers; Starlink versions the API only at the URI path level (v1, v2).
+- Deprecations appear here and by email to recent callers, per the 60-day deprecation policy.
+- Incident history is kept separately at https://starlink.readme.io/docs/starlink-api-status.

@@ -1,0 +1,109 @@
+generated: '2026-07-25'
+method: searched
+source: https://starlink.readme.io/docs/60-day-deprecation-policy
+versioning:
+  scheme: uri-path
+  current: v2
+  current_path: https://starlink.com/api/public/v2
+  spec_version: '2'
+  docs: https://starlink.readme.io/docs/migrating-from-v1-to-v2
+  documents:
+  - version: '2'
+    url: https://starlink.com/api/public/swagger/v2/swagger.json
+    paths: 49
+    operations: 63
+  - version: '1'
+    url: https://starlink.com/api/public/swagger/v1/swagger.json
+    paths: 0
+    note: the V1 document is now an empty shell; all V1 paths were removed at sunset
+deprecation:
+  policy_url: https://starlink.readme.io/docs/60-day-deprecation-policy
+  notice_period_days: 60
+  mechanism: >-
+    When a deprecation period begins Starlink removes the documentation for the affected
+    endpoints, emails developers who recently called them with migration instructions, and
+    posts the notice to the API changelog. At the end of the period the endpoints are removed
+    and return 404.
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  announcement_channel: https://starlink.readme.io/changelog
+  notification_channel: email to recent callers of the affected endpoints
+sunsets:
+- item: Starlink Public API V1
+  announced: '2026-03-27'
+  sunset: '2026-06-01'
+  status: complete
+  effect: all V1 endpoints return 404
+  source: https://starlink.readme.io/changelog/starlink-v1-api-deprecated
+- item: Legacy host and path web-api.starlink.com/enterprise/
+  sunset: '2026-07-01'
+  status: complete
+  effect: legacy paths stop functioning; callers must use https://starlink.com/api/public
+  source: https://starlink.readme.io/changelog/upcoming-path-deprecation
+deprecated_fields:
+- field: circuitId
+  replaced_by: circuitIds
+  surface: all L2VPN endpoints
+  status: still returned (first element of the circuit group); removal announced for a future release
+  source: https://starlink.readme.io/changelog/l2vpn-api-changes
+- fields: [regionCode, administrativeArea]
+  surface: POST /public/v2/addresses, PUT /public/v2/addresses/{addressReferenceId}
+  status: accepted but ignored; required fields are addressLines, formattedAddress, latitude, longitude
+  source: https://starlink.readme.io/changelog/address-endpoints-deprecating-request-parameters
+- field: servicePlan.dataCategoryMapping
+  surface: POST /public/v2/data-usage/query
+  status: always returns an empty object
+  source: https://starlink.readme.io/changelog/changes-to-data-usage-api-overhaul-response-system
+deprecated_operations: []
+deprecated_operations_note: >-
+  No operation in openapi/starlink-public-api-v2-openapi.json carries deprecated: true.
+  Deprecation is communicated out-of-band through the changelog and email, not in the spec.
+pre_release_operations:
+- GET /public/v2/data-pools
+- GET /public/v2/data-pools/usage
+- POST /public/v2/data-pools/{dataPoolId}/set-automatic-top-up
+- GET /public/v2/managed/accounts
+- GET /public/v2/managed/accounts/tree
+- PATCH /public/v2/service-lines/{serviceLineNumber}/consume-from-pool
+pre_release_note: these operations are marked "Pre-Release ... available for select audiences only"
+status_page:
+  url: https://starlink.readme.io/docs/starlink-api-status
+  style: manually curated incident history page inside the developer docs
+  automated: false
+  components: false
+  subscribe: false
+  recent_incidents:
+  - date: '2026-04-15'
+    window: 21:42-22:15 UTC
+    summary: internal maintenance issue caused failing API requests for a significant fraction of traffic
+  - date: '2026-04-09'
+    window: 22:56-23:04 UTC
+    summary: internal fault caused failing API requests for a significant fraction of traffic
+  - date: '2026-04-06'
+    window: 23:43 UTC to 02:46 UTC 2026-04-07
+    summary: v2/telemetry/stream returned 404 for a small number of users
+  - date: '2026-03-01'
+    window: 00:03-00:19 UTC
+    summary: partial database outage; API timeouts and all router sandboxes failed open
+  - date: '2026-02-20'
+    window: 00:04-00:21 UTC
+    summary: regression caused request timeouts and inability to mint a new bearer token
+  - date: '2026-01-30'
+    window: 17:30-17:38 UTC
+    summary: planned maintenance on the data usage endpoints
+sla:
+  url: null
+  uptime_target: null
+  note: no published SLA or uptime target for the Starlink Public API was found
+support:
+  url: https://starlink.com/support
+  security_contact: mailto:vulnerabilityreporting@spacex.com
+  space_safety_contact: space-safety-onboarding@spacex.com
+minimum_device_software:
+  local_device_grpc:
+    router: '> 2023.55'
+    user_terminal: '> 2023.51.0'
+    failure_mode: UNIMPLEMENTED gRPC responses below these versions
+  router_local_https_api: 2024.12.17.mr44165 or later
+changelog: changelog/starlink-changelog.yml

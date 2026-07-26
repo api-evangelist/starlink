@@ -1,0 +1,44 @@
+generated: '2026-07-25'
+method: searched
+source: live probes of https://starlink.com, https://www.starlink.com and https://space-safety.starlink.com
+hosts:
+- host: https://starlink.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: starlink-security.txt
+    note: RFC 9116; no Expires field published
+  - path: /api/auth/.well-known/openid-configuration
+    status: 200
+    file: starlink-openid-configuration.json
+    note: OIDC discovery for the Starlink Public API V2 identity provider (issuer https://api.starlink.com/auth)
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://www.starlink.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    file: starlink-security.txt
+    note: identical body to starlink.com
+- host: https://space-safety.starlink.com
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    note: returns the SPA HTML shell (587 bytes), not an RFC 9116 document
+- host: https://starlink.readme.io
+  documents:
+  - path: /llms.txt
+    status: 200
+    file: ../llms/starlink-llms.txt
+    note: provider-published llms.txt for the developer documentation
+notes:
+- The only genuine well-known documents SpaceX publishes for Starlink are the
+  root security.txt and the OIDC discovery document served under /api/auth/.
+- The OIDC discovery document is anonymous and is the authoritative source for
+  the token endpoint used by every Starlink Public API V2 service account.

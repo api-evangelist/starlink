@@ -1,0 +1,117 @@
+generated: '2026-07-25'
+method: derived
+source: openapi/starlink-public-api-v2-openapi.json
+enriched_from:
+- https://starlink.readme.io/docs/authentication
+- https://starlink.com/api/auth/.well-known/openid-configuration
+- https://docs.space-safety.starlink.com/docs/api-keys
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: openapi/starlink-public-api-v2-openapi.json declares openapi 3.0.4 with 49 paths and 63 operations
+- id: openapi-3.1
+  conforms: false
+  evidence: the published document is 3.0.4
+- id: oauth2
+  conforms: true
+  evidence: >-
+    client_credentials grant against https://starlink.com/api/auth/connect/token; the OpenAPI itself
+    declares no securitySchemes, so this is asserted from the docs and the OIDC discovery document
+- id: oauth2-client-credentials
+  conforms: true
+  evidence: grant_types_supported includes client_credentials in well-known/starlink-openid-configuration.json
+- id: oidc-discovery
+  conforms: true
+  evidence: https://starlink.com/api/auth/.well-known/openid-configuration returns a full OIDC discovery document
+- id: oidc
+  conforms: true
+  evidence: issuer https://api.starlink.com/auth, jwks_uri, userinfo, introspection, revocation and CIBA endpoints published
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: false
+  evidence: /.well-known/oauth-authorization-server returns 404; only the OIDC discovery path is served
+- id: rfc9116-security-txt
+  conforms: partial
+  evidence: >-
+    https://starlink.com/.well-known/security.txt returns 200 with Contact, Encryption and Hiring
+    fields but omits the REQUIRED Expires field and publishes no Policy field
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: errors use a proprietary ServiceResponse envelope on application/json, never application/problem+json
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    a 60-day deprecation policy is published but it is executed through documentation removal,
+    email and changelog posts; no Sunset or Deprecation headers are documented
+- id: rfc7807
+  conforms: false
+  evidence: superseded by RFC 9457; neither is used
+- id: mutual-tls
+  conforms: true
+  scope: Starlink Space Traffic Coordination API only
+  evidence: >-
+    space-safety.starlink.com authenticates clients with an EC secp384r1 certificate signed by SpaceX
+    (https://docs.space-safety.starlink.com/docs/api-keys)
+- id: grpc
+  conforms: true
+  evidence: proto/starlink-device.proto defines SpaceX.API.Device with a Handle RPC, published by SpaceX on GitHub
+- id: protobuf3
+  conforms: true
+  evidence: proto/starlink-device.proto is proto3
+- id: ccsds-oem
+  conforms: true
+  scope: Starlink Space Traffic Coordination API
+  evidence: trajectories are uploaded as CCSDS Orbit Ephemeris Message (OEM) files via POST /api/v1/trajectory
+- id: ccsds-cdm
+  conforms: true
+  scope: Starlink Space Traffic Coordination API
+  evidence: the cdm resource group exchanges CCSDS Conjunction Data Messages
+- id: h3-geospatial-index
+  conforms: true
+  evidence: the telemetry stream reports user terminal location as an H3CellId (https://h3geo.org)
+- id: iso-3166-1-alpha-2
+  conforms: true
+  evidence: the telemetry stream CountryCode field is ISO 3166-1 alpha-2, with XZ for international waters
+- id: json-api
+  conforms: false
+  evidence: responses use a bespoke ServiceResponse envelope, not the JSON:API media type
+- id: odata
+  conforms: false
+- id: scim2
+  conforms: false
+- id: fhir-r4
+  conforms: false
+- id: fapi
+  conforms: false
+- id: psd2
+  conforms: false
+- id: camara
+  conforms: false
+  evidence: no CAMARA API implementation is published anywhere in Starlink's developer material
+- id: gsma-open-gateway
+  conforms: false
+  evidence: Starlink is not a GSMA Open Gateway participant; it is an access-network operator, not an MNO
+- id: tmforum-open-api
+  conforms: false
+  evidence: no TM Forum Open API conformance certification was found
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    a real event surface exists (telemetry stream, device alerts) but Starlink publishes no
+    AsyncAPI document; asyncapi/starlink-telemetry-asyncapi.yml is an API Evangelist derivation
+- id: webhooks
+  conforms: false
+  evidence: no webhook or callback surface is documented; the event model is client-polled plus email alerts
+- id: idempotency-key
+  conforms: false
+  evidence: no Idempotency-Key header or equivalent appears in the spec or the docs
+- id: rate-limit-headers
+  conforms: false
+  evidence: rate limits are published in prose and signalled only by HTTP 429
+compliance_program:
+  published: false
+  certifications: []
+  trust_center: null
+  note: >-
+    No SOC 2, ISO 27001, PCI DSS, HIPAA or FedRAMP attestation is published for the Starlink API
+    or for a Starlink trust center. SpaceX runs a vulnerability reporting address but no public
+    bug bounty. Do NOT wire a Compliance pointer for this provider.

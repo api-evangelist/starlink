@@ -33,6 +33,9 @@ tags:
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.19'
+enrichment:
+  round: '2026-07-25'
+  method: searched+generated+derived
 apis:
 - aid: starlink:starlink-public-api-v2
   name: Starlink Public API V2
@@ -62,6 +65,16 @@ apis:
     url: https://starlink.readme.io/docs/authentication
   - type: RateLimits
     url: https://starlink.readme.io/docs/rate-limits-1
+  - type: Overlay
+    url: overlays/starlink-public-api-v2-overlay.yaml
+  - type: ErrorCatalog
+    url: errors/starlink-problem-types.yml
+  - type: DataModel
+    url: data-model/starlink-data-model.yml
+  - type: MCPServer
+    url: mcp/starlink-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/starlink-tool-crosswalk.yml
 - aid: starlink:starlink-telemetry-stream-api
   name: Starlink Telemetry Stream API
   description: A low-latency JSON over HTTP streaming API for device telemetry, consumed by
@@ -83,6 +96,10 @@ apis:
     url: https://starlink.readme.io/reference/post_public-v2-telemetry-stream
   - type: Documentation
     url: https://starlink.readme.io/docs/alerts
+  - type: AsyncAPI
+    url: asyncapi/starlink-telemetry-asyncapi.yml
+  - type: AgentSkill
+    url: skills/starlink-consume-telemetry-and-alerts.md
 - aid: starlink:starlink-mobile-data-api
   name: Starlink Mobile Data API
   description: A gated feature within the Starlink Public API V2 exposing Starlink Mobile
@@ -137,6 +154,8 @@ apis:
     url: https://starlink.readme.io/docs/device-api
   - type: Proto
     url: proto/starlink-device.proto
+  - type: Protobuf
+    url: proto/starlink-device.proto
   - type: SourceCode
     url: https://github.com/SpaceExplorationTechnologies/enterprise-api
 - aid: starlink:starlink-router-local-https-api
@@ -168,7 +187,7 @@ apis:
     onboarding, access is limited to satellite operators, and the OpenAPI source file itself
     is not published for download.
   humanURL: https://docs.space-safety.starlink.com/docs/api/space-traffic-coordination-apis
-  baseURL: https://space-safety.starlink.com
+  baseURL: https://space-safety.starlink.com/api/v1
   tags:
   - Space Safety
   - Conjunction Screening
@@ -182,9 +201,15 @@ apis:
     url: https://docs.space-safety.starlink.com/docs/api-keys
   - type: GettingStarted
     url: https://docs.space-safety.starlink.com/docs/quick-start
+  - type: Sandbox
+    url: https://staging.space-safety.starlink.com
+  - type: Conventions
+    url: https://docs.space-safety.starlink.com/docs/api-patterns
 common:
 - type: Website
   url: https://www.starlink.com/
+- type: DeveloperPortal
+  url: https://starlink.readme.io/
 - type: Documentation
   url: https://starlink.readme.io/
 - type: GettingStarted
@@ -197,30 +222,86 @@ common:
   url: https://starlink.com/api/public/swagger/v2/swagger.json
 - type: Authentication
   url: https://starlink.readme.io/docs/authentication
+- type: Authentication
+  url: authentication/starlink-authentication.yml
+- type: OAuthScopes
+  url: scopes/starlink-scopes.yml
 - type: OpenIDConfiguration
   url: https://starlink.com/api/auth/.well-known/openid-configuration
 - type: RateLimits
   url: https://starlink.readme.io/docs/rate-limits-1
+- type: RateLimits
+  url: rate-limits/starlink-rate-limits.yml
+- type: Conventions
+  url: conventions/starlink-conventions.yml
 - type: ChangeLog
   url: https://starlink.readme.io/changelog
+- type: ChangeLog
+  url: changelog/starlink-changelog.yml
+- type: Lifecycle
+  url: lifecycle/starlink-lifecycle.yml
 - type: StatusPage
   url: https://starlink.readme.io/docs/starlink-api-status
 - type: Deprecation
   url: https://starlink.readme.io/docs/60-day-deprecation-policy
+- type: Conformance
+  url: conformance/starlink-conformance.yml
+- type: ErrorCatalog
+  url: errors/starlink-problem-types.yml
+- type: DataModel
+  url: data-model/starlink-data-model.yml
+- type: Sandbox
+  url: sandbox/starlink-sandbox.yml
+- type: Packages
+  url: packages/starlink-packages.yml
+- type: MCPServer
+  url: mcp/starlink-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/starlink-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: AgenticAccess
+  url: agentic-access/starlink-agentic-access.yml
+- type: AsyncAPI
+  url: asyncapi/starlink-telemetry-asyncapi.yml
+- type: Overlay
+  url: overlays/starlink-public-api-v2-overlay.yaml
+- type: Protobuf
+  url: proto/starlink-device.proto
 - type: LlmsText
   url: https://starlink.readme.io/llms.txt
+- type: LLMsTxt
+  url: llms/starlink-llms.txt
+- type: WellKnown
+  url: well-known/starlink-well-known.yml
 - type: Portal
   url: https://www.starlink.com/account/settings
+- type: Login
+  url: https://www.starlink.com/account
+- type: SignUp
+  url: https://www.starlink.com/account
 - type: GitHubOrganization
   url: https://github.com/SpaceExplorationTechnologies
 - type: SourceCode
   url: https://github.com/SpaceExplorationTechnologies/enterprise-api
 - type: SecurityTxt
+  url: well-known/starlink-security.txt
+- type: Security
   url: https://starlink.com/.well-known/security.txt
 - type: VulnerabilityDisclosure
-  url: mailto:vulnerabilityreporting@spacex.com
+  url: security/starlink-vulnerability-disclosure.yml
+- type: DomainSecurity
+  url: security/starlink-domain-security.yml
 - type: Support
   url: https://starlink.com/support
+- type: Blog
+  url: https://www.starlink.com/updates
+- type: Pricing
+  url: https://www.starlink.com/business
+- type: TermsOfService
+  url: https://www.starlink.com/legal
+- type: PrivacyPolicy
+  url: https://www.starlink.com/legal
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

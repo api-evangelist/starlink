@@ -1,0 +1,45 @@
+generated: '2026-07-25'
+method: searched
+source: https://starlink.readme.io/docs/rate-limits-1
+docs: https://starlink.readme.io/docs/rate-limits-1
+rate_limits:
+- name: Starlink Public API V2
+  scope: per Starlink account (determined by the account linked to the V2 service account)
+  limit_count: 250
+  limit_period: minute
+  applies_to: https://starlink.com/api/public/v2
+  effective_from: '2026-03-27'
+  exceeded_status: 429
+  note: V2 traffic does not count against the V1 per-IP allowance
+- name: Bearer token endpoint
+  scope: per client IP
+  limit_count: 1000
+  limit_period: 15 minutes
+  applies_to: https://starlink.com/api/auth/connect/token
+  exceeded_status: 429
+  note: tokens live ~15 minutes and should be reused until they expire
+- name: Starlink Public API V1 (sunset)
+  scope: per source IP
+  limit_count: 250
+  limit_period: minute
+  applies_to: legacy V1 endpoints
+  status: retired with the V1 sunset on 2026-06-01
+- name: Starlink Space Traffic Coordination API
+  scope: per operator
+  limit_count: null
+  limit_period: null
+  applies_to: https://space-safety.starlink.com/api/v1
+  exceeded_status: 503
+  docs: https://docs.space-safety.starlink.com/docs/api-keys
+  note: >-
+    Numeric limits are not published. SpaceX states the goal is that rate limits pose no
+    practical impediment to operators and asks operators to make contact if they are hampered.
+headers:
+  published: false
+  note: no RateLimit-Limit / RateLimit-Remaining / Retry-After headers are documented or declared in the OpenAPI
+guidance:
+- Reduce request rate on HTTP 429 to avoid throttling.
+- Starlink recommends periodically syncing API data into your own database rather than
+  polling the API for low-latency or expressive queries.
+- The telemetry stream is the exception; it is designed to be polled continuously at roughly
+  4 requests per minute (a 15000 ms linger per request).

@@ -1,0 +1,96 @@
+generated: '2026-07-25'
+method: searched
+source: https://starlink.readme.io/docs/authentication
+docs: https://starlink.readme.io/docs/authentication
+notes: >-
+  The downloadable Starlink Public API V2 OpenAPI (openapi/starlink-public-api-v2-openapi.json)
+  declares NO components.securitySchemes and no top-level security requirement, even though
+  every operation is authenticated. This profile was therefore harvested from the published
+  authentication guide, the API V2 Service Accounts guide, and the anonymous OIDC discovery
+  document, not derived from the spec. The per-operation authorization model is RBAC, carried
+  in each operation description as "Required permission: <permission>, <View|Edit>".
+summary:
+  types: [oauth2, http, mutualTLS]
+  api_key_in: []
+  oauth2_flows: [clientCredentials]
+  spec_declares_security_schemes: false
+schemes:
+- name: StarlinkServiceAccount
+  type: oauth2
+  applies_to: Starlink Public API V2 (account, service line, user terminal, router, billing, telemetry, mobile, flights)
+  flow: clientCredentials
+  token_url: https://starlink.com/api/auth/connect/token
+  discovery: https://starlink.com/api/auth/.well-known/openid-configuration
+  issuer: https://api.starlink.com/auth
+  token_endpoint_auth_methods_supported: [client_secret_basic, client_secret_post]
+  id_token_signing_alg_values_supported: [RS384]
+  credential: clientId + secret minted as a "V2 Service Account" in the Starlink account settings page
+  presentation: 'Authorization: Bearer <access_token>'
+  token_lifetime: ~15 minutes; reuse the token until a 401 is returned, then re-mint
+  source: well-known/starlink-openid-configuration.json
+- name: SpaceSafetyClientCertificate
+  type: mutualTLS
+  applies_to: Starlink Space Traffic Coordination API (space-safety.starlink.com)
+  docs: https://docs.space-safety.starlink.com/docs/api-keys
+  credential: EC secp384r1 client key + a CSR signed by SpaceX into a client.crt
+  presentation: TLS client certificate (curl --key client.key --cert client.crt)
+  onboarding: email space-safety-onboarding@spacex.com; access limited to satellite operators
+  environments:
+  - https://staging.space-safety.starlink.com
+  - https://space-safety.starlink.com
+- name: LocalDeviceNone
+  type: none
+  applies_to: Starlink Local Device gRPC API (192.168.1.1:9000 router, 192.168.100.1:9200 user terminal)
+  docs: https://starlink.readme.io/docs/device-api
+  rationale: no authentication because the gRPC server is only reachable on the local network
+- name: RouterLocalHttpsTls
+  type: mutualTLS
+  applies_to: Starlink Router Local HTTPS API (/starlinkrouter/)
+  docs: https://starlink.readme.io/docs/router-api
+  credential: enterprise-supplied TLS certificate + key configured on the router config, plus a CORS allowed-origins list
+  note: the enterprise owns the certificate; the router serves the API on an operator-chosen domain
+service_account_model:
+  docs: https://starlink.readme.io/docs/api-v2-service-accounts
+  scope: a V2 service account is bound to a Starlink ACCOUNT, not a user, and survives the creating user leaving
+  who_can_create: users holding the Admin or Service Account Management role
+  ceiling: a user cannot grant a service account a permission they do not themselves hold
+  limits:
+    service_accounts_per_account: 20
+    secrets_per_service_account: 20
+  rotation: secrets support an optional expiry; create new secrets then delete old ones to rotate
+  revocation: service accounts can be disabled but never deleted, to preserve traceability
+  mfa: service accounts are exempt from multi-factor authentication challenges
+authorization:
+  model: role-based access control, declared per operation in the OpenAPI description
+  source: openapi/starlink-public-api-v2-openapi.json
+  permissions:
+  - Account information, View
+  - Account information, Edit
+  - Admin Only - API User Management, Edit
+  - Aviation flight status management, Edit
+  - Device command and configuration, View
+  - Device command and configuration, Edit
+  - Device configuration assignment, Edit
+  - Device management, View
+  - Device management, Edit
+  - Device telemetry, View
+  - Financial, View
+  - Gated Feature - Starlink Mobile Data, View
+  - Managed Account Information, View
+  - Service plan, View
+  - Service plan, Edit
+  - User management, Edit
+  visibility_roles:
+  - Admin
+  - Technical
+  - Technical Read Only
+  - Technical Configuration
+  - Service Account Management
+failure_modes:
+- status: 401
+  meaning: token expired or invalid; clear the cached token and mint a new one
+- status: 403
+  meaning: the service account lacks the required permission for this endpoint or resource (user_lacks_required_permission)
+rate_limits:
+  token_endpoint: 1000 authentication requests per 15 minutes per client IP
+  source: https://starlink.readme.io/docs/rate-limits-1

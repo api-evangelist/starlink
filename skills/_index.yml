@@ -1,0 +1,81 @@
+generated: '2026-07-25'
+method: generated
+source: >-
+  Grounded in openapi/starlink-public-api-v2-openapi.json plus the published Starlink
+  documentation. The Starlink OpenAPI declares no operationIds, so every step is grounded in a
+  verbatim METHOD + path taken from the spec (or, for the two telemetry operations, from the
+  published API reference, which is noted in the skill).
+note: SpaceX publishes no AGENTS.md and no agent skills; these are API Evangelist authored.
+skills:
+- file: starlink-authenticate-and-inventory.md
+  name: Authenticate to the Starlink API and inventory an account
+  api: openapi/starlink-public-api-v2-openapi.json
+  operations:
+  - POST https://starlink.com/api/auth/connect/token
+  - GET /public/v2/account
+  - GET /public/v2/addresses
+  - GET /public/v2/service-lines
+  - GET /public/v2/user-terminals
+  - GET /public/v2/routers/{routerId}
+- file: starlink-activate-service-line.md
+  name: Activate Starlink service for a new site
+  api: openapi/starlink-public-api-v2-openapi.json
+  operations:
+  - GET /public/v2/products
+  - POST /public/v2/addresses
+  - POST /public/v2/service-lines
+  - PUT /public/v2/service-lines/{serviceLineNumber}/nickname
+  - POST /public/v2/user-terminals
+  - POST /public/v2/service-lines/{serviceLineNumber}/user-terminals
+  - GET /public/v2/service-lines/{serviceLineNumber}
+  - DELETE /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}
+  - DELETE /public/v2/service-lines/{serviceLineNumber}
+  - DELETE /public/v2/user-terminals/{deviceId}
+- file: starlink-consume-telemetry-and-alerts.md
+  name: Consume the Starlink telemetry stream and device alerts
+  api: asyncapi/starlink-telemetry-asyncapi.yml
+  operations:
+  - POST /public/v2/telemetry/stream
+  - POST /public/v2/telemetry/query
+- file: starlink-manage-router-fleet.md
+  name: Manage a Starlink WiFi router fleet
+  api: openapi/starlink-public-api-v2-openapi.json
+  operations:
+  - GET /public/v2/routers/configs
+  - POST /public/v2/routers/configs
+  - PUT /public/v2/routers/configs/{configId}
+  - PUT /public/v2/routers/configs/assign
+  - PUT /public/v2/routers/configs/default
+  - GET /public/v2/routers/configs/tls
+  - POST /public/v2/routers/configs/tls
+  - DELETE /public/v2/routers/configs/tls
+  - POST /public/v2/routers/local-content
+  - GET /public/v2/routers/sandbox/clients
+  - POST /public/v2/routers/sandbox/clients
+  - PUT /public/v2/routers/sandbox/heartbeat
+  - POST /public/v2/routers/{routerId}/reboot
+  - POST /public/v2/user-terminals/{deviceId}/reboot
+  - PUT /public/v2/user-terminals/configs/assign
+- file: starlink-billing-and-data-usage.md
+  name: Reconcile Starlink billing and data usage
+  api: openapi/starlink-public-api-v2-openapi.json
+  operations:
+  - GET /public/v2/billing/invoices
+  - GET /public/v2/billing/invoices/{invoiceId}
+  - GET /public/v2/billing/balance
+  - POST /public/v2/data-usage/query
+  - GET /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods
+  - PUT /public/v2/service-lines/{serviceLineNumber}/data/recurring
+  - POST /public/v2/service-lines/{serviceLineNumber}/data/top-up
+  - POST /public/v2/service-lines/{serviceLineNumber}/data/opt-in
+  - POST /public/v2/service-lines/{serviceLineNumber}/data/opt-out
+  - PUT /public/v2/service-lines/{serviceLineNumber}/product
+  - GET /public/v2/data-pools
+  - GET /public/v2/data-pools/usage
+cross_cutting:
+  conventions: conventions/starlink-conventions.yml
+  errors: errors/starlink-problem-types.yml
+  authentication: authentication/starlink-authentication.yml
+  rate_limits: rate-limits/starlink-rate-limits.yml
+  lifecycle: lifecycle/starlink-lifecycle.yml
+  sandbox: sandbox/starlink-sandbox.yml

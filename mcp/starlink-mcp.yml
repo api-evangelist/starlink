@@ -1,0 +1,740 @@
+generated: '2026-07-25'
+method: derived
+status: candidate
+source: openapi/starlink-public-api-v2-openapi.json
+note: SpaceX publishes no MCP server for Starlink and none is registered in the official MCP registry
+  (registry.modelcontextprotocol.io returns 0 results for "starlink"). This is an API Evangelist CANDIDATE
+  tool surface derived one-to-one from the published OpenAPI plus the two telemetry operations that are
+  documented in the API reference but missing from the downloadable spec. Nothing here is a Starlink product
+  claim. The Starlink OpenAPI declares no operationIds, so each tool is bound to its METHOD + path instead.
+server:
+  name: starlink
+  transport: http
+  url: null
+  published: false
+auth:
+  style: OIDC client_credentials bearer token
+  token_url: https://starlink.com/api/auth/connect/token
+  authorization: per-tool RBAC permission on the V2 service account
+coverage:
+  openapi_operations: 63
+  documented_only_operations: 2
+  tools: 65
+  read_tools: 29
+  write_tools: 36
+tools:
+- name: get_account_information
+  description: Get account information
+  category: Account
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/account
+  method: GET
+  path: /public/v2/account
+  required_permission: Account information, View
+  mutating: false
+- name: get_all_addresses
+  description: Get all addresses
+  category: Addresses
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/addresses
+  method: GET
+  path: /public/v2/addresses
+  required_permission: Account information, View
+  parameters:
+  - addressIds
+  - metadata
+  - page
+  mutating: false
+- name: create_address
+  description: Create address
+  category: Addresses
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/addresses
+  method: POST
+  path: /public/v2/addresses
+  required_permission: Account information, Edit
+  request_body:
+    media_type: application/json
+    schema: AddressCreateRequest
+  mutating: true
+- name: get_address
+  description: Get address
+  category: Addresses
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/addresses/{addressReferenceId}
+  method: GET
+  path: /public/v2/addresses/{addressReferenceId}
+  required_permission: Account information, View
+  parameters:
+  - addressReferenceId
+  mutating: false
+- name: update_address
+  description: Update address
+  category: Addresses
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/addresses/{addressReferenceId}
+  method: PUT
+  path: /public/v2/addresses/{addressReferenceId}
+  required_permission: Account information, Edit
+  parameters:
+  - addressReferenceId
+  request_body:
+    media_type: application/json
+    schema: AddressUpdateRequestV2
+  mutating: true
+- name: get_account_balance
+  description: Get account balance
+  category: Billing
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/billing/balance
+  method: GET
+  path: /public/v2/billing/balance
+  required_permission: Financial, View
+  mutating: false
+- name: get_invoice_summaries
+  description: Get invoice summaries
+  category: Billing
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/billing/invoices
+  method: GET
+  path: /public/v2/billing/invoices
+  required_permission: Financial, View
+  parameters:
+  - page
+  mutating: false
+- name: get_invoice_details
+  description: Get invoice details
+  category: Billing
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/billing/invoices/{invoiceId}
+  method: GET
+  path: /public/v2/billing/invoices/{invoiceId}
+  required_permission: Financial, View
+  parameters:
+  - invoiceId
+  mutating: false
+- name: get_contacts
+  description: Get contacts
+  category: Contacts
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/contacts
+  method: GET
+  path: /public/v2/contacts
+  required_permission: User management, Edit
+  parameters:
+  - page
+  mutating: false
+- name: create_contact
+  description: Create contact
+  category: Contacts
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/contacts
+  method: POST
+  path: /public/v2/contacts
+  required_permission: Admin Only - API User Management, Edit
+  request_body:
+    media_type: application/json
+    schema: CreateContactOnAccountRequest
+  mutating: true
+- name: delete_contact
+  description: Delete contact
+  category: Contacts
+  source_operation: openapi/starlink-public-api-v2-openapi.json#DELETE /public/v2/contacts/{subjectId}
+  method: DELETE
+  path: /public/v2/contacts/{subjectId}
+  required_permission: Admin Only - API User Management, Edit
+  parameters:
+  - subjectId
+  mutating: true
+- name: update_contact
+  description: Update contact
+  category: Contacts
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/contacts/{subjectId}
+  method: PUT
+  path: /public/v2/contacts/{subjectId}
+  required_permission: Admin Only - API User Management, Edit
+  parameters:
+  - subjectId
+  request_body:
+    media_type: application/json
+    schema: UpdateContactOnAccountRequest
+  mutating: true
+- name: get_all_multi_service_line_enabled_data_pools
+  description: 'Pre-Release: Get all multi-service line enabled data pools.'
+  category: Data Pools
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/data-pools
+  method: GET
+  path: /public/v2/data-pools
+  required_permission: Service plan, View
+  parameters:
+  - productReferenceId
+  - dataPoolIds
+  - page
+  mutating: false
+- name: query_data_pool_usage_with_service_line_and_monthly_breakdow
+  description: 'Pre-Release: Query data pool usage with service line and monthly breakdowns.'
+  category: Data Pools
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/data-pools/usage
+  method: GET
+  path: /public/v2/data-pools/usage
+  required_permission: Service plan, View
+  parameters:
+  - dataPoolIds
+  - asOfTimestamp
+  - page
+  - limit
+  mutating: false
+- name: enable_or_disable_automatic_top_up_for_a_data_pool
+  description: 'Pre-Release: Enable or disable automatic top-up for a data pool.'
+  category: Data Pools
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/data-pools/{dataPoolId}/set-automatic-top-up
+  method: POST
+  path: /public/v2/data-pools/{dataPoolId}/set-automatic-top-up
+  required_permission: Service plan, Edit
+  parameters:
+  - dataPoolId
+  - enabled
+  mutating: true
+- name: query_data_usage
+  description: Query data usage
+  category: Account
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/data-usage/query
+  method: POST
+  path: /public/v2/data-usage/query
+  required_permission: Service plan, View
+  parameters:
+  - page
+  - limit
+  request_body:
+    media_type: application/json
+    schema: QueryDataUsageRequest
+  mutating: true
+- name: post_a_flight_event
+  description: Post a flight event
+  category: Flights
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/flights/status
+  method: POST
+  path: /public/v2/flights/status
+  required_permission: Aviation flight status management, Edit
+  request_body:
+    media_type: application/json
+    schema: StarlinkFlightRequest
+  mutating: true
+- name: query_managed_accounts
+  description: 'Pre-Release: Query managed accounts'
+  category: Managed Accounts
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/managed/accounts
+  method: GET
+  path: /public/v2/managed/accounts
+  required_permission: Managed Account Information, View
+  parameters:
+  - ancestorAccountNumber
+  - searchString
+  - accountNumbers
+  - maxDepth
+  - cursor
+  mutating: false
+- name: get_managed_account_tree
+  description: 'Pre-Release: Get managed account tree'
+  category: Managed Accounts
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/managed/accounts/tree
+  method: GET
+  path: /public/v2/managed/accounts/tree
+  required_permission: Managed Account Information, View
+  parameters:
+  - ancestorAccountNumber
+  mutating: false
+- name: create_a_managed_customer_account
+  description: Create a managed customer account
+  category: Managed
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/managed/customers
+  method: POST
+  path: /public/v2/managed/customers
+  request_body:
+    media_type: application/json
+    schema: CreateManagedCustomerRequest
+  mutating: true
+- name: get_map_data
+  description: Get Map Data
+  category: Mobile
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/mobile/map/{timestamp}
+  method: GET
+  path: /public/v2/mobile/map/{timestamp}
+  required_permission: Gated Feature - Starlink Mobile Data, View
+  parameters:
+  - timestamp
+  mutating: false
+- name: get_radio_access_network_data
+  description: Get Radio Access Network Data
+  category: Mobile
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/mobile/radio-access-network/{timestamp}
+  method: GET
+  path: /public/v2/mobile/radio-access-network/{timestamp}
+  required_permission: Gated Feature - Starlink Mobile Data, View
+  parameters:
+  - timestamp
+  mutating: false
+- name: get_timeseries_data_of_starlink_mobile_usage_and_beam_reliab
+  description: Get Timeseries Data of Starlink Mobile Usage and Beam Reliability
+  category: Mobile
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/mobile/timeseries/{timestamp}
+  method: GET
+  path: /public/v2/mobile/timeseries/{timestamp}
+  required_permission: Gated Feature - Starlink Mobile Data, View
+  parameters:
+  - timestamp
+  mutating: false
+- name: get_products
+  description: Get products
+  category: Account
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/products
+  method: GET
+  path: /public/v2/products
+  required_permission: Service plan, View
+  parameters:
+  - page
+  mutating: false
+- name: get_all_router_configs
+  description: Get all router configs
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/configs
+  method: GET
+  path: /public/v2/routers/configs
+  required_permission: Device command and configuration, View
+  parameters:
+  - page
+  mutating: false
+- name: create_router_config
+  description: Create router config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/routers/configs
+  method: POST
+  path: /public/v2/routers/configs
+  required_permission: Device command and configuration, Edit
+  request_body:
+    media_type: application/json
+    schema: RouterConfigRequest
+  mutating: true
+- name: router_config_assignment
+  description: Router config assignment
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/routers/configs/assign
+  method: PUT
+  path: /public/v2/routers/configs/assign
+  required_permission: Device configuration assignment, Edit
+  request_body:
+    media_type: application/json
+    schema: AssignRoutersConfigRequest
+  mutating: true
+- name: get_default_router_config
+  description: Get default router config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/configs/default
+  method: GET
+  path: /public/v2/routers/configs/default
+  required_permission: Device command and configuration, View
+  mutating: false
+- name: set_default_router_config
+  description: Set default router config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/routers/configs/default
+  method: PUT
+  path: /public/v2/routers/configs/default
+  required_permission: Device configuration assignment, Edit
+  request_body:
+    media_type: application/json
+    schema: UpdateDefaultConfigRequest
+  mutating: true
+- name: get_tls_configs
+  description: Get TLS configs
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/configs/tls
+  method: GET
+  path: /public/v2/routers/configs/tls
+  required_permission: Device command and configuration, View
+  parameters:
+  - page
+  mutating: false
+- name: create_tls_config
+  description: Create TLS config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/routers/configs/tls
+  method: POST
+  path: /public/v2/routers/configs/tls
+  required_permission: Device command and configuration, Edit
+  request_body:
+    media_type: application/json
+    schema: TlsConfigCreateRequestV2
+  mutating: true
+- name: delete_tls_config
+  description: Delete TLS config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#DELETE /public/v2/routers/configs/tls
+  method: DELETE
+  path: /public/v2/routers/configs/tls
+  required_permission: Device command and configuration, Edit
+  request_body:
+    media_type: application/json
+    schema: DeleteTlsConfigRequest
+  mutating: true
+- name: get_router_config
+  description: Get router config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/configs/{configId}
+  method: GET
+  path: /public/v2/routers/configs/{configId}
+  required_permission: Device command and configuration, View
+  parameters:
+  - configId
+  mutating: false
+- name: update_router_config
+  description: Update router config
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/routers/configs/{configId}
+  method: PUT
+  path: /public/v2/routers/configs/{configId}
+  required_permission: Device command and configuration, Edit
+  parameters:
+  - configId
+  request_body:
+    media_type: application/json
+    schema: RouterConfigRequest
+  mutating: true
+- name: upload_router_local_content_file
+  description: Upload router local content file
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/routers/local-content
+  method: POST
+  path: /public/v2/routers/local-content
+  required_permission: Device command and configuration, Edit
+  request_body:
+    media_type: multipart/form-data
+    schema: null
+  mutating: true
+- name: get_list_of_router_local_content_files
+  description: Get list of router local content files
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/local-content
+  method: GET
+  path: /public/v2/routers/local-content
+  required_permission: Device command and configuration, View
+  mutating: false
+- name: get_sandbox_clients
+  description: Get sandbox clients
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/sandbox/clients
+  method: GET
+  path: /public/v2/routers/sandbox/clients
+  required_permission: Device command and configuration, View
+  parameters:
+  - sandboxId
+  - expiryAfter
+  - page
+  mutating: false
+- name: batch_update_sandbox_clients
+  description: Batch update sandbox clients
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/routers/sandbox/clients
+  method: POST
+  path: /public/v2/routers/sandbox/clients
+  required_permission: Device command and configuration, Edit
+  request_body:
+    media_type: application/json
+    schema: null
+  mutating: true
+- name: update_sandbox_heartbeat
+  description: Update sandbox heartbeat
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/routers/sandbox/heartbeat
+  method: PUT
+  path: /public/v2/routers/sandbox/heartbeat
+  required_permission: Device command and configuration, Edit
+  request_body:
+    media_type: application/json
+    schema: SandboxHeartbeatRequest
+  mutating: true
+- name: get_router
+  description: Get router
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/routers/{routerId}
+  method: GET
+  path: /public/v2/routers/{routerId}
+  required_permission: Device management, View
+  parameters:
+  - routerId
+  mutating: false
+- name: reboot_router
+  description: Reboot router
+  category: Routers
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/routers/{routerId}/reboot
+  method: POST
+  path: /public/v2/routers/{routerId}/reboot
+  required_permission: Device command and configuration, Edit
+  parameters:
+  - routerId
+  mutating: true
+- name: get_all_service_lines
+  description: Get all service lines
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/service-lines
+  method: GET
+  path: /public/v2/service-lines
+  required_permission: Service plan, View
+  parameters:
+  - addressReferenceId
+  - searchString
+  - dataPoolId
+  - page
+  - orderByCreatedDateDescending
+  mutating: false
+- name: create_service_line
+  description: Create service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/service-lines
+  method: POST
+  path: /public/v2/service-lines
+  required_permission: Service plan, Edit
+  request_body:
+    media_type: application/json
+    schema: ServiceLineCreateRequestV2
+  mutating: true
+- name: get_service_line
+  description: Get service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/service-lines/{serviceLineNumber}
+  method: GET
+  path: /public/v2/service-lines/{serviceLineNumber}
+  required_permission: Service plan, View
+  parameters:
+  - serviceLineNumber
+  mutating: false
+- name: deactivate_a_service_line
+  description: Deactivate a service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#DELETE /public/v2/service-lines/{serviceLineNumber}
+  method: DELETE
+  path: /public/v2/service-lines/{serviceLineNumber}
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  - reasonForCancellation
+  - endNow
+  mutating: true
+- name: get_billing_partial_periods
+  description: Get billing partial periods
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods
+  method: GET
+  path: /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods
+  required_permission: Service plan, View
+  parameters:
+  - serviceLineNumber
+  mutating: false
+- name: set_whether_a_service_line_should_consume_from_a_data_pool
+  description: 'Pre-Release: Set whether a service line should consume from a data pool.'
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PATCH /public/v2/service-lines/{serviceLineNumber}/consume-from-pool
+  method: PATCH
+  path: /public/v2/service-lines/{serviceLineNumber}/consume-from-pool
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  - consumeFromPool
+  mutating: true
+- name: opt_in_priority_data
+  description: Opt in priority data
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/service-lines/{serviceLineNumber}/data/opt-in
+  method: POST
+  path: /public/v2/service-lines/{serviceLineNumber}/data/opt-in
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  mutating: true
+- name: opt_out_priority_data
+  description: Opt out priority data
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/service-lines/{serviceLineNumber}/data/opt-out
+  method: POST
+  path: /public/v2/service-lines/{serviceLineNumber}/data/opt-out
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  mutating: true
+- name: set_recurring_data_blocks_on_service_line
+  description: Set recurring data blocks on service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/service-lines/{serviceLineNumber}/data/recurring
+  method: PUT
+  path: /public/v2/service-lines/{serviceLineNumber}/data/recurring
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  request_body:
+    media_type: application/json
+    schema: RecurringDataBlocksRequest
+  mutating: true
+- name: adds_one_time_top_up_data_block_to_service_line
+  description: Adds one-time top up data block to service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/service-lines/{serviceLineNumber}/data/top-up
+  method: POST
+  path: /public/v2/service-lines/{serviceLineNumber}/data/top-up
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  request_body:
+    media_type: application/json
+    schema: AddDataBlockRequest
+  mutating: true
+- name: set_service_line_nickname
+  description: Set service line nickname
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/service-lines/{serviceLineNumber}/nickname
+  method: PUT
+  path: /public/v2/service-lines/{serviceLineNumber}/nickname
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  request_body:
+    media_type: application/json
+    schema: ServiceLineUpdateNicknameRequest
+  mutating: true
+- name: update_service_line_product
+  description: Update service line product
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/service-lines/{serviceLineNumber}/product
+  method: PUT
+  path: /public/v2/service-lines/{serviceLineNumber}/product
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  request_body:
+    media_type: application/json
+    schema: UpdateServiceLineProductRequest
+  mutating: true
+- name: set_service_line_public_ip_setting
+  description: Set service line public IP setting
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/service-lines/{serviceLineNumber}/public-ip
+  method: PUT
+  path: /public/v2/service-lines/{serviceLineNumber}/public-ip
+  required_permission: Device command and configuration, Edit
+  parameters:
+  - serviceLineNumber
+  request_body:
+    media_type: application/json
+    schema: ServiceLineSetPublicIpRequest
+  mutating: true
+- name: add_user_terminal_to_service_line
+  description: Add user terminal to service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/service-lines/{serviceLineNumber}/user-terminals
+  method: POST
+  path: /public/v2/service-lines/{serviceLineNumber}/user-terminals
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  request_body:
+    media_type: application/json
+    schema: DeviceIdRequest
+  mutating: true
+- name: remove_user_terminal_from_service_line
+  description: Remove user terminal from service line
+  category: Service Lines
+  source_operation: openapi/starlink-public-api-v2-openapi.json#DELETE /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}
+  method: DELETE
+  path: /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}
+  required_permission: Service plan, Edit
+  parameters:
+  - serviceLineNumber
+  - deviceId
+  mutating: true
+- name: get_all_user_terminals
+  description: Get all user terminals
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/user-terminals
+  method: GET
+  path: /public/v2/user-terminals
+  required_permission: Device management, View
+  parameters:
+  - serviceLineNumbers
+  - userTerminalIds
+  - hasServiceLine
+  - searchString
+  - page
+  mutating: false
+- name: add_user_terminal_to_account
+  description: Add user terminal to account
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/user-terminals
+  method: POST
+  path: /public/v2/user-terminals
+  required_permission: Device management, Edit
+  request_body:
+    media_type: application/json
+    schema: DeviceIdRequest
+  mutating: true
+- name: user_terminal_config_assignment
+  description: User terminal config assignment
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/user-terminals/configs/assign
+  method: PUT
+  path: /public/v2/user-terminals/configs/assign
+  required_permission: Device configuration assignment, Edit
+  request_body:
+    media_type: application/json
+    schema: AssignUserTerminalsConfigRequest
+  mutating: true
+- name: get_l2vpn_circuits_available_for_this_account
+  description: Get L2VPN circuits available for this account
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#GET /public/v2/user-terminals/l2vpn
+  method: GET
+  path: /public/v2/user-terminals/l2vpn
+  required_permission: Device command and configuration, View
+  mutating: false
+- name: remove_user_terminal_from_account
+  description: Remove user terminal from account
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#DELETE /public/v2/user-terminals/{deviceId}
+  method: DELETE
+  path: /public/v2/user-terminals/{deviceId}
+  required_permission: Device management, Edit
+  parameters:
+  - deviceId
+  mutating: true
+- name: set_l2vpn_vlans_for_user_terminal
+  description: Set L2VPN VLANs for user terminal
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#PUT /public/v2/user-terminals/{deviceId}/l2vpn
+  method: PUT
+  path: /public/v2/user-terminals/{deviceId}/l2vpn
+  required_permission: Device configuration assignment, Edit
+  parameters:
+  - deviceId
+  request_body:
+    media_type: application/json
+    schema: null
+  mutating: true
+- name: reboot_user_terminal
+  description: Reboot user terminal
+  category: User Terminals
+  source_operation: openapi/starlink-public-api-v2-openapi.json#POST /public/v2/user-terminals/{deviceId}/reboot
+  method: POST
+  path: /public/v2/user-terminals/{deviceId}/reboot
+  required_permission: Device command and configuration, Edit
+  parameters:
+  - deviceId
+  mutating: true
+- name: get_telemetry_stream
+  description: Get telemetry
+  category: Telemetry
+  source_operation: https://starlink.readme.io/reference/post_public-v2-telemetry-stream
+  method: POST
+  path: /public/v2/telemetry/stream
+  required_permission: Device telemetry, View
+  parameters:
+  - batchSize
+  - maxLingerMs
+  mutating: false
+  note: documented in the API reference but absent from the downloadable V2 OpenAPI
+- name: query_telemetry_latest
+  description: Get the most recent device health data, mapped to enterprise response format
+  category: Telemetry
+  source_operation: https://starlink.readme.io/reference/post_public-v2-telemetry-query
+  method: POST
+  path: /public/v2/telemetry/query
+  required_permission: Device telemetry, View
+  mutating: false
+  note: documented in the API reference but absent from the downloadable V2 OpenAPI

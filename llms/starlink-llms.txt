@@ -1,0 +1,122 @@
+# Starlink Documentation
+
+> Documentation for Starlink
+
+## Guides
+- [Getting Started](https://starlink.readme.io/docs/getting-started.md)
+- [API V2 Service Accounts](https://starlink.readme.io/docs/api-v2-service-accounts.md): API Credentials and Keys
+- [Migrating from V1 to V2](https://starlink.readme.io/docs/migrating-from-v1-to-v2.md)
+- [Authentication](https://starlink.readme.io/docs/authentication.md)
+- [Rate Limits](https://starlink.readme.io/docs/rate-limits-1.md)
+- [Starlink API Status](https://starlink.readme.io/docs/starlink-api-status.md)
+- [60-Day Deprecation Policy](https://starlink.readme.io/docs/60-day-deprecation-policy.md)
+- [Starlink Public IPs](https://starlink.readme.io/docs/starlink-public-ips.md)
+- [Managing Addresses](https://starlink.readme.io/docs/managing-addresses.md)
+- [Activating a Starlink](https://starlink.readme.io/docs/activating-service.md)
+- [Pause and Resume Starlinks](https://starlink.readme.io/docs/pause-and-resume-starlinks.md)
+- [Updating and Reactivating Service Line Products](https://starlink.readme.io/docs/updating-service-line-products.md)
+- [Managing Data Plans](https://starlink.readme.io/docs/managing-data-plans.md)
+- [Data Usage](https://starlink.readme.io/docs/data-usage-api.md)
+- [Understanding Proration](https://starlink.readme.io/docs/understanding-proration.md)
+- [Managing Contacts](https://starlink.readme.io/docs/managing-contacts.md)
+- [Managing Layer 2 VPN](https://starlink.readme.io/docs/managing-layer-2-vpn.md)
+- [Telemetry Stream API](https://starlink.readme.io/docs/telemetry-api.md)
+- [Alerts](https://starlink.readme.io/docs/alerts.md)
+- [Device APIs](https://starlink.readme.io/docs/device-api.md)
+- [WiFi Router Capabilities](https://starlink.readme.io/docs/starlink-wifi-routers.md)
+- [RADIUS](https://starlink.readme.io/docs/radius.md): Remote Authentication Dial-In User Service on Starlink WiFi Routers
+- [Remote RADIUS (RadSec)](https://starlink.readme.io/docs/remote-radius.md): Remote RADIUS on Starlink WiFi Routers
+- [Onboard RADIUS](https://starlink.readme.io/docs/onboard-radius.md): Onboard RADIUS server on Starlink WiFi Routers
+- [Captive Portal](https://starlink.readme.io/docs/wifi-captive-portal.md): Manage the WiFi Client Experience
+- [Client Sandboxing](https://starlink.readme.io/docs/client-sandboxing.md)
+- [Local HTTPS API](https://starlink.readme.io/docs/router-api.md): Local HTTPS API on Starlink WiFi Routers
+- [Diagnostics](https://starlink.readme.io/docs/diagnostics.md)
+- [Sandbox Client](https://starlink.readme.io/docs/client-sandboxing-1.md)
+- [Local Content](https://starlink.readme.io/docs/local-content.md)
+- [TLS Configuration and Certificate Management](https://starlink.readme.io/docs/certificate-management.md)
+- [Geo Fencing](https://starlink.readme.io/docs/geo-fencing.md)
+- [Disable Wi-Fi Network When Offline](https://starlink.readme.io/docs/disabling-networks-when-offline.md)
+- [DNS and Routing](https://starlink.readme.io/docs/dns-and-routing.md)
+- [Ethernet Ports](https://starlink.readme.io/docs/ethernet-ports.md): Information on Starlink WiFi Ethernet Ports
+- [Multi-Starlink (WAN Failover)](https://starlink.readme.io/docs/multi-starlink.md): Developed for Starlink Aviation
+- [About Managed Accounts](https://starlink.readme.io/docs/about-managed-accounts.md)
+- [Using Starlink Location in Aviation](https://starlink.readme.io/docs/location-in-aviation.md): Connect your Plane with Starlink's GPS-Independent Location Data
+
+## API Reference
+- [Get account information](https://starlink.readme.io/reference/get_public-v2-account.md): Required permission: Account information, View.
+- [Query data usage](https://starlink.readme.io/reference/post_public-v2-data-usage-query.md): Required permission: Service plan, View.<br/>Retrieve the real-time data tracking info for this account's data usage. For detailed instructions, please refer to the API documentation: https://starlink.readme.io/docs/data-usage-api
+- [Get products](https://starlink.readme.io/reference/get_public-v2-products.md): Required permission: Service plan, View.<br/>Gets all products available to this account that could be assigned to service lines. Each product includes data block product info if compatible.
+- [Get all addresses](https://starlink.readme.io/reference/get_public-v2-addresses.md): Required permission: Account information, View.<br/>Returns all addresses on the account in paginated form.
+- [Create address](https://starlink.readme.io/reference/post_public-v2-addresses.md): Required permission: Account information, Edit.
+- [Get address](https://starlink.readme.io/reference/get_public-v2-addresses-addressreferenceid.md): Required permission: Account information, View.
+- [Update address](https://starlink.readme.io/reference/put_public-v2-addresses-addressreferenceid.md): Required permission: Account information, Edit.
+- [Get invoice summaries](https://starlink.readme.io/reference/get_public-v2-billing-invoices.md): Required permission: Financial, View.
+- [Get invoice details](https://starlink.readme.io/reference/get_public-v2-billing-invoices-invoiceid.md): Required permission: Financial, View.
+- [Get account balance](https://starlink.readme.io/reference/get_public-v2-billing-balance.md): Required permission: Financial, View.<br/>Response contains one balance for each currency. If all balances are 0 then response will contain a single entry with 0 balance and currency matching the default for this account.
+- [Get contacts](https://starlink.readme.io/reference/get_public-v2-contacts.md): Required permission: User management, Edit.<br/>Get list of contacts on the authenticated user's account.
+- [Create contact](https://starlink.readme.io/reference/post_public-v2-contacts.md): Required permission: Admin Only - API User Management, Edit.<br/>Creates the contact if it is new, and adds the contact to the authenticated account.
+- [Delete contact](https://starlink.readme.io/reference/delete_public-v2-contacts-subjectid.md): Required permission: Admin Only - API User Management, Edit.<br/>Deletes contact based on specified subject Id on the authenticated account.
+- [Update contact](https://starlink.readme.io/reference/put_public-v2-contacts-subjectid.md): Required permission: Admin Only - API User Management, Edit.<br/>Update contact on the authenticated account.
+- [Pre-Release: Get all multi-service line enabled data pools.](https://starlink.readme.io/reference/get_public-v2-data-pools.md): Required permission: Service plan, View.<br/>This endpoint is available for select audiences only.
+- [Pre-Release: Query data pool usage with service line and monthly breakdowns.](https://starlink.readme.io/reference/get_public-v2-data-pools-usage.md): Required permission: Service plan, View.<br/>This endpoint is available for select audiences only.
+- [Pre-Release: Enable or disable automatic top-up for a data pool.](https://starlink.readme.io/reference/post_public-v2-data-pools-datapoolid-set-automatic-top-up.md): Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only.
+- [Post a flight event](https://starlink.readme.io/reference/post_public-v2-flights-status.md): Required permission: Aviation flight status management, Edit.<br/>Post a real-time flight event on a Starlink-enabled plane. This endpoint is only accessible from an aviation account.
+- [Create a managed customer account](https://starlink.readme.io/reference/post_public-v2-managed-customers.md): This endpoint is only callable with an authorized provider account.
+- [Pre-Release: Get managed account tree](https://starlink.readme.io/reference/get_public-v2-managed-accounts-tree.md): Required permission: Managed Account Information, View.<br/>Gets the entire managed account hierarchy beneath the calling account.              This endpoint is available for select audiences only.
+- [Pre-Release: Query managed accounts](https://starlink.readme.io/reference/get_public-v2-managed-accounts.md): Required permission: Managed Account Information, View.<br/>Query managed accounts within your account hierarchy with filtering and pagination support. Returns up to 100 accounts at at time.              This endpoint is available for select audiences only.
+- [Get Radio Access Network Data](https://starlink.readme.io/reference/get_public-v2-mobile-radio-access-network-timestamp.md): Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Radio Access Network (RAN) data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.
+- [Get Timeseries Data of Starlink Mobile Usage and Beam Reliability](https://starlink.readme.io/reference/get_public-v2-mobile-timeseries-timestamp.md): Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Timeseries data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.
+- [Get Map Data](https://starlink.readme.io/reference/get_public-v2-mobile-map-timestamp.md): Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Map data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.
+- [Get router](https://starlink.readme.io/reference/get_public-v2-routers-routerid.md): Required permission: Device management, View.
+- [Get all router configs](https://starlink.readme.io/reference/get_public-v2-routers-configs.md): Required permission: Device command and configuration, View.<br/>Return all router configs on this account in paginated form
+- [Create router config](https://starlink.readme.io/reference/post_public-v2-routers-configs.md): Required permission: Device command and configuration, Edit.
+- [Get router config](https://starlink.readme.io/reference/get_public-v2-routers-configs-configid.md): Required permission: Device command and configuration, View.
+- [Update router config](https://starlink.readme.io/reference/put_public-v2-routers-configs-configid.md): Required permission: Device command and configuration, Edit.<br/>Update a given router config. Any router assigned to this config will immediately receive the update if it is online. Otherwise, the router will receive the update when it comes online.
+- [Router config assignment](https://starlink.readme.io/reference/put_public-v2-routers-configs-assign.md): Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the routers. For each router if it is currently online, the config will immediately be sent to the router. Else, the config will be sent to the router when it comes online. Configs are sent to the router within 1-2 minutes. On error no assignment occurs.
+- [Get default router config](https://starlink.readme.io/reference/get_public-v2-routers-configs-default.md): Required permission: Device command and configuration, View.<br/>Gets the router config id that will be assigned to any routers when they are first added to this account.
+- [Set default router config](https://starlink.readme.io/reference/put_public-v2-routers-configs-default.md): Required permission: Device configuration assignment, Edit.<br/>Set the default router config on the account. Use an empty string to remove the default config from the account. Any NEW routers on this account will be assigned this config.
+- [Upload router local content file](https://starlink.readme.io/reference/post_public-v2-routers-local-content.md): Required permission: Device command and configuration, Edit.<br/>Upload html file to allow it to be configured as the HTTPS server local content file for router configs. File must be HTML, under 4MB, and file name under 100 characters. Files are stored in a public bucket for configured routers to download. File should be attached as multipart/form-data. See https://starlink.readme.io/docs/local-content for example upload script.
+- [Get list of router local content files](https://starlink.readme.io/reference/get_public-v2-routers-local-content.md): Required permission: Device command and configuration, View.
+- [Get sandbox clients](https://starlink.readme.io/reference/get_public-v2-routers-sandbox-clients.md): Required permission: Device command and configuration, View.<br/>Returns clients that were unsandboxed through the management API and have access that has not yet expired, paginated 1000 at a time. Clients that are allowed internet access due to sandbox disablement are not returned.
+- [Batch update sandbox clients](https://starlink.readme.io/reference/post_public-v2-routers-sandbox-clients.md): Required permission: Device command and configuration, Edit.<br/>Update the sandbox state for multiple clients. If sandboxing is enabled, sandboxed clients will only have access to domains in the sandbox domain allow list. If a client is duplicated, records the client with the latest expiry.
+- [Update sandbox heartbeat](https://starlink.readme.io/reference/put_public-v2-routers-sandbox-heartbeat.md): Required permission: Device command and configuration, Edit.<br/>Heartbeats verify the health of enterprise systems that manage router sandboxing. If heartbeats are not received for an account, Starlink API will instruct routers under the account disable sandboxes until reboot.
+- [Reboot router](https://starlink.readme.io/reference/post_public-v2-routers-routerid-reboot.md): Required permission: Device command and configuration, Edit.
+- [Get TLS configs](https://starlink.readme.io/reference/get_public-v2-routers-configs-tls.md): Required permission: Device command and configuration, View.<br/>Gets a paginated list of TLS configs on this account.
+- [Create TLS config](https://starlink.readme.io/reference/post_public-v2-routers-configs-tls.md): Required permission: Device command and configuration, Edit.<br/>Creates a TLS config that allows this certificate and key to be used in router configs when a certificate and key are required by only specifying the certificate (matching key will be added). TLS configs are identified by their certificate string base64 encoded which must be unique on the account.
+- [Delete TLS config](https://starlink.readme.io/reference/delete_public-v2-routers-configs-tls.md): Required permission: Device command and configuration, Edit.<br/>Deletes a TLS certificate and key pair from the set of TLS configs that can be reused when saving router configs and only specifying the certificate. Does not affect any router configs that were already saved, just removes it from list of certificates that the matching key will be inserted on save for.
+- [Get service line](https://starlink.readme.io/reference/get_public-v2-service-lines-servicelinenumber.md): Required permission: Service plan, View.
+- [Deactivate a service line](https://starlink.readme.io/reference/delete_public-v2-service-lines-servicelinenumber.md): Required permission: Service plan, Edit.
+- [Get all service lines](https://starlink.readme.io/reference/get_public-v2-service-lines.md): Required permission: Service plan, View.
+- [Create service line](https://starlink.readme.io/reference/post_public-v2-service-lines.md): Required permission: Service plan, Edit.<br/>Service line must be linked to an address and a subscription/product-ID, and can optionally be immediately configured with data blocks.
+- [Set service line nickname](https://starlink.readme.io/reference/put_public-v2-service-lines-servicelinenumber-nickname.md): Required permission: Service plan, Edit.
+- [Update service line product](https://starlink.readme.io/reference/put_public-v2-service-lines-servicelinenumber-product.md): Required permission: Service plan, Edit.
+- [Set service line public IP setting](https://starlink.readme.io/reference/put_public-v2-service-lines-servicelinenumber-public-ip.md): Required permission: Device command and configuration, Edit.<br/>Enable or disable public ip setting on a service line
+- [Opt in priority data](https://starlink.readme.io/reference/post_public-v2-service-lines-servicelinenumber-data-opt-in.md): Required permission: Service plan, Edit.<br/>Opt in the service line to continue using priority data after reaching the plan capacity. Only applies to some products.
+- [Opt out priority data](https://starlink.readme.io/reference/post_public-v2-service-lines-servicelinenumber-data-opt-out.md): Required permission: Service plan, Edit.<br/>Opt out the service line from continuing to use priority data even when plan capacity is exceeded. If the service line reaches the plan capacity, it will switch to using standard data. Only applies to some products.
+- [Add user terminal to service line](https://starlink.readme.io/reference/post_public-v2-service-lines-servicelinenumber-user-terminals.md): Required permission: Service plan, Edit.<br/>User terminal must already be on the account. See POST /v2/user-terminals to add user terminal to account.
+- [Remove user terminal from service line](https://starlink.readme.io/reference/delete_public-v2-service-lines-servicelinenumber-user-terminals-deviceid.md): Required permission: Service plan, Edit.<br/>This removes the user terminal from the service line, but it remains on the account and can be added to another service line. This clears any L2VPN circuits configured for the terminal.
+- [Set recurring data blocks on service line](https://starlink.readme.io/reference/put_public-v2-service-lines-servicelinenumber-data-recurring.md): Required permission: Service plan, Edit.<br/>Service line must be on a top up plan
+- [Adds one-time top up data block to service line](https://starlink.readme.io/reference/post_public-v2-service-lines-servicelinenumber-data-top-up.md): Required permission: Service plan, Edit.<br/>Service line must be on a top up plan
+- [Get billing partial periods](https://starlink.readme.io/reference/get_public-v2-service-lines-servicelinenumber-billing-cycles-partial-periods.md): Required permission: Service plan, View.<br/>Get the previous billing partial periods for this service line. For more information about this endpoint, see https://starlink.readme.io/docs/understanding-proration.
+- [Pre-Release: Set whether a service line should consume from a data pool.](https://starlink.readme.io/reference/patch_public-v2-service-lines-servicelinenumber-consume-from-pool.md): Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only.
+- [Get all user terminals](https://starlink.readme.io/reference/get_public-v2-user-terminals.md): Required permission: Device management, View.<br/>Gets all user terminals on the account, filtered by the optional filter parameters, in paginated form
+- [Add user terminal to account](https://starlink.readme.io/reference/post_public-v2-user-terminals.md): Required permission: Device management, Edit.<br/>This will add the user terminal to the account, but won't start service. User terminals must be present on the account before adding to a service line.
+- [Remove user terminal from account](https://starlink.readme.io/reference/delete_public-v2-user-terminals-deviceid.md): Required permission: Device management, Edit.<br/>User terminal must already be removed from service lines before it can be removed from the account. See /v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}
+- [Reboot user terminal](https://starlink.readme.io/reference/post_public-v2-user-terminals-deviceid-reboot.md): Required permission: Device command and configuration, Edit.
+- [User terminal config assignment](https://starlink.readme.io/reference/put_public-v2-user-terminals-configs-assign.md): Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the user terminals. For each terminal if it is currently online, the config will immediately be sent. Else, the config will be sent when it comes online. On error no assignment occurs. Currently terminal configIds are only visible on starlink website.
+- [Get L2VPN circuits available for this account](https://starlink.readme.io/reference/get_public-v2-user-terminals-l2vpn.md): Required permission: Device command and configuration, View.
+- [Set L2VPN VLANs for user terminal](https://starlink.readme.io/reference/put_public-v2-user-terminals-deviceid-l2vpn.md): Required permission: Device configuration assignment, Edit.<br/>Terminal must be on subscription that allows L2VPN. Maximum 2 circuits per Starlink PoP. Use null or empty circuit list to clear all L2VPN circuits for terminal. See /user-terminals/available-circuits for all configurable circuits and associated Starlink PoP.
+- [Get telemetry](https://starlink.readme.io/reference/post_public-v2-telemetry-stream.md): Required permission: Device telemetry, View.<br/>Get telemetry data of size 'batchSize'. Data is retrieved for all devices of the account associated with the used API credentials. Can be called repeatedly to generate a stream of data. See https://starlink.readme.io/docs/telemetry-api for more.
+- [Get the most recent device health data, mapped to enterprise response format](https://starlink.readme.io/reference/post_public-v2-telemetry-query.md): Required permission: Device telemetry, View.<br/>Returns the most recent telemetry values for each requested device in a structured dictionary form. For each device type there is an entry mapping device id to a fully typed telemetry object.
+
+## Changelog
+- [Address Endpoints: Deprecating Request Parameters](https://starlink.readme.io/changelog/address-endpoints-deprecating-request-parameters.md)
+- [New Invoices and Account Balance API Endpoints](https://starlink.readme.io/changelog/new-invoices-and-account-balance-api-endpoints.md)
+- [L2VPN API Changes](https://starlink.readme.io/changelog/l2vpn-api-changes.md)
+- [Upcoming Legacy API Path Deprecation](https://starlink.readme.io/changelog/upcoming-path-deprecation.md)
+- [Starlink V1 API Deprecated](https://starlink.readme.io/changelog/starlink-v1-api-deprecated.md)
+- [Telemetry API Maintenance](https://starlink.readme.io/changelog/telemetry-api-maintenance.md)
+- [Data Usage Query V2 - Updates in Data Usage Responses](https://starlink.readme.io/changelog/changes-to-data-usage-api-overhaul-response-system.md)
+- [Service Line V2 Recurring Data - New Apply to Current Month Request Parameter](https://starlink.readme.io/changelog/service-line-v2-adding-recurring-data-to-current-month.md)
+- [Telemetry Stream API: New Fields Added](https://starlink.readme.io/changelog/telemetry-stream-api-new-fields-added.md)
+- [API Rate Limiting By Account](https://starlink.readme.io/changelog/api-rate-limiting-by-account.md)

@@ -1,0 +1,96 @@
+generated: '2026-07-25'
+method: searched
+source: https://starlink.com/api/auth/.well-known/openid-configuration
+docs: https://starlink.readme.io/docs/api-v2-service-accounts
+note: >-
+  Starlink's identity provider is a full OIDC server and publishes scopes_supported anonymously,
+  but the Starlink Public API V2 itself does NOT authorize on OAuth scopes. Service accounts
+  use the client_credentials grant and are authorized by a role-based PERMISSION set assigned in
+  the Starlink account settings page. The OIDC scopes below belong to the interactive user-facing
+  flows on the same issuer; the permission set below is the real authorization surface for the API
+  and is transcribed from the "Required permission:" line on each operation in the OpenAPI.
+  No fabricated scopes: nothing here was invented.
+schemes:
+- name: StarlinkServiceAccount
+  type: oauth2
+  source: well-known/starlink-openid-configuration.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://starlink.com/api/auth/connect/token
+  issuer: https://api.starlink.com/auth
+  authorizationUrl: https://starlink.com/api/auth/connect/authorize
+  introspection_endpoint: https://starlink.com/api/auth/connect/introspect
+  revocation_endpoint: https://starlink.com/api/auth/connect/revocation
+  grant_types_supported:
+  - authorization_code
+  - client_credentials
+  - refresh_token
+  - implicit
+  - urn:ietf:params:oauth:grant-type:device_code
+  - urn:openid:params:grant-type:ciba
+  - delegation
+  - login_code
+scopes:
+- scope: openid
+  description: OpenID Connect subject identifier
+  flows: [authorizationCode, implicit]
+  sources: [well-known/starlink-openid-configuration.json]
+- scope: email
+  description: Email address and email_verified claims
+  flows: [authorizationCode, implicit]
+  sources: [well-known/starlink-openid-configuration.json]
+- scope: phone
+  description: Phone number and phone_number_verified claims
+  flows: [authorizationCode, implicit]
+  sources: [well-known/starlink-openid-configuration.json]
+- scope: profile
+  description: Standard profile claims (name, family_name, given_name, picture, locale, updated_at)
+  flows: [authorizationCode, implicit]
+  sources: [well-known/starlink-openid-configuration.json]
+- scope: group
+  description: Group membership claim
+  flows: [authorizationCode, implicit]
+  sources: [well-known/starlink-openid-configuration.json]
+permissions:
+  model: role-based access control on the V2 service account
+  source: openapi/starlink-public-api-v2-openapi.json
+  entries:
+  - permission: Account information
+    levels: [View, Edit]
+    covers:
+    - GET /public/v2/account
+    - GET/POST /public/v2/addresses
+    - 'GET/PUT /public/v2/addresses/{addressReferenceId}'
+  - permission: Service plan
+    levels: [View, Edit]
+    covers: [service lines, products, data usage, data pools, data blocks, top-ups, proration]
+  - permission: Device management
+    levels: [View, Edit]
+    covers: [user terminal inventory on the account]
+  - permission: Device command and configuration
+    levels: [View, Edit]
+    covers: [router configs, TLS configs, local content, sandbox clients and heartbeat, reboots, public IP, L2VPN read]
+  - permission: Device configuration assignment
+    levels: [Edit]
+    covers: [assigning router and user terminal configs, setting L2VPN VLANs]
+  - permission: Device telemetry
+    levels: [View]
+    covers: [POST /public/v2/telemetry/stream, POST /public/v2/telemetry/query]
+  - permission: Financial
+    levels: [View]
+    covers: [invoices, invoice details, account balance]
+  - permission: User management
+    levels: [Edit]
+    covers: [GET /public/v2/contacts]
+  - permission: Admin Only - API User Management
+    levels: [Edit]
+    covers: [create, update and delete contacts]
+  - permission: Managed Account Information
+    levels: [View]
+    covers: [managed account tree and managed account queries]
+  - permission: Aviation flight status management
+    levels: [Edit]
+    covers: [POST /public/v2/flights/status]
+  - permission: Gated Feature - Starlink Mobile Data
+    levels: [View]
+    covers: [mobile radio access network, timeseries and map data]

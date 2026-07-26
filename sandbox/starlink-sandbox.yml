@@ -1,0 +1,88 @@
+generated: '2026-07-25'
+method: searched
+source: https://docs.space-safety.starlink.com/docs/quick-start
+summary: >-
+  Starlink publishes NO sandbox, test mode, test credentials or magic test values for the
+  Starlink Public API V2. Every V2 service account is minted against a real, billable Starlink
+  enterprise account and every call acts on live service lines, live billing and live hardware.
+  A genuine staging environment exists only for the Space Traffic Coordination API. Note the
+  word "sandbox" in the V2 API refers to WiFi CLIENT sandboxing (a captive-portal walled garden
+  on the router), not to a developer test environment - a trap worth naming explicitly.
+apis:
+- api: Starlink Public API V2
+  sandbox: false
+  test_mode: false
+  test_credentials: false
+  key_prefixes: none published
+  note: >-
+    The only separation Starlink offers is multiple V2 service accounts. The telemetry docs
+    recommend creating a second service account when you need to consume the same data stream
+    from a second environment (for example development alongside production), because each
+    service account holds an independent read index. That is stream isolation, not a sandbox.
+  interactive_console:
+    url: https://starlink.com/api/public/swagger/index.html?urls.primaryName=V2
+    kind: Swagger UI with an Authorize button wired to the OIDC discovery document
+    note: executes against production
+- api: Starlink Space Traffic Coordination API
+  sandbox: true
+  environments:
+  - name: staging
+    url: https://staging.space-safety.starlink.com
+    api_base: https://staging.space-safety.starlink.com/api/v1
+    purpose: >-
+      Lets satellite operators exercise the web UI and API integrations without interfering with
+      the on-orbit operations of other users. SpaceX asks operators to complete the quick-start
+      guide in staging before touching production.
+    ui_signal: a yellow banner marks the staging environment in the web UI
+  - name: production
+    url: https://space-safety.starlink.com
+    api_base: https://space-safety.starlink.com/api/v1
+    purpose: real conjunction assessment shared with other operators
+  credentials:
+    kind: mTLS client certificate
+    generation: >-
+      openssl req -new -newkey ec:<(openssl ecparam -name secp384r1) -nodes -keyout client.key
+      -sha384 -out client.csr -subj "/CN=<yourorg>/O=<Your Org>/OU=Operations"
+    signing: send the CSR to SpaceX; certificates are issued separately for staging and production
+    onboarding: space-safety-onboarding@spacex.com, then a passkey for staging access
+    docs: https://docs.space-safety.starlink.com/docs/api-keys
+  documented_test_values:
+  - field: operator_id
+    value: 3fa85f64-5717-4562-b3fc-2c963f66afa6
+    context: placeholder UUID used in the API Patterns example for POST /api/v1/object
+  - field: object_id
+    value: 4411f40a-6153-4b0b-97d4-fe9e4f59b102
+    context: placeholder UUID used in the API Patterns example for POST /api/v1/trajectory
+  - field: object_name
+    value: MYSAT-1
+    context: example object name
+  - field: trajectory_type
+    value: hypothetical
+    context: >-
+      a real trajectory type used in the quick-start so an uploaded ephemeris is screened without
+      being treated as an operational plan
+  - field: trajectory file format
+    value: CCSDS OEM
+    context: orbit ephemeris message format accepted by POST /api/v1/trajectory
+- api: Starlink Local Device gRPC API
+  sandbox: false
+  note: >-
+    Requires physical Starlink hardware on the local network. There is no emulator. Devices below
+    router 2023.55 or user terminal 2023.51.0 answer UNIMPLEMENTED.
+- api: Starlink Router Local HTTPS API
+  sandbox: false
+  note: >-
+    Requires a Starlink WiFi router on software 2024.12.17.mr44165 or later, an enterprise-owned
+    TLS certificate and a router config pushed from the Starlink dashboard.
+naming_collision:
+  term: sandbox
+  meanings:
+  - context: Starlink Public API V2 routers endpoints
+    meaning: >-
+      WiFi client sandboxing. A sandboxed client can only reach domains on the sandbox allow list
+      until it is unsandboxed. Managed with GET/POST /public/v2/routers/sandbox/clients and
+      PUT /public/v2/routers/sandbox/heartbeat. If Starlink stops receiving heartbeats for an
+      account, routers are instructed to disable sandboxes until reboot.
+    docs: https://starlink.readme.io/docs/client-sandboxing
+  - context: developer tooling
+    meaning: a test environment - which the Starlink Public API V2 does not have

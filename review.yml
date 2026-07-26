@@ -1,0 +1,365 @@
+aid: starlink
+name: Starlink
+review:
+  question: Does Starlink publish a real, self-serve developer surface, and what is
+    its CAMARA / Open Gateway posture as a telecom access provider?
+  answer: partly
+  date: '2026-07-25'
+  reviewer: API Evangelist
+  homeMarket: United States
+  tier: satellite-ntn
+findings:
+  summary: |
+    Starlink publishes a real, open, first-party developer portal at
+    https://starlink.readme.io/ (HTTP 200, no login wall) with a complete public
+    API reference, guides, a changelog, an API incident-history page, and a
+    published 60-day deprecation policy. The OpenAPI 3.0.4 description of the
+    Starlink Public API V2 is downloadable anonymously from
+    https://starlink.com/api/public/swagger/v2/swagger.json (HTTP 200,
+    application/json, 49 paths, 132 schemas) and was harvested verbatim. SpaceX
+    also publishes an official gRPC protobuf for the local device API on GitHub.
+
+    The surface is nevertheless gated in practice: the API is described as
+    "available to all enterprise accounts", credentials come from a V2 service
+    account that an account admin creates inside
+    https://www.starlink.com/account/settings, and there is no self-serve
+    developer signup, sandbox key, or free tier for the API. Documentation is
+    open; access is not.
+
+    The API is operational rather than developer-product. It manages accounts,
+    addresses, contacts, service lines, user terminals, WiFi routers, data
+    pools, billing, and device telemetry. It exposes no messaging, voice,
+    identity, or network-capability product of the kind CPaaS aggregators sell.
+
+    No CAMARA API, no GSMA Open Gateway participation, no Aduna channel, and no
+    TM Forum Open API conformance was found in any Starlink or SpaceX published
+    material. A case-insensitive grep across the harvested OpenAPI, the readme.io
+    llms.txt index of every guide and reference page, and every fetched doc page
+    returned zero hits for "CAMARA", "Open Gateway", "TM Forum", "network
+    exposure", "SIM swap", "number verification", or "slice". This is not a case
+    of a press release without an implementation - there is not even a press
+    release. Starlink is an access-network operator outside the GSMA/CAMARA
+    operator programme.
+  developerPortal:
+    url: https://starlink.readme.io/
+    status: 200
+    verdict: real public developer documentation portal, no login wall
+    gated: true
+    gatingNote: |
+      Docs and the OpenAPI are fully public and anonymous. API credentials are
+      not: an enterprise or business Starlink account is required, and a user
+      with the "Admin" or "Service Account Management" role must create a V2
+      service account with an explicit permission set. Up to 20 service accounts
+      per account and 20 secrets per service account, with optional expiry for
+      rotation.
+    selfServeSignup: false
+  portalProbes:
+  - url: https://developer.starlink.com
+    status: 000
+    note: does not resolve
+  - url: https://developers.starlink.com
+    status: 000
+    note: does not resolve
+  - url: https://docs.starlink.com
+    status: 000
+    note: does not resolve
+  - url: https://api.starlink.com/
+    status: 404
+    note: host resolves and serves 404 at root; only /auth/.well-known/openid-configuration
+      answered
+  - url: https://starlink.com/developer
+    status: 200
+    note: SPA catch-all shell (identical 32,203-byte body as every unknown path);
+      not a developer page
+  - url: https://starlink.com/developers
+    status: 200
+    note: SPA catch-all shell, not a developer page
+  - url: https://starlink.com/api
+    status: 200
+    note: SPA catch-all shell
+  - url: https://starlink.com/business/api
+    status: 200
+    note: SPA catch-all shell
+  - url: https://opengateway.starlink.com
+    status: 000
+    note: does not resolve
+  - url: https://developers.opengateway.starlink.com
+    status: 000
+    note: does not resolve
+  - url: https://starlink.com/opengateway
+    status: 200
+    note: SPA catch-all shell, no Open Gateway content
+  - url: https://starlink.readme.io/
+    status: 200
+    note: the real developer portal
+  - url: https://docs.space-safety.starlink.com/docs/
+    status: 200
+    note: second, separate public developer docs site for the Space Safety platform
+  specsHarvested:
+  - path: openapi/starlink-public-api-v2-openapi.json
+    sourceURL: https://starlink.com/api/public/swagger/v2/swagger.json
+    mirrorURL: https://web-api.starlink.com/enterprise/swagger/v2/swagger.json
+    httpStatus: 200
+    contentType: application/json;charset=utf-8
+    bytes: 249970
+    fetched: '2026-07-25'
+    format: OpenAPI 3.0.4
+    title: Starlink Public API
+    version: '2'
+    paths: 49
+    schemas: 132
+    parses: true
+    verbatim: true
+    tags:
+    - Account
+    - Addresses
+    - Billing
+    - Contacts
+    - Data Pools
+    - Flights
+    - Managed
+    - Managed Accounts
+    - Mobile
+    - Routers
+    - Service Lines
+    - User Terminals
+    note: |
+      servers is declared as the relative "/api", so the effective base URL from
+      the documented examples is https://starlink.com/api/public/v2. The document
+      declares no components.securitySchemes and no top-level security, even
+      though every operation's description states a required RBAC permission and
+      the info.description points at the OIDC well-known URL.
+  specsNotHarvested:
+  - sourceURL: https://starlink.com/api/public/swagger/v1/swagger.json
+    httpStatus: 200
+    bytes: 633
+    reason: |
+      V1 returns a well-formed OpenAPI 3.0.4 shell with empty paths {} and empty
+      components {}. Nothing real to save. V1 is deprecated and, per the Getting
+      Started guide, was scheduled for sunset on 2026-06-01.
+  - sourceURL: https://docs.space-safety.starlink.com/
+    reason: |
+      The Space Safety docs are generated by docusaurus-plugin-openapi-docs from a
+      build-time file named public_openapi3.yaml (visible in the site bundle
+      config), but that file is not served. Every guessed location returned 404 or
+      the SPA shell. The API reference is readable in HTML only.
+  protoHarvested:
+  - path: proto/starlink-device.proto
+    sourceURL: https://raw.githubusercontent.com/SpaceExplorationTechnologies/enterprise-api/master/device-api/device.proto
+    httpStatus: 200
+    bytes: 7650
+    fetched: '2026-07-25'
+    package: SpaceX.API.Device
+    service: Device
+    note: |
+      First-party protobuf published by SpaceX. Single Handle RPC carrying
+      GetDiagnosticsRequest, answered by WifiGetDiagnosticsResponse or
+      DishGetDiagnosticsResponse. Router listens on 192.168.1.1:9000, user
+      terminal on 192.168.100.1:9200.
+  camara:
+    posture: no CAMARA reference found - satellite access operator outside the
+      GSMA/CAMARA operator programme
+    apis: []
+    exposesCamaraAPIs: false
+    openGatewayMember: false
+    adunaChannel: false
+    cpaasChannelPartner: false
+    pressReleaseOnly: false
+    evidence: |
+      Zero occurrences of "CAMARA", "Open Gateway", "SIM swap", "Number
+      Verification", "Quality on Demand", "Device Location", "Carrier Billing",
+      "KYC Match", or "Scam Signal" across: the harvested V2 OpenAPI (249,970
+      bytes), the readme.io llms.txt index listing all 41 guides, 63 API
+      reference pages, and 10 changelog entries, and every fetched guide page.
+      opengateway.starlink.com and developers.opengateway.starlink.com do not
+      resolve; starlink.com/opengateway returns the site's SPA catch-all shell.
+      SpaceX/Starlink does not appear in CAMARA project materials. Starlink sells
+      access and wholesale capacity, and reaches mobile subscribers through MNO
+      partnerships rather than by publishing network APIs of its own.
+  tmForum:
+    conformanceFound: false
+    note: |
+      No TM Forum Open API conformance certification (TMF620, TMF622, TMF641 or
+      any other) is claimed in Starlink's documentation, and the V2 API's account,
+      product, and service-line resources are proprietary shapes, not TMF payloads.
+  threeGppExposure:
+    nefOrScef: false
+    networkSlicing: false
+    edgeMec: false
+    note: |
+      No NEF, SCEF, 5G network-slicing, or edge/MEC API is published. The closest
+      network-side surface is the gated Starlink Mobile Data API, which returns
+      radio access network, beam-reliability timeseries, and map data as
+      hour-partitioned analytics - reporting, not exposure. L2VPN circuits on user
+      terminals are configured through the management API, not through a 3GPP
+      exposure function.
+  auth:
+    model: OAuth2 / OIDC client credentials, bearer tokens
+    tokenEndpoint: https://starlink.com/api/auth/connect/token
+    wellKnown: https://starlink.com/api/auth/.well-known/openid-configuration
+    wellKnownStatus: 200
+    issuer: https://api.starlink.com/auth
+    tokenLifetime: 15 minutes
+    rbac: |
+      Service accounts carry explicit permission sets (Account information,
+      Service plan, Financial, User management, Device management, Device command
+      and configuration, Device configuration assignment, Device telemetry,
+      Managed Account Information, Aviation flight status management, Gated
+      Feature - Starlink Mobile Data). A user cannot grant a service account a
+      permission they do not hold themselves.
+    ciba:
+      present: true
+      endpoint: https://starlink.com/api/auth/connect/ciba
+      grantType: urn:openid:params:grant-type:ciba
+      deliveryModes:
+      - poll
+      note: |
+        CIBA is genuinely advertised in the OIDC discovery document, alongside
+        device_code, delegation, and login_code grants - but this is the Starlink
+        consumer/account identity provider's stock capability set, NOT a CAMARA
+        network-authorization surface. Nothing in the API documentation uses or
+        mentions CIBA; every documented example uses grant_type=client_credentials.
+        Recording it as present is accurate; reading it as CAMARA alignment would
+        not be.
+    otherSchemes:
+    - scheme: mTLS
+      surface: Space Safety Space Traffic Coordination API
+      note: |
+        Client authentication is a secp384r1 key plus a CSR signed by SpaceX,
+        issued per environment (staging and production) after email onboarding at
+        space-safety-onboarding@spacex.com. Access limited to satellite operators.
+    - scheme: none
+      surface: Local Device gRPC API
+      note: reachable only on the local LAN at 192.168.1.1:9000 / 192.168.100.1:9200
+  rateLimits:
+    v2: 250 requests per minute per Starlink account
+    v1: 250 requests per minute per source IP until V1 sunset
+    tokenEndpoint: 1000 authentication requests per 15 minutes per client IP
+    overLimit: HTTP 429
+  webhooks:
+    published: false
+    asyncapiPublished: false
+    note: |
+      No webhook or callback catalog is published. Event-style data is pulled, not
+      pushed: the Telemetry Stream API is a polling loop (repeated POST with
+      batchSize and maxLingerMs up to 65s of linger), and device alerts arrive
+      inside those telemetry responses as enum values resolved against response
+      metadata. The router sandbox feature runs the reverse direction - the
+      enterprise heartbeats INTO Starlink via PUT
+      /public/v2/routers/sandbox/heartbeat, and routers fail open if heartbeats stop.
+  sdks:
+    firstPartyPackages: false
+    note: |
+      No first-party SDK is published on npm, PyPI, Maven, or NuGet. The only
+      first-party code is example Python: the authentication and telemetry
+      snippets in the docs, and demo.py plus a Makefile in
+      SpaceExplorationTechnologies/enterprise-api that compiles device.proto with
+      grpc_tools.protoc.
+  postman:
+    workspace: none found
+  graphql:
+    published: false
+    note: https://starlink.com/graphql and https://starlink.com/api/graphql both
+      return the site's SPA catch-all shell, not a GraphQL endpoint
+  productFamily:
+  - segment: Account and identity
+    surface: GET /public/v2/account, products, addresses, contacts, managed account
+      tree
+  - segment: Service lines (subscription lifecycle)
+    surface: create, deactivate, rename, change product, public IP, priority-data
+      opt in/out, top-up and recurring data blocks, proration periods
+  - segment: Connectivity hardware
+    surface: user terminals and WiFi routers - add/remove, reboot, config assignment,
+      TLS configs, local content, client sandboxing, L2VPN circuits
+  - segment: Billing
+    surface: invoices, invoice detail, account balance, data pools with automatic
+      top-up
+  - segment: Telemetry and alerts
+    surface: streaming telemetry and most-recent-value query, device alert enums
+  - segment: Vertical add-ons
+    surface: aviation flight status, Starlink Mobile RAN/timeseries/map data (both
+      permission-gated)
+  - segment: Space safety
+    surface: separate mTLS platform for conjunction screening and maneuver coordination
+  transports:
+  - protocol: REST
+    scheme: https
+    baseURL: https://starlink.com/api/public/v2
+    documented: true
+  - protocol: HTTP polling stream
+    scheme: https
+    baseURL: https://starlink.com/api/public/v2/telemetry/stream
+    documented: true
+    note: JSON small-batch polling described by Starlink as a "streaming" API; not
+      SSE and not WebSocket
+  - protocol: gRPC
+    scheme: http
+    baseURL: 192.168.100.1:9200 (dish), 192.168.1.1:9000 (router)
+    documented: true
+    note: local network only, protobuf published as device.proto
+  - protocol: REST
+    scheme: https
+    baseURL: https://space-safety.starlink.com
+    documented: true
+    note: mTLS, satellite operators only, staging at staging.space-safety.starlink.com
+  - protocol: WebSocket
+    scheme: wss
+    documented: false
+  - protocol: GraphQL
+    documented: false
+sources:
+- url: https://starlink.readme.io/
+  type: Documentation
+  status: 200
+  note: first-party developer portal, publicly readable
+- url: https://starlink.readme.io/llms.txt
+  type: LlmsText
+  status: 200
+  note: machine index of 41 guides, 63 API reference pages, 10 changelog entries
+- url: https://starlink.com/api/public/swagger/v2/swagger.json
+  type: OpenAPI
+  status: 200
+  note: source of the harvested spec
+- url: https://web-api.starlink.com/enterprise/swagger/index.html
+  type: SwaggerUI
+  status: 200
+  note: second host serving the identical V1/V2 Swagger UI
+- url: https://starlink.com/api/auth/.well-known/openid-configuration
+  type: OpenIDConfiguration
+  status: 200
+  note: issuer https://api.starlink.com/auth; CIBA, device_code, delegation and
+    login_code grants advertised
+- url: https://starlink.readme.io/docs/authentication
+  type: Authentication
+  status: 200
+- url: https://starlink.readme.io/docs/rate-limits-1
+  type: RateLimits
+  status: 200
+- url: https://starlink.readme.io/docs/telemetry-api
+  type: Documentation
+  status: 200
+- url: https://starlink.readme.io/docs/device-api
+  type: Documentation
+  status: 200
+- url: https://github.com/SpaceExplorationTechnologies/enterprise-api
+  type: SourceCode
+  status: 200
+  note: official SpaceX repo carrying device.proto, demo.py, Makefile
+- url: https://docs.space-safety.starlink.com/docs/api-keys
+  type: Authentication
+  status: 200
+  note: mTLS client certificate issuance process
+- url: https://starlink.com/.well-known/security.txt
+  type: SecurityTxt
+  status: 200
+  note: Contact mailto:vulnerabilityreporting@spacex.com
+actions:
+  apisYmlCreated: true
+  openapiHarvested: 1
+  protoHarvested: 1
+  asyncapiCreated: false
+  reason: |
+    One real downloadable OpenAPI and one real published protobuf were captured
+    verbatim with provenance. No AsyncAPI was authored because no webhook, SSE, or
+    WebSocket surface exists - the telemetry "stream" is client-driven polling
+    over plain REST and is already covered by the REST transport.

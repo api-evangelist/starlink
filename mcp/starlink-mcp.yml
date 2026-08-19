@@ -738,3 +738,9 @@ tools:
   required_permission: Device telemetry, View
   mutating: false
   note: documented in the API reference but absent from the downloadable V2 OpenAPI
+deployment:
+  mode: none
+  verified: derived
+  tools: 65
+  checked: '2026-08-12'
+  source: catalog MCP census

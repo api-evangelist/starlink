@@ -1,0 +1,1409 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Starlink Public API",
+    "version": "2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Account",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get account information",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/account"
+          },
+          "docs": "Required permission: Account information, View."
+        },
+        {
+          "info": {
+            "name": "Query data usage",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/data-usage/query",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Index of page to get."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Amount of service lines to retrieve per page. Defaults to 50, can request up to 250."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, View.<br/>Retrieve the real-time data tracking info for this account's data usage. For detailed instructions, please refer to the API documentation: https://starlink.readme.io/docs/data-usage-api"
+        },
+        {
+          "info": {
+            "name": "Get products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/products",
+            "params": [
+              {
+                "name": "page",
+                "value": "0",
+                "type": "query",
+                "description": "Index of page to get. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, View.<br/>Gets all products available to this account that could be assigned to service lines. Each product includes data block product info if compatible."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Addresses",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all addresses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/addresses",
+            "params": [
+              {
+                "name": "addressIds",
+                "value": "",
+                "type": "query",
+                "description": "Filter by a specific set of Address Reference IDs"
+              },
+              {
+                "name": "metadata",
+                "value": "",
+                "type": "query",
+                "description": "Filter by metadata"
+              },
+              {
+                "name": "page",
+                "value": "0",
+                "type": "query",
+                "description": "Index of page to get. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Account information, View.<br/>Returns all addresses on the account in paginated form."
+        },
+        {
+          "info": {
+            "name": "Create address",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/addresses",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Account information, Edit."
+        },
+        {
+          "info": {
+            "name": "Get address",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/addresses/:addressReferenceId",
+            "params": [
+              {
+                "name": "addressReferenceId",
+                "value": "55ec6574-10d8-bd9c-1951-d4184f4ae467",
+                "type": "path",
+                "description": "Address reference ID"
+              }
+            ]
+          },
+          "docs": "Required permission: Account information, View."
+        },
+        {
+          "info": {
+            "name": "Update address",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/addresses/:addressReferenceId",
+            "params": [
+              {
+                "name": "addressReferenceId",
+                "value": "55ec6574-10d8-bd9c-1951-d4184f4ae467",
+                "type": "path",
+                "description": "Reference Id of address to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Account information, Edit."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Billing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get invoice summaries",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/billing/invoices",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The index of the page, starting at 0. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Financial, View."
+        },
+        {
+          "info": {
+            "name": "Get invoice details",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/billing/invoices/:invoiceId",
+            "params": [
+              {
+                "name": "invoiceId",
+                "value": "INV-DF-US-1234ABCD",
+                "type": "path",
+                "description": "The invoice identifier"
+              }
+            ]
+          },
+          "docs": "Required permission: Financial, View."
+        },
+        {
+          "info": {
+            "name": "Get account balance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/billing/balance"
+          },
+          "docs": "Required permission: Financial, View.<br/>Response contains one balance for each currency. If all balances are 0 then response will contain a single entry with 0 balance and currency matching the default for this account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Contacts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get contacts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/contacts",
+            "params": [
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Page of contacts to query."
+              }
+            ]
+          },
+          "docs": "Required permission: User management, Edit.<br/>Get list of contacts on the authenticated user's account."
+        },
+        {
+          "info": {
+            "name": "Create contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/contacts",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Admin Only - API User Management, Edit.<br/>Creates the contact if it is new, and adds the contact to the authenticated account."
+        },
+        {
+          "info": {
+            "name": "Update contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/contacts/:subjectId",
+            "params": [
+              {
+                "name": "subjectId",
+                "value": "",
+                "type": "path",
+                "description": "Subject Id of the contact to be updated."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Admin Only - API User Management, Edit.<br/>Update contact on the authenticated account."
+        },
+        {
+          "info": {
+            "name": "Delete contact",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/api/public/v2/contacts/:subjectId",
+            "params": [
+              {
+                "name": "subjectId",
+                "value": "",
+                "type": "path",
+                "description": "Subject ID of contact to be deleted."
+              }
+            ]
+          },
+          "docs": "Required permission: Admin Only - API User Management, Edit.<br/>Deletes contact based on specified subject Id on the authenticated account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Data Pools",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Pre-Release: Get all multi-service line enabled data pools.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/data-pools",
+            "params": [
+              {
+                "name": "productReferenceId",
+                "value": "",
+                "type": "query",
+                "description": "Filter by Product ID of the pool"
+              },
+              {
+                "name": "dataPoolIds",
+                "value": "",
+                "type": "query",
+                "description": "Data pool IDs to filter by. Queries for all data pools on account if omitted"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The index of the page, starting at 0. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, View.<br/>This endpoint is available for select audiences only."
+        },
+        {
+          "info": {
+            "name": "Pre-Release: Query data pool usage with service line and monthly breakdowns.",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/data-pools/usage",
+            "params": [
+              {
+                "name": "dataPoolIds",
+                "value": "",
+                "type": "query",
+                "description": "Data pool Ids to filter by. Queries for usage of all data pools on account if omitted"
+              },
+              {
+                "name": "asOfTimestamp",
+                "value": "",
+                "type": "query",
+                "description": "Optional timestamp for snapshotting data pool usage *as of* this time. Only includes data blocks\n            that are active at this instant (i.e., `StartDate <= asOfTimestamp < EndDate`).\n            Defaults to `DateTimeOffset.UtcNow` to return currently active blocks."
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The index of the page, starting at 0."
+              },
+              {
+                "name": "limit",
+                "value": "",
+                "type": "query",
+                "description": "Amount of data pool usage summaries to retrieve per page. Defaults to 50, can request up to 100."
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, View.<br/>This endpoint is available for select audiences only."
+        },
+        {
+          "info": {
+            "name": "Pre-Release: Enable or disable automatic top-up for a data pool.",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/data-pools/:dataPoolId/set-automatic-top-up",
+            "params": [
+              {
+                "name": "dataPoolId",
+                "value": "",
+                "type": "path",
+                "description": "The data pool ID"
+              },
+              {
+                "name": "enabled",
+                "value": "",
+                "type": "query",
+                "description": "Whether automatic top-up should be enabled (defaults to true)"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Flights",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Post a flight event",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/flights/status",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Aviation flight status management, Edit.<br/>Post a real-time flight event on a Starlink-enabled plane. This endpoint is only accessible from an aviation account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Managed",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Create a managed customer account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/managed/customers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint is only callable with an authorized provider account."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Managed Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Pre-Release: Get managed account tree",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/managed/accounts/tree",
+            "params": [
+              {
+                "name": "ancestorAccountNumber",
+                "value": "",
+                "type": "query",
+                "description": "The root account number to build the tree from. If not provided, uses the token's account.\n             This account number must be in the hierarchy underneath the calling account."
+              }
+            ]
+          },
+          "docs": "Required permission: Managed Account Information, View.<br/>Gets the entire managed account hierarchy beneath the calling account.\n            \nThis endpoint is available for select audiences only."
+        },
+        {
+          "info": {
+            "name": "Pre-Release: Query managed accounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/managed/accounts",
+            "params": [
+              {
+                "name": "ancestorAccountNumber",
+                "value": "",
+                "type": "query",
+                "description": "Query accounts under this ancestor account number.\n             Defaults to calling token's account if not provided."
+              },
+              {
+                "name": "searchString",
+                "value": "",
+                "type": "query",
+                "description": "Filter by account name or number (prefix match)"
+              },
+              {
+                "name": "accountNumbers",
+                "value": "",
+                "type": "query",
+                "description": "Get specific accounts by account numbers"
+              },
+              {
+                "name": "maxDepth",
+                "value": "",
+                "type": "query",
+                "description": "Maximum depth in hierarchy (1 = direct children only, 2 = children +\n             grandchildren, 3 = children through great-grandchildren, etc. null for all\n             descendants.)"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor for fetching next page"
+              }
+            ]
+          },
+          "docs": "Required permission: Managed Account Information, View.<br/>Query managed accounts within your account hierarchy with filtering and pagination support.\nReturns up to 100 accounts at at time.\n            \nThis endpoint is available for select audiences only."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Mobile",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get Radio Access Network Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/mobile/radio-access-network/:timestamp",
+            "params": [
+              {
+                "name": "timestamp",
+                "value": "2026-06-15T00:00:00Z",
+                "type": "path",
+                "description": "Timestamp of target data aggregated by the hour for the selected hour"
+              }
+            ]
+          },
+          "docs": "Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Radio Access Network (RAN) data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds."
+        },
+        {
+          "info": {
+            "name": "Get Timeseries Data of Starlink Mobile Usage and Beam Reliability",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/mobile/timeseries/:timestamp",
+            "params": [
+              {
+                "name": "timestamp",
+                "value": "2026-06-15T00:00:00Z",
+                "type": "path",
+                "description": "Timestamp of target data aggregated by the hour for the selected hour"
+              }
+            ]
+          },
+          "docs": "Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Timeseries data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds."
+        },
+        {
+          "info": {
+            "name": "Get Map Data",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/mobile/map/:timestamp",
+            "params": [
+              {
+                "name": "timestamp",
+                "value": "2026-06-15T00:00:00Z",
+                "type": "path",
+                "description": "Timestamp of target data aggregated by the hour for the selected hour"
+              }
+            ]
+          },
+          "docs": "Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Map data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Routers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get router",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/:routerId",
+            "params": [
+              {
+                "name": "routerId",
+                "value": "010000000000000000012345",
+                "type": "path",
+                "description": "Router Id"
+              }
+            ]
+          },
+          "docs": "Required permission: Device management, View."
+        },
+        {
+          "info": {
+            "name": "Get all router configs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/configs",
+            "params": [
+              {
+                "name": "page",
+                "value": "0",
+                "type": "query",
+                "description": "Index of page to get. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Device command and configuration, View.<br/>Return all router configs on this account in paginated form"
+        },
+        {
+          "info": {
+            "name": "Create router config",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/routers/configs",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit."
+        },
+        {
+          "info": {
+            "name": "Get router config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/configs/:configId",
+            "params": [
+              {
+                "name": "configId",
+                "value": "DVC_CFG-12341234",
+                "type": "path",
+                "description": "Config Id"
+              }
+            ]
+          },
+          "docs": "Required permission: Device command and configuration, View."
+        },
+        {
+          "info": {
+            "name": "Update router config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/routers/configs/:configId",
+            "params": [
+              {
+                "name": "configId",
+                "value": "DVC_CFG-12341234",
+                "type": "path",
+                "description": "Config Id"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Update a given router config. Any router assigned to this config will immediately receive the update if it is online. Otherwise, the router will receive the update when it comes online."
+        },
+        {
+          "info": {
+            "name": "Router config assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/routers/configs/assign",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the routers. For each router if it is currently online, the config will immediately be sent to the router. Else, the config will be sent to the router when it comes online. Configs are sent to the router within 1-2 minutes. On error no assignment occurs."
+        },
+        {
+          "info": {
+            "name": "Get default router config",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/configs/default"
+          },
+          "docs": "Required permission: Device command and configuration, View.<br/>Gets the router config id that will be assigned to any routers when they are first added to this account."
+        },
+        {
+          "info": {
+            "name": "Set default router config",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/routers/configs/default",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device configuration assignment, Edit.<br/>Set the default router config on the account. Use an empty string to remove the default config from the account. Any NEW routers on this account will be assigned this config."
+        },
+        {
+          "info": {
+            "name": "Get TLS configs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/configs/tls",
+            "params": [
+              {
+                "name": "page",
+                "value": "0",
+                "type": "query",
+                "description": "Index of page to get. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Device command and configuration, View.<br/>Gets a paginated list of TLS configs on this account."
+        },
+        {
+          "info": {
+            "name": "Create TLS config",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/routers/configs/tls",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Creates a TLS config that allows this certificate and key to be used in router configs when a certificate and key are required by only specifying the certificate (matching key will be added). TLS configs are identified by their certificate string base64 encoded which must be unique on the account."
+        },
+        {
+          "info": {
+            "name": "Delete TLS config",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/api/public/v2/routers/configs/tls",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Deletes a TLS certificate and key pair from the set of TLS configs that can be reused when saving router configs and only specifying the certificate. Does not affect any router configs that were already saved, just removes it from list of certificates that the matching key will be inserted on save for."
+        },
+        {
+          "info": {
+            "name": "Get list of router local content files",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/local-content"
+          },
+          "docs": "Required permission: Device command and configuration, View."
+        },
+        {
+          "info": {
+            "name": "Upload router local content file",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/routers/local-content",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Upload html file to allow it to be configured as the HTTPS server local content file for router configs. File must be HTML, under 4MB, and file name under 100 characters. Files are stored in a public bucket for configured routers to download. File should be attached as multipart/form-data. See https://starlink.readme.io/docs/local-content for example upload script."
+        },
+        {
+          "info": {
+            "name": "Get sandbox clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/routers/sandbox/clients",
+            "params": [
+              {
+                "name": "sandboxId",
+                "value": "123",
+                "type": "query",
+                "description": "Sandbox Id"
+              },
+              {
+                "name": "expiryAfter",
+                "value": "2020-01-01T01:00:00+00:00",
+                "type": "query",
+                "description": "Include clients whose access expires after this time"
+              },
+              {
+                "name": "page",
+                "value": "0",
+                "type": "query",
+                "description": "Index of page to get. Page size is 1000"
+              }
+            ]
+          },
+          "docs": "Required permission: Device command and configuration, View.<br/>Returns clients that were unsandboxed through the management API and have access that has not yet expired, paginated 1000 at a time. Clients that are allowed internet access due to sandbox disablement are not returned."
+        },
+        {
+          "info": {
+            "name": "Batch update sandbox clients",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/routers/sandbox/clients",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Update the sandbox state for multiple clients. If sandboxing is enabled, sandboxed clients will only have access to domains in the sandbox domain allow list. If a client is duplicated, records the client with the latest expiry."
+        },
+        {
+          "info": {
+            "name": "Update sandbox heartbeat",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/routers/sandbox/heartbeat",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Heartbeats verify the health of enterprise systems that manage router sandboxing. If heartbeats are not received for an account, Starlink API will instruct routers under the account disable sandboxes until reboot."
+        },
+        {
+          "info": {
+            "name": "Reboot router",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/routers/:routerId/reboot",
+            "params": [
+              {
+                "name": "routerId",
+                "value": "010000000000000000012345",
+                "type": "path",
+                "description": "Router Id"
+              }
+            ]
+          },
+          "docs": "Required permission: Device command and configuration, Edit."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Service Lines",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, View."
+        },
+        {
+          "info": {
+            "name": "Deactivate a service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              },
+              {
+                "name": "reasonForCancellation",
+                "value": "",
+                "type": "query",
+                "description": "Optional reason for cancelling this service line"
+              },
+              {
+                "name": "endNow",
+                "value": "",
+                "type": "query",
+                "description": "If service should end now, or on next bill day. Default is false"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, Edit."
+        },
+        {
+          "info": {
+            "name": "Get all service lines",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/service-lines",
+            "params": [
+              {
+                "name": "addressReferenceId",
+                "value": "55ec6574-10d8-bd9c-1951-d4184f4ae467",
+                "type": "query",
+                "description": "Filter by an Address Reference ID"
+              },
+              {
+                "name": "searchString",
+                "value": "",
+                "type": "query",
+                "description": "Filter by fuzzy match of nickname, or exact match on UT ID, UT nickname, UT serial number, or service line number"
+              },
+              {
+                "name": "dataPoolId",
+                "value": "",
+                "type": "query",
+                "description": "Filter for service lines on a given data pool"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The index of the page, starting at 0. Page size is 100"
+              },
+              {
+                "name": "orderByCreatedDateDescending",
+                "value": "",
+                "type": "query",
+                "description": "Sort the paginated results by created date"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, View."
+        },
+        {
+          "info": {
+            "name": "Create service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/service-lines",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>Service line must be linked to an address and a subscription/product-ID, and can optionally be immediately configured with data blocks."
+        },
+        {
+          "info": {
+            "name": "Set service line nickname",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/nickname",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, Edit."
+        },
+        {
+          "info": {
+            "name": "Update service line product",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/product",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, Edit."
+        },
+        {
+          "info": {
+            "name": "Set service line public IP setting",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/public-ip",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device command and configuration, Edit.<br/>Enable or disable public ip setting on a service line"
+        },
+        {
+          "info": {
+            "name": "Opt in priority data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/data/opt-in",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>Opt in the service line to continue using priority data after reaching the plan capacity. Only applies to some products."
+        },
+        {
+          "info": {
+            "name": "Opt out priority data",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/data/opt-out",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>Opt out the service line from continuing to use priority data even when plan capacity is exceeded. If the service line reaches the plan capacity, it will switch to using standard data. Only applies to some products."
+        },
+        {
+          "info": {
+            "name": "Add user terminal to service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/user-terminals",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>User terminal must already be on the account. See POST /v2/user-terminals to add user terminal to account."
+        },
+        {
+          "info": {
+            "name": "Remove user terminal from service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/user-terminals/:deviceId",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              },
+              {
+                "name": "deviceId",
+                "value": "12345678-12345678-12345678",
+                "type": "path",
+                "description": "User terminal ID, kit serial number, or dish serial number."
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>This removes the user terminal from the service line, but it remains on the account and can be added to another service line. This clears any L2VPN circuits configured for the terminal."
+        },
+        {
+          "info": {
+            "name": "Set recurring data blocks on service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/data/recurring",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>Service line must be on a top up plan"
+        },
+        {
+          "info": {
+            "name": "Adds one-time top up data block to service line",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/data/top-up",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "",
+                "type": "path",
+                "description": "The service line number"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>Service line must be on a top up plan"
+        },
+        {
+          "info": {
+            "name": "Get billing partial periods",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/billing-cycles/partial-periods",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, View.<br/>Get the previous billing partial periods for this service line. For more information about this endpoint, see https://starlink.readme.io/docs/understanding-proration."
+        },
+        {
+          "info": {
+            "name": "Pre-Release: Set whether a service line should consume from a data pool.",
+            "type": "http"
+          },
+          "http": {
+            "method": "PATCH",
+            "url": "/api/public/v2/service-lines/:serviceLineNumber/consume-from-pool",
+            "params": [
+              {
+                "name": "serviceLineNumber",
+                "value": "AST-511274-31364-54",
+                "type": "path",
+                "description": "Service line number"
+              },
+              {
+                "name": "consumeFromPool",
+                "value": "",
+                "type": "query",
+                "description": "Whether the service line should consume from pool, defaults to true"
+              }
+            ]
+          },
+          "docs": "Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "User Terminals",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get all user terminals",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/user-terminals",
+            "params": [
+              {
+                "name": "serviceLineNumbers",
+                "value": "",
+                "type": "query",
+                "description": "Filter by a set of service line numbers"
+              },
+              {
+                "name": "userTerminalIds",
+                "value": "",
+                "type": "query",
+                "description": "Filter by a set of user terminal IDs"
+              },
+              {
+                "name": "hasServiceLine",
+                "value": "",
+                "type": "query",
+                "description": "Filter by user terminals with or without a services lines. Omitting this will return both sets"
+              },
+              {
+                "name": "searchString",
+                "value": "",
+                "type": "query",
+                "description": "Filter by partial match of user terminal ID, serial number, or kit serial number"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "The index of the page, starting at 0. Page size is 100"
+              }
+            ]
+          },
+          "docs": "Required permission: Device management, View.<br/>Gets all user terminals on the account, filtered by the optional filter parameters, in paginated form"
+        },
+        {
+          "info": {
+            "name": "Add user terminal to account",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/user-terminals",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device management, Edit.<br/>This will add the user terminal to the account, but won't start service. User terminals must be present on the account before adding to a service line."
+        },
+        {
+          "info": {
+            "name": "Remove user terminal from account",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "/api/public/v2/user-terminals/:deviceId",
+            "params": [
+              {
+                "name": "deviceId",
+                "value": "12345678-12345678-12345678",
+                "type": "path",
+                "description": "User terminal ID, kit serial number, or dish serial number."
+              }
+            ]
+          },
+          "docs": "Required permission: Device management, Edit.<br/>User terminal must already be removed from service lines before it can be removed from the account. See /v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}"
+        },
+        {
+          "info": {
+            "name": "Reboot user terminal",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "/api/public/v2/user-terminals/:deviceId/reboot",
+            "params": [
+              {
+                "name": "deviceId",
+                "value": "12345678-12345678-12345678",
+                "type": "path",
+                "description": "User terminal ID, kit serial number, or dish serial number."
+              }
+            ]
+          },
+          "docs": "Required permission: Device command and configuration, Edit."
+        },
+        {
+          "info": {
+            "name": "User terminal config assignment",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/user-terminals/configs/assign",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the user terminals. For each terminal if it is currently online, the config will immediately be sent. Else, the config will be sent when it comes online. On error no assignment occurs. Currently terminal configIds are only visible on starlink website."
+        },
+        {
+          "info": {
+            "name": "Get L2VPN circuits available for this account",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "/api/public/v2/user-terminals/l2vpn"
+          },
+          "docs": "Required permission: Device command and configuration, View."
+        },
+        {
+          "info": {
+            "name": "Set L2VPN VLANs for user terminal",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "/api/public/v2/user-terminals/:deviceId/l2vpn",
+            "params": [
+              {
+                "name": "deviceId",
+                "value": "12345678-12345678-12345678",
+                "type": "path",
+                "description": "User terminal ID, kit serial number, or dish serial number."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Required permission: Device configuration assignment, Edit.<br/>Terminal must be on subscription that allows L2VPN. Maximum 2 circuits per Starlink PoP. Use null or empty circuit list to clear all L2VPN circuits for terminal. See /user-terminals/available-circuits for all configurable circuits and associated Starlink PoP."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

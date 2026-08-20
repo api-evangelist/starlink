@@ -50,6 +50,12 @@ apis:
   - Account Management
   - Service Lines
   - User Terminals
+  - Router
+  - Billing
+  tags_raw:
+  - Account Management
+  - Service Lines
+  - User Terminals
   - Routers
   - Billing
   properties:

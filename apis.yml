@@ -17,6 +17,19 @@ description: Starlink is the low-Earth-orbit satellite internet constellation op
   or business Starlink account whose admin must mint a V2 service account. No CAMARA implementation,
   no GSMA Open Gateway participation, and no TM Forum Open API conformance was found anywhere
   in Starlink's published material.
+deliveryModel:
+  model: unknown
+  open_source: unknown
+  commercial: true
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  - pricing
+  - repository-unlicensed
+  generated: '2026-08-28'
+  method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 tags:
 - Telecommunications
@@ -518,6 +531,8 @@ apis:
   - type: Documentation
     url: https://starlink.readme.io/docs/location-in-aviation
 common:
+- type: IssueTracker
+  url: https://github.com/SpaceExplorationTechnologies/enterprise-api/issues
 - type: Website
   url: https://www.starlink.com/
 - type: DeveloperPortal

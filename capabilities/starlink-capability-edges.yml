@@ -1,0 +1,35 @@
+slug: starlink
+provider: Starlink
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Transportation & Logistics
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 2
+edges:
+- tag: Billing
+  spec_file: starlink-billing-api-openapi.yml
+  capability_id: BC-4250.30
+  capability_id_l1: BC-4250
+  capability_name: Invoicing & Statement Management
+  confidence: 0.7
+  evidence: GET /public/v2/billing/invoices Get invoice summaries; GET /public/v2/billing/balance Get
+    account balance; schemas InvoiceDetailResponse, InvoiceLineDetailResponse, PublicInvoiceStatus
+  reason: Invoice summary/detail and account balance exposure for a recurring connectivity subscription
+    is invoicing and statement management in the subscription billing lifecycle.
+- tag: Routers
+  spec_file: starlink-routers-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.7
+  evidence: POST /public/v2/routers/configs 'Create router config'; 'Set default router config'; 'Get
+    TLS configs'
+  reason: CRUD over router device configurations, TLS configs and local content uploads is network device/infrastructure
+    configuration management, i.e. IT infrastructure (network) management.

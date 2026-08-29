@@ -531,6 +531,9 @@ apis:
   - type: Documentation
     url: https://starlink.readme.io/docs/location-in-aviation
 common:
+- type: CapabilityMap
+  url: capabilities/starlink-capability-edges.yml
+  name: Starlink Business Capability Map
 - type: IssueTracker
   url: https://github.com/SpaceExplorationTechnologies/enterprise-api/issues
 - type: Website

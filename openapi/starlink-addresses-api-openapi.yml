@@ -1,0 +1,465 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Addresses API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Addresses
+paths:
+  /public/v2/addresses:
+    get:
+      tags:
+      - Addresses
+      summary: Get all addresses
+      description: 'Required permission: Account information, View.<br/>Returns all addresses on the account in paginated form.'
+      parameters:
+      - name: addressIds
+        in: query
+        description: Filter by a specific set of Address Reference IDs
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+      - name: metadata
+        in: query
+        description: Filter by metadata
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: Index of page to get. Page size is 100
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Addresses retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponsePaginatedServiceResponse'
+        '422':
+          description: Failed to retrieve addresses
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    post:
+      tags:
+      - Addresses
+      summary: Create address
+      description: 'Required permission: Account information, Edit.'
+      requestBody:
+        description: AddressCreateRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressCreateRequest'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '201':
+          description: Address created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponseServiceResponse'
+        '422':
+          description: Failed to create address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponseServiceResponse'
+  /public/v2/addresses/{addressReferenceId}:
+    get:
+      tags:
+      - Addresses
+      summary: Get address
+      description: 'Required permission: Account information, View.'
+      parameters:
+      - name: addressReferenceId
+        in: path
+        description: Address reference ID
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 55ec6574-10d8-bd9c-1951-d4184f4ae467
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Address retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponseServiceResponse'
+        '422':
+          description: Failed to retrieve address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    put:
+      tags:
+      - Addresses
+      summary: Update address
+      description: 'Required permission: Account information, Edit.'
+      parameters:
+      - name: addressReferenceId
+        in: path
+        description: Reference Id of address to update
+        required: true
+        schema:
+          type: string
+          format: uuid
+        example: 55ec6574-10d8-bd9c-1951-d4184f4ae467
+      requestBody:
+        description: AddressUpdateRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressUpdateRequestV2'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Address updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressResponseServiceResponse'
+        '422':
+          description: Failed to update the address
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AddressResponse:
+      type: object
+      properties:
+        addressReferenceId:
+          type: string
+          description: 'Reference identifier for address. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
+          format: uuid
+        addressLines:
+          type: array
+          items:
+            type: string
+          description: 'The address lines for the address. Example: 1 Rocket Road'
+        locality:
+          type:
+          - string
+          - 'null'
+          description: 'The town/locality of the address. Example: Hawthorne'
+        administrativeArea:
+          type:
+          - string
+          - 'null'
+          description: 'The administrative area of the address. Example: California'
+        administrativeAreaCode:
+          type: string
+          description: 'The administrative area code of the address. Example: CA'
+        region:
+          type:
+          - string
+          - 'null'
+          description: 'The region of the address. Example: United States'
+        regionCode:
+          type: string
+          description: 'The region code of the address. Example: US'
+        postalCode:
+          type: string
+          description: 'The postal code of the address. Example: 90250'
+        metadata:
+          type:
+          - string
+          - 'null'
+          description: Optional field that can be used to store information about the address for external purposes
+        formattedAddress:
+          type: string
+          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
+        latitude:
+          type: number
+          description: 'The latitude of the address: Example 33.92'
+          format: double
+        longitude:
+          type: number
+          description: 'The longitude of the address. Example: -118.32'
+          format: double
+      additionalProperties: false
+    AddressUpdateRequestV2:
+      required:
+      - addressLines
+      - formattedAddress
+      - latitude
+      - longitude
+      type: object
+      properties:
+        addressLines:
+          type: array
+          items:
+            type: string
+          description: 'The address lines for the address. Example: 1 Rocket Road'
+        locality:
+          type:
+          - string
+          - 'null'
+          description: 'The town/locality of the address. Example: Hawthorne'
+        administrativeArea:
+          type:
+          - string
+          - 'null'
+          description: 'The administrative area of the address. Example: California'
+        administrativeAreaCode:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: value will be ignored. Administrative area code will be determined from latitude and longitude.'
+          deprecated: true
+        region:
+          type:
+          - string
+          - 'null'
+          description: 'The region of the address. Example: United States'
+        regionCode:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: value will be ignored. Region Code will be determined from latitude and longitude.'
+          deprecated: true
+        postalCode:
+          type:
+          - string
+          - 'null'
+          description: 'The postal code of the address. Example: 90250-6844'
+        metadata:
+          type:
+          - string
+          - 'null'
+          description: Optional field that can be used to store information about the address for external purposes
+        formattedAddress:
+          minLength: 1
+          type: string
+          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
+        latitude:
+          type: number
+          description: 'The required latitude of the address. Example: 33.92'
+          format: double
+        longitude:
+          type: number
+          description: 'The required longitude of the address. Example: -118.32'
+          format: double
+      additionalProperties: false
+    AddressResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddressResponse'
+      additionalProperties: false
+    AddressResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddressResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    AddressResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddressResponsePaginated'
+      additionalProperties: false
+    AddressCreateRequest:
+      required:
+      - addressLines
+      - formattedAddress
+      - latitude
+      - longitude
+      type: object
+      properties:
+        addressLines:
+          type: array
+          items:
+            type: string
+          description: 'The address lines for the address. Example: 1 Rocket Road'
+        locality:
+          type:
+          - string
+          - 'null'
+          description: 'The town/locality of the address. Example: Hawthorne'
+        administrativeArea:
+          type:
+          - string
+          - 'null'
+          description: 'The administrative area of the address. Example: California'
+        administrativeAreaCode:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: value will be ignored. Administrative area code will be determined from latitude and longitude.'
+          deprecated: true
+        region:
+          type:
+          - string
+          - 'null'
+          description: 'The region of the address. Example: United States'
+        regionCode:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: value will be ignored. Region Code will be determined from latitude and longitude.'
+          deprecated: true
+        postalCode:
+          type:
+          - string
+          - 'null'
+          description: 'The postal code of the address. Example: 90250-6844'
+        metadata:
+          type:
+          - string
+          - 'null'
+          description: Optional field that can be used to store information about the address for external purposes
+        formattedAddress:
+          minLength: 1
+          type: string
+          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
+        latitude:
+          type: number
+          description: 'The required latitude of the address. Example: 33.92'
+          format: double
+        longitude:
+          type: number
+          description: 'The required longitude of the address. Example: -118.32'
+          format: double
+      additionalProperties: false

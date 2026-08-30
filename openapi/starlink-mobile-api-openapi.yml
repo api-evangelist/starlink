@@ -1,0 +1,511 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Mobile API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Mobile
+paths:
+  /public/v2/mobile/radio-access-network/{timestamp}:
+    get:
+      tags:
+      - Mobile
+      summary: Get Radio Access Network Data
+      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Radio Access Network (RAN) data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
+      parameters:
+      - name: timestamp
+        in: path
+        description: Timestamp of target data aggregated by the hour for the selected hour
+        required: true
+        schema:
+          type: string
+          format: date-time
+        example: '2026-06-15T00:00:00Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileRanResponseListServiceResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/mobile/timeseries/{timestamp}:
+    get:
+      tags:
+      - Mobile
+      summary: Get Timeseries Data of Starlink Mobile Usage and Beam Reliability
+      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Timeseries data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
+      parameters:
+      - name: timestamp
+        in: path
+        description: Timestamp of target data aggregated by the hour for the selected hour
+        required: true
+        schema:
+          type: string
+          format: date-time
+        example: '2026-06-15T00:00:00Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileTimeSeriesResponseListServiceResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/mobile/map/{timestamp}:
+    get:
+      tags:
+      - Mobile
+      summary: Get Map Data
+      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Map data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
+      parameters:
+      - name: timestamp
+        in: path
+        description: Timestamp of target data aggregated by the hour for the selected hour
+        required: true
+        schema:
+          type: string
+          format: date-time
+        example: '2026-06-15T00:00:00Z'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MobileMapResponseListServiceResponse'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    MobileRanResponse:
+      type: object
+      properties:
+        trackingAreaCode:
+          type: integer
+          description: Tracking area code
+          format: int32
+        timestamp:
+          type: string
+          description: Timestamp in UTC of the start of the returned hour of data
+          format: date-time
+        broadcastPublicLandMobileNumber:
+          type: integer
+          description: Broadcast Public Land Mobile Number of serving network
+          format: int32
+        radioResourceControllerConnectionsCompleted:
+          type: integer
+          description: Total number of Radio Resource Controller (RRC) connections completed
+          format: int32
+        radioResourceControllerConnectionsRequested:
+          type: integer
+          description: Total number of Radio Resource Controller (RRC) connections requested
+          format: int32
+        radioResourceControllerSuccessRate:
+          type: number
+          description: Radio Resource Controller success rate -> (RadioResourceControllerConnectionsCompleted / RadioResourceControllerConnectionsRequested)*100 (0-100)
+          format: float
+        radioResourceControllerAdmissionRejects:
+          type: integer
+          description: Total number of admission rejects due to 128 user limit
+          format: int32
+        radioResourceControllerConnectionsMax:
+          type: integer
+          description: Highest instantaneous value of maximum Radio Resource Controller concurrently connected users
+          format: int32
+        radioResourceControllerConnectionsP90:
+          type: number
+          description: 90th percentile of concurrent Radio Resource Controller connections
+          format: float
+        resourceControllerConnectionsAverage:
+          type: number
+          description: Average number of concurrent Radio Resource Controller connections
+          format: float
+        activeUsersAverage:
+          type: number
+          description: Active users = SUM(number initial context setup requests + handover in attempts)
+          format: float
+        activeUsersMax:
+          type: number
+          description: Maximum value of active users during hour
+          format: float
+        uplinkPhysicalResourceBlockUtilizationP90:
+          type: number
+          description: 90th percentile of uplink physical resource block usage (0-100)
+          format: float
+        downlinkPhysicalResourceBlockUtilizationP90:
+          type: number
+          description: 90th percentile of downlink physical resource block usage (0-100)
+          format: float
+        uplinkPhysicalResourceBlockUtilizationMax:
+          type: number
+          description: Maximum of Uplink physical resource block usage during aggregation period (0-100)
+          format: float
+        downlinkPhysicalResourceBlockUtilizationMax:
+          type: number
+          description: Maximum of downlink physical resource block usage during aggregation period (0-100)
+          format: float
+        uplinkPhysicalResourceBlockUtilizationAverage:
+          type: number
+          description: Average of uplink physical resource block usage during aggregation period (0-100)
+          format: float
+        downlinkPhysicalResourceBlockUtilizationAverage:
+          type: number
+          description: Average of downlink physical resource block usage during aggregation period (0-100)
+          format: float
+        uplinkThroughputKilobitsPerSecMax:
+          type: number
+          description: Maximum uplink data throughput at eNode-B kilobits per second
+          format: float
+        downlinkThroughputKilobitsPerSecMax:
+          type: number
+          description: Maximum downlink data throughput at eNode-B kilobits per second
+          format: float
+        downlinkThroughputKilobitsPerSecAverage:
+          type: number
+          description: Average downlink data throughput at eNode-B kilobits per second
+          format: float
+        uplinkThroughputKilobitsPerSecAverage:
+          type: number
+          description: Average uplink data throughput at eNode-B kilobits per second
+          format: float
+        downlinkThroughputKilobitsPerSecP90:
+          type: number
+          description: 90th percentile downlink data throughput at eNode-B kilobits per second
+          format: float
+        uplinkThroughputKilobitsPerSecP90:
+          type: number
+          description: 90th percentile uplink data throughput at eNode-B kilobits per second
+          format: float
+        downlinkThroughputKilobitsPerSecPerUserAverage:
+          type: number
+          description: Average downlink data throughput at eNode-B kilobits per second
+          format: float
+        downlinkThroughputKilobitsPerSecPerUserMax:
+          type: number
+          description: Maximum downlink data throughput at eNode-B kilobits per second
+          format: float
+        uplinkThroughputKilobitsPerSecPerUserAverage:
+          type: number
+          description: Average uplink data throughput at eNode-B kilobits per second
+          format: float
+        uplinkThroughputKilobitsPerSecPerUserMax:
+          type: number
+          description: Maximum uplink data throughput at eNode-B kilobits per second
+          format: float
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    MobileTimeSeriesResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileTimeSeriesResponse'
+      additionalProperties: false
+    MobileMapResponse:
+      type: object
+      properties:
+        trackingAreaCode:
+          type: integer
+          description: Tracking area code
+          format: int32
+        broadcastPublicLandMobileNumber:
+          type: integer
+          description: Broadcast Public Land Mobile Number of serving network
+          format: int32
+        timestamp:
+          type: string
+          description: Timestamp in UTC of the start of the returned hour of data
+          format: date-time
+        accessType:
+          type: string
+          description: Network Access Type - home or reciprocal users
+        deviceType:
+          type: string
+          description: Device Type - commercial (phone/user equipment) or Internet of Things (IOT) device
+        serviceType:
+          type: string
+          description: Service Type - Commercial or Emergency
+        gapTimeSecondsByTrackingAreaCodeAverage:
+          type: number
+          description: Average duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        gapTimeSecondsByTrackingAreaCodeP90:
+          type: number
+          description: 90th percentile duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        gapTimeSecondsByTrackingAreaCodeP50:
+          type: number
+          description: 50th percentile duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        trackingAreaCodeBeamAvailabilitySeconds:
+          type: number
+          description: Total time of beam coverage/placement in seconds per tracking area code (0-3600)
+          format: double
+        totalShortMessageServiceMessages:
+          type: integer
+          description: Total number of Mobile Originated (MO) and Mobile Terminated (MT) Short Message Services sent per tracking area code
+          format: int32
+        uniqueInternationalMobileSubscriberIdentities:
+          type: integer
+          description: Unique International Mobile Subscriber Identity (IMSI) count of users that connect with 'NAS_ATTACH_COMPLETE' message received per tracking area code
+          format: int32
+        upLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
+          type: number
+          description: Average value of uplink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
+          format: double
+        downLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
+          type: number
+          description: Average value of downlink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
+          format: double
+      additionalProperties: false
+    MobileRanResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileRanResponse'
+      additionalProperties: false
+    MobileTimeSeriesResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          description: Timestamp in UTC of the start of the returned hour of data)
+          format: date-time
+        networkAccessType:
+          type: string
+          description: Network Access Type - home or reciprocal users
+        deviceType:
+          type: string
+          description: Device Type - commercial (phone/user equipment) or Internet of Things (IOT) device
+        serviceType:
+          type: string
+          description: Service Type - Commercial or Emergency
+        broadcastPublicLandMobileNumber:
+          type: number
+          description: Broadcast Public Land Mobile Number of serving network
+          format: float
+        nonAccessStratumAttachSuccessRate:
+          type: number
+          description: Non-Access Stratum (NAS) attach success rate -> (NAS_Accepted / (NAS_Accepted + NAS_Rejected))*100 (0-100)
+          format: float
+        nonAccessStratumAccepted:
+          type: number
+          description: Total number of Non-Access Stratum (NAS) Accepted messages sent
+          format: float
+        nonAccessStratumRejected:
+          type: number
+          description: Total number of Non-Access Stratum (NAS) Rejected messages sent
+          format: float
+        beamReliabilityRate:
+          type: number
+          description: (Beams placed / Total number of beams expected/scheduled to be placed)*100 (0-100)
+          format: float
+        uniqueUsers:
+          type: integer
+          description: Unique international mobile subscriber identity (IMSI) that received 'NAS_ATTACH_COMPLETE'
+          format: int32
+        totalSuccessfulMobileOriginatedMessages:
+          type: integer
+          description: Total number of Mobile Originated (MO) messages sent
+          format: int32
+        totalSuccessfulMobileTerminatedMessages:
+          type: integer
+          description: Total number of Mobile Terminated (MT) messages sent
+          format: int32
+        mobileTerminatedSuccessRate:
+          type: number
+          description: Success rate of Mobile Terminated short message service messages (0-100)
+          format: float
+        upLinkDataVolumeMegabytes:
+          type: number
+          description: Total uplink data consumed in megabytes measured at serving gateway (SGw)
+          format: float
+        downLinkDataVolumeMegabytes:
+          type: number
+          description: Total downlink data consumed in megabytes measured at serving gateway (SGw)
+          format: float
+      additionalProperties: false
+    MobileMapResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileMapResponse'
+      additionalProperties: false

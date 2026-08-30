@@ -1,0 +1,409 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Billing API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Billing
+paths:
+  /public/v2/billing/invoices:
+    get:
+      tags:
+      - Billing
+      summary: Get invoice summaries
+      description: 'Required permission: Financial, View.'
+      parameters:
+      - name: page
+        in: query
+        description: The index of the page, starting at 0. Page size is 100
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Invoices retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceSummaryResponsePaginatedServiceResponse'
+        '422':
+          description: Failed to retrieve invoices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/billing/invoices/{invoiceId}:
+    get:
+      tags:
+      - Billing
+      summary: Get invoice details
+      description: 'Required permission: Financial, View.'
+      parameters:
+      - name: invoiceId
+        in: path
+        description: The invoice identifier
+        required: true
+        schema:
+          type: string
+        example: INV-DF-US-1234ABCD
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Invoice retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDetailResponseServiceResponse'
+        '422':
+          description: Failed to retrieve the invoice
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/billing/balance:
+    get:
+      tags:
+      - Billing
+      summary: Get account balance
+      description: 'Required permission: Financial, View.<br/>Response contains one balance for each currency. If all balances are 0 then response will contain a single entry with 0 balance and currency matching the default for this account.'
+      responses:
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Balance retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountBalanceResponseServiceResponse'
+        '422':
+          description: Failed to retrieve the balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    AccountBalanceResponse:
+      type: object
+      properties:
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyBalanceResponse'
+          description: The account balance for each currency owed. If nothing is owed, a single zero balance in the account's currency is returned.
+      additionalProperties: false
+    InvoiceSummaryResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/InvoiceSummaryResponsePaginated'
+      additionalProperties: false
+    CurrencyBalanceResponse:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: 'The ISO 4217 alphabetic currency code of the balance. Example: USD'
+        dueAmount:
+          type: number
+          description: The amount due
+          format: double
+      additionalProperties: false
+    InvoiceSummaryResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InvoiceSummaryResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AccountBalanceResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AccountBalanceResponse'
+      additionalProperties: false
+    InvoiceDetailResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/InvoiceDetailResponse'
+      additionalProperties: false
+    InvoiceLineDetailResponse:
+      type: object
+      properties:
+        productReferenceId:
+          type: string
+          description: The product identifier
+        productDescription:
+          type: string
+          description: The product description
+        serviceName:
+          type:
+          - string
+          - 'null'
+          description: The service name
+        serviceLineNumbers:
+          type: array
+          items:
+            type: string
+          description: The service line numbers this line applies to
+        quantity:
+          type: number
+          description: The quantity billed
+          format: double
+        unitPrice:
+          type: number
+          description: The unit price, before tax
+          format: double
+        taxAmount:
+          type: number
+          description: The total tax
+          format: double
+        subTotal:
+          type: number
+          description: The line total, before tax
+          format: double
+        servicePeriodStartDate:
+          type:
+          - string
+          - 'null'
+          description: The start of the service period
+          format: date-time
+        servicePeriodEndDate:
+          type:
+          - string
+          - 'null'
+          description: The end of the service period
+          format: date-time
+      additionalProperties: false
+    InvoiceDetailResponse:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          description: 'The invoice identifier. Example: INV-DF-US-1234ABCD'
+        orderReferenceId:
+          type: string
+          description: The order this invoice was generated from
+        currency:
+          type: string
+          description: 'The ISO 4217 alphabetic currency code of the invoice. Example: USD'
+        dueAmount:
+          type: number
+          description: The amount still owed on the invoice
+          format: double
+        paidAmount:
+          type: number
+          description: The amount already paid on the invoice
+          format: double
+        invoiceDate:
+          type: string
+          description: The date the invoice was issued
+          format: date-time
+        dueDate:
+          type:
+          - string
+          - 'null'
+          description: The date payment is due
+          format: date-time
+        invoiceLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceLineDetailResponse'
+          description: The line items on the invoice
+      additionalProperties: false
+    PublicInvoiceStatus:
+      enum:
+      - Unknown
+      - Paid
+      - Cancelled
+      - Overdue
+      - DueSoon
+      - Outstanding
+      type: string
+      description: The status of an invoice
+      x-enumNames:
+      - Unknown
+      - Paid
+      - Cancelled
+      - Overdue
+      - DueSoon
+      - Outstanding
+    InvoiceSummaryResponse:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          description: 'The invoice identifier. Example: INV-DF-US-1234ABCD'
+        description:
+          type: string
+          description: 'The invoice description. Example: Order'
+        currency:
+          type: string
+          description: 'The ISO 4217 alphabetic currency code of the invoice. Example: USD'
+        amount:
+          type: number
+          description: The total amount of the invoice
+          format: double
+        dueAmount:
+          type: number
+          description: The amount still owed on the invoice
+          format: double
+        invoiceDate:
+          type: string
+          description: The date the invoice was issued
+          format: date-time
+        dueDate:
+          type:
+          - string
+          - 'null'
+          description: The date payment is due
+          format: date-time
+        status:
+          $ref: '#/components/schemas/PublicInvoiceStatus'
+      additionalProperties: false

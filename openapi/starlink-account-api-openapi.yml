@@ -1,0 +1,767 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Account API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Account
+paths:
+  /public/v2/account:
+    get:
+      tags:
+      - Account
+      summary: Get account information
+      description: 'Required permission: Account information, View.'
+      responses:
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Account retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponseV2ServiceResponse'
+        '422':
+          description: Failed to retrieve account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/data-usage/query:
+    post:
+      tags:
+      - Account
+      summary: Query data usage
+      description: 'Required permission: Service plan, View.<br/>Retrieve the real-time data tracking info for this account''s data usage. For detailed instructions, please refer to the API documentation: https://starlink.readme.io/docs/data-usage-api'
+      parameters:
+      - name: page
+        in: query
+        description: Index of page to get.
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: limit
+        in: query
+        description: Amount of service lines to retrieve per page. Defaults to 50, can request up to 250.
+        schema:
+          type: integer
+          format: int32
+          default: 50
+      requestBody:
+        description: Data usage query filters
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QueryDataUsageRequest'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully retrieved data usage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLineDataUsageForBillingCyclesPaginatedServiceResponse'
+        '422':
+          description: Failed to query data usage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/products:
+    get:
+      tags:
+      - Account
+      summary: Get products
+      description: 'Required permission: Service plan, View.<br/>Gets all products available to this account that could be assigned to service lines. Each product includes data block product info if compatible.'
+      parameters:
+      - name: page
+        in: query
+        description: Index of page to get. Page size is 100
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint
+        '200':
+          description: Subscription products retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubscriptionProductResponsePaginatedServiceResponse'
+        '422':
+          description: Failed to retrieve subscriptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    AccountResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AccountResponseV2'
+      additionalProperties: false
+    SubscriptionProductResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/SubscriptionProductResponsePaginated'
+      additionalProperties: false
+    DataBlockType:
+      enum:
+      - IncludedWithBaseSubscription
+      - RecurringPerBillingCycle
+      - Overage
+      - OneTimePurchase
+      type: string
+      x-enumNames:
+      - IncludedWithBaseSubscription
+      - RecurringPerBillingCycle
+      - Overage
+      - OneTimePurchase
+    DataBlockMonthlyPublicResponse:
+      type: object
+      properties:
+        startDate:
+          type: string
+          description: Start date of the respective month.
+          format: date-time
+        endDate:
+          type: string
+          description: End date of the respective month.
+          format: date-time
+        serviceLineUsage:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockServiceLineUsagePublicResponse'
+          description: Montly usage breakdown by service lines.
+      additionalProperties: false
+    SubscriptionProductResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SubscriptionProductResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ServiceLineDataUsageForBillingCyclesPaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/ServiceLineDataUsageForBillingCyclesPaginated'
+      additionalProperties: false
+    DataUsageDailyV2:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date of usage (UTC).
+          format: date-time
+        priorityGB:
+          type: number
+          description: Total priority (unrestricted, high-speed) data consumed on this day in GB. Includes opt-in priority data.
+          format: double
+        optInPriorityGB:
+          type: number
+          description: Portion of priority data consumed while opted into overage on this day in GB. This is a subset of PriorityGB, not additive.
+          format: double
+        standardGB:
+          type: number
+          description: Standard (deprioritized) data consumed on this day in GB.
+          format: double
+        nonBillableGB:
+          type: number
+          description: Non-billable data consumed on this day in GB.
+          format: double
+      additionalProperties: false
+    ServiceLineDataUsageForBillingCyclesPaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ServiceLineDataUsageForBillingCycles'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    DataProductResponse:
+      type: object
+      properties:
+        productId:
+          type:
+          - string
+          - 'null'
+        price:
+          type: number
+          format: double
+        isoCurrencyCode:
+          type:
+          - string
+          - 'null'
+        dataAmount:
+          type: number
+          format: double
+        dataUnit:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DataBlockServiceLineUsagePublicResponse:
+      type: object
+      properties:
+        serviceLineNumber:
+          type: string
+          description: Service line number.
+        consumedAmountGB:
+          type: number
+          description: GB amount that the service line consumed from the block.
+          format: double
+      additionalProperties: false
+    DataProductsResponse:
+      type: object
+      properties:
+        topUpProduct:
+          $ref: '#/components/schemas/DataProductResponse'
+        dataBlockProducts:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataProductResponse'
+          description: The data block products that are available for this service plan.
+      additionalProperties: false
+    DataOverageType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      type: integer
+      format: int32
+      x-enumNames:
+      - None
+      - PriorityPerGb
+      - DeprioritizedPerGb
+      - LimitWithNoOverageData
+    SubscriptionProductResponse:
+      type: object
+      properties:
+        productReferenceId:
+          type: string
+          description: The unique product identifier
+        name:
+          type: string
+          description: Name of the product
+        price:
+          type: number
+          description: Monthly price
+          format: double
+        isoCurrencyCode:
+          type: string
+          description: Currency code for the price
+        isSla:
+          type: boolean
+          description: If Product Has SLA
+        maxNumberOfUserTerminals:
+          type:
+          - integer
+          - 'null'
+          description: The maximum number of user terminals that can be assigned to a single service line using this product. Null response means an unlimited number of UTs can be assigned.
+          format: int32
+        dataProducts:
+          $ref: '#/components/schemas/DataProductsResponse'
+      additionalProperties: false
+    DataBucketType:
+      enum:
+      - 0
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5
+      - 6
+      - 7
+      - 8
+      - 9
+      - 10
+      type: integer
+      format: int32
+      x-enumNames:
+      - Unknown
+      - MobileRestricted
+      - MobileUnrestricted
+      - FixedRestricted
+      - FixedUnrestricted
+      - NonBillable
+      - MobileDeprioritizedLimited
+      - FixedDeprioritizedLimited
+      - Residential
+      - ResidentialLite
+      - Roam
+    QueryDataUsageRequest:
+      type: object
+      properties:
+        serviceLineNumbers:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Service line numbers to filter by. Queries for all service lines on account if omitted
+        previousBillingCycles:
+          type:
+          - integer
+          - 'null'
+          description: Number of previous billing cycles to include in addition to the current one. Defaults to 1
+          format: int32
+        activeServiceLinesOnly:
+          type: boolean
+          description: Whether to filter by only active service lines. Defaults to true
+        queryStartDate:
+          type:
+          - string
+          - 'null'
+          description: Override the first cycle's start date with the provided query start date
+          format: date-time
+      additionalProperties: false
+    DataBlockUsagePublicResponse:
+      type: object
+      properties:
+        dataBlockId:
+          type: string
+          description: Data block ID
+        startDateUtc:
+          type: string
+          description: UTC start date of the data block.
+          format: date-time
+        expirationDateUtc:
+          type: string
+          description: UTC expiration date of the data block.
+          format: date-time
+        totalAmountGB:
+          type: number
+          description: Total GB capacity, calculated by multiplying BlocksCount and PerBlockAmountGB.
+          format: double
+        consumedAmountGB:
+          type: number
+          description: How much data has been used on the block.
+          format: double
+        perBlockAmountGB:
+          type: number
+          description: GB capacity per individual block.
+          format: double
+        dataBlockType:
+          $ref: '#/components/schemas/DataBlockType'
+        productId:
+          type: string
+          description: Product ID of the data block.
+        blocksCount:
+          type: integer
+          description: Number of data blocks.
+          format: int32
+        perBlockPrice:
+          type: number
+          description: Price per individual data block.
+          format: double
+        totalPrice:
+          type: number
+          description: Total price, calculated by multiplying PerBlockPrice and BlocksCount.
+          format: double
+          readOnly: true
+        isoCurrencyCode:
+          type: string
+          description: Currency code for the price.
+        serviceLineUsage:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockServiceLineUsagePublicResponse'
+          description: Usage breakdown by service lines.
+        monthlyUsage:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockMonthlyPublicResponse'
+          description: Usage breakdown by month.
+      additionalProperties: false
+    DataUsageOverageLine:
+      type: object
+      properties:
+        restricted:
+          $ref: '#/components/schemas/DataBucketType'
+        unrestricted:
+          $ref: '#/components/schemas/DataBucketType'
+        pricePerGB:
+          type: number
+          description: Price per GB for overage consumption (e.g., 1.00 for $1.00/GB).
+          format: double
+        usageLimitGB:
+          type: number
+          description: Plan's included priority data limit in GB before overage charges apply. Zero for plans that are restricted by default.
+          format: double
+        overageAmountGB:
+          type: number
+          description: Amount of priority data consumed beyond the usage limit while opted into overage, in GB. Only opt-in priority data counts toward overage.
+          format: double
+        consumedAmountGB:
+          type: number
+          description: Amount of priority data consumed up to the usage limit, in GB.
+          format: double
+        overagePrice:
+          type: number
+          description: Total overage cost before taxes and fees.
+          format: double
+        productId:
+          type: string
+          description: Product ID for the overage product.
+        dataOverageType:
+          $ref: '#/components/schemas/DataOverageType'
+        activeFrom:
+          type:
+          - string
+          - 'null'
+          description: Date when this overage period began tracking usage (UTC). Null if no usage has been recorded yet.
+          format: date-time
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    ServiceLineDataUsageForBillingCycles:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: Account number that owns this service line.
+        serviceLineNumber:
+          type: string
+          description: Service line number for which usage data is reported.
+        startDate:
+          type: string
+          description: Start date of the first billing cycle in the response (UTC).
+          format: date-time
+        endDate:
+          type: string
+          description: End date of the last billing cycle in the response (UTC).
+          format: date-time
+        billingCycles:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataUsageBillingCycleV2'
+          description: Data usage grouped by billing cycle, ordered chronologically. The most recent cycle appears last in the array.
+        servicePlan:
+          $ref: '#/components/schemas/DataServicePlan'
+        lastUpdated:
+          type:
+          - string
+          - 'null'
+          description: Timestamp when the usage data was last updated in the cache. Only present for cached data (typically yesterday and later).
+          format: date-time
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DataServicePlan:
+      required:
+      - dataCategoryMapping
+      - isMobilePlan
+      - isOptedIntoOverage
+      - productId
+      - usageLimitGB
+      type: object
+      properties:
+        isoCurrencyCode:
+          type:
+          - string
+          - 'null'
+          description: ISO currency code for displaying prices (e.g., "USD", "EUR"). Null if no subscription exists.
+        isMobilePlan:
+          type: boolean
+          description: Indicates if this is a mobile-type plan (mobility class is nomadic or mobile).
+        activeFrom:
+          type:
+          - string
+          - 'null'
+          description: Date when data usage tracking began for this product (UTC). May differ from subscription start date.
+          format: date-time
+        subscriptionActiveFrom:
+          type:
+          - string
+          - 'null'
+          description: Date when the service line's subscription started (UTC).
+          format: date-time
+        subscriptionEndDate:
+          type:
+          - string
+          - 'null'
+          description: Date when the subscription ended (UTC). Null for active subscriptions.
+          format: date-time
+        overageName:
+          type: string
+          description: Display name for the overage product shown in opt-in/out interfaces. Empty string if no overage product exists.
+        overageDescription:
+          type: string
+          description: Description of the overage product shown in opt-in/out interfaces. Empty string if no overage product exists.
+        isOptedIntoOverage:
+          type: boolean
+          description: Indicates whether the service line is currently opted into overage for metered plans.
+        overageLineDeactivatedDate:
+          type:
+          - string
+          - 'null'
+          description: Most recent date and time when overage opt-in was disabled (UTC). Null if never disabled or currently opted in.
+          format: date-time
+        overageLine:
+          $ref: '#/components/schemas/DataUsageOverageLine'
+        dataPoolUsage:
+          $ref: '#/components/schemas/DataPoolUsagePublicResponse'
+        productId:
+          minLength: 1
+          type: string
+          description: Product ID identifying the current subscription plan. Empty string if no subscription exists.
+        usageLimitGB:
+          type: number
+          description: Usage limit in GB for this plan. For metered plans, this is the priority data limit. For Priority data plans, this is the total data pool capacity.
+          format: double
+        dataCategoryMapping:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DataBucketType'
+          description: Deprecated. Value will always be empty dictionary.
+      additionalProperties: false
+    AccountResponseV2:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: 'The Account Number. Example: ACC-511274-31364-54'
+        regionCode:
+          type: string
+          description: 'The region code of the account. Example: US'
+        accountName:
+          type:
+          - string
+          - 'null'
+          description: The name of the account
+        activeSuspensions:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Active suspensions on account
+      additionalProperties: false
+    DataUsageBillingCycleV2:
+      type: object
+      properties:
+        startDate:
+          type: string
+          description: Start date of the billing cycle.
+          format: date-time
+        endDate:
+          type: string
+          description: End date of the billing cycle.
+          format: date-time
+        dailyDataUsage:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataUsageDailyV2'
+          description: Daily data usage breakdown for each day in the billing cycle. Omits days with no recorded usage.
+        overageLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataUsageOverageLine'
+          description: Overage lines for metered plans showing usage beyond plan limits. Empty for plans without overage or cycles with no overage. May contain multiple lines if subscription changed mid-cycle.
+        dataPoolUsage:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataPoolUsagePublicResponse'
+          description: Data pool usage information for Priority data plans. Empty for metered plans or if no data pools are attached.
+        totalPriorityGB:
+          type: number
+          description: Total priority data consumed in this billing cycle (GB), rounded to 2 decimal places. Includes opt-in priority data.
+          format: double
+          readOnly: true
+        totalStandardGB:
+          type: number
+          description: Total standard data consumed in this billing cycle (GB), rounded to 2 decimal places.
+          format: double
+          readOnly: true
+        totalOptInPriorityGB:
+          type: number
+          description: Total priority data consumed while opted into overage in this billing cycle (GB), rounded to 2 decimal places. This is a subset of TotalPriorityGB.
+          format: double
+          readOnly: true
+        totalNonBillableGB:
+          type: number
+          description: Total non-billable data consumed in this billing cycle (GB), rounded to 2 decimal places.
+          format: double
+          readOnly: true
+      additionalProperties: false
+    DataPoolUsagePublicResponse:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: Account number that owns this data pool.
+        dataPoolId:
+          type: string
+          description: Data pool ID.
+        lastUpdated:
+          type: string
+          description: Timestamp when the data pool usage was last updated (UTC).
+          format: date-time
+        dataBlocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockUsagePublicResponse'
+          description: Usage by data blocks in the pool.
+      additionalProperties: false

@@ -1,0 +1,154 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Flights API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Flights
+paths:
+  /public/v2/flights/status:
+    post:
+      tags:
+      - Flights
+      summary: Post a flight event
+      description: 'Required permission: Aviation flight status management, Edit.<br/>Post a real-time flight event on a Starlink-enabled plane. This endpoint is only accessible from an aviation account.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StarlinkFlightRequest'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    EventType:
+      enum:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
+      type: string
+      x-enumNames:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    StarlinkFlightRequest:
+      required:
+      - eventType
+      - flightNumber
+      - tailNumber
+      type: object
+      properties:
+        tailNumber:
+          minLength: 1
+          type: string
+          description: Tail Number that matches aircraft registration.
+        flightNumber:
+          maxLength: 7
+          minLength: 3
+          type: string
+          description: Flight Number that specifies specific route operated by airlines. Please include 2-character airline code in IATA format followed by 1-4 digits.
+        eventType:
+          $ref: '#/components/schemas/EventType'
+        eventTimeUtc:
+          type:
+          - string
+          - 'null'
+          description: ISO 8601 Timestamp that represents actual gate departure (if eventType = Departure) or gate arrival (if eventType = Arrival) time in UTC.
+          format: date-time
+        eventAirport:
+          $ref: '#/components/schemas/AirportCode'
+        scheduledArrivalAirport:
+          $ref: '#/components/schemas/AirportCode'
+        estimatedGateArrivalTimeUtc:
+          type:
+          - string
+          - 'null'
+          description: Optional Metadata. ISO 8601 Timestamp that represents estimated gate arrival time in UTC.
+          format: date-time
+        passengerCount:
+          type:
+          - integer
+          - 'null'
+          description: Optional Metadata. Actual passenger count on flight.
+          format: int32
+        slaOptOutFlight:
+          type: boolean
+          description: Optional Metadata. Exclude this flight from Starlink SLA commitments. Default is false.
+          default: false
+      additionalProperties: false
+    AirportCode:
+      type: object
+      properties:
+        airportIataCode:
+          maxLength: 3
+          minLength: 3
+          type:
+          - string
+          - 'null'
+          description: 3 character string representing airport code in IATA format.
+        airportIcaoCode:
+          maxLength: 4
+          minLength: 4
+          type:
+          - string
+          - 'null'
+          description: 4 character string representing airport code in ICAO format.
+      additionalProperties: false

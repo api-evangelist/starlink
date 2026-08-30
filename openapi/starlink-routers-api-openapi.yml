@@ -1,0 +1,1139 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Routers API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Routers
+paths:
+  /public/v2/routers/{routerId}:
+    get:
+      tags:
+      - Routers
+      summary: Get router
+      description: 'Required permission: Device management, View.'
+      parameters:
+      - name: routerId
+        in: path
+        description: Router Id
+        required: true
+        schema:
+          type: string
+        example: '010000000000000000012345'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: RouterResponse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouterResponseV2ServiceResponse'
+        '422':
+          description: Failed to get router
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/configs:
+    get:
+      tags:
+      - Routers
+      summary: Get all router configs
+      description: 'Required permission: Device command and configuration, View.<br/>Return all router configs on this account in paginated form'
+      parameters:
+      - name: page
+        in: query
+        description: Index of page to get. Page size is 100
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Paginated RouterConfigResponse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouterConfigResponseV2PaginatedServiceResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    post:
+      tags:
+      - Routers
+      summary: Create router config
+      description: 'Required permission: Device command and configuration, Edit.'
+      requestBody:
+        description: RouterConfigRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouterConfigRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouterConfigResponseV2ServiceResponse'
+        '422':
+          description: Failed to create router config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '200':
+          description: Success
+  /public/v2/routers/configs/{configId}:
+    get:
+      tags:
+      - Routers
+      summary: Get router config
+      description: 'Required permission: Device command and configuration, View.'
+      parameters:
+      - name: configId
+        in: path
+        description: Config Id
+        required: true
+        schema:
+          type: string
+        example: DVC_CFG-12341234
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: RouterConfigResponse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouterConfigResponseV2ServiceResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    put:
+      tags:
+      - Routers
+      summary: Update router config
+      description: 'Required permission: Device command and configuration, Edit.<br/>Update a given router config. Any router assigned to this config will immediately receive the update if it is online. Otherwise, the router will receive the update when it comes online.'
+      parameters:
+      - name: configId
+        in: path
+        description: Config Id
+        required: true
+        schema:
+          type: string
+        example: DVC_CFG-12341234
+      requestBody:
+        description: RouterConfigRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RouterConfigRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: RouterConfigResponse
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouterConfigResponseV2ServiceResponse'
+        '422':
+          description: Failed to update router config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/configs/assign:
+    put:
+      tags:
+      - Routers
+      summary: Router config assignment
+      description: 'Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the routers. For each router if it is currently online, the config will immediately be sent to the router. Else, the config will be sent to the router when it comes online. Configs are sent to the router within 1-2 minutes. On error no assignment occurs.'
+      requestBody:
+        description: Request containing config id (or empty) and list of deviceId's to assign to
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignRoutersConfigRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/configs/default:
+    get:
+      tags:
+      - Routers
+      summary: Get default router config
+      description: 'Required permission: Device command and configuration, View.<br/>Gets the router config id that will be assigned to any routers when they are first added to this account.'
+      responses:
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultRouterConfigResponseServiceResponse'
+        '422':
+          description: Failed to get default router config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    put:
+      tags:
+      - Routers
+      summary: Set default router config
+      description: 'Required permission: Device configuration assignment, Edit.<br/>Set the default router config on the account. Use an empty string to remove the default config from the account. Any NEW routers on this account will be assigned this config.'
+      requestBody:
+        description: UpdateDefaultConfigRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDefaultConfigRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Updated default config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to set config as account default
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/configs/tls:
+    get:
+      tags:
+      - Routers
+      summary: Get TLS configs
+      description: 'Required permission: Device command and configuration, View.<br/>Gets a paginated list of TLS configs on this account.'
+      parameters:
+      - name: page
+        in: query
+        description: Index of page to get. Page size is 100
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TlsConfigResponseV2PaginatedServiceResponse'
+        '422':
+          description: Failed to get TLS configs
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    post:
+      tags:
+      - Routers
+      summary: Create TLS config
+      description: 'Required permission: Device command and configuration, Edit.<br/>Creates a TLS config that allows this certificate and key to be used in router configs when a certificate and key are required by only specifying the certificate (matching key will be added). TLS configs are identified by their certificate string base64 encoded which must be unique on the account.'
+      requestBody:
+        description: Request containing certificate and key, both in base64 encoded pem format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TlsConfigCreateRequestV2'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DefaultRouterConfigResponseServiceResponse'
+        '422':
+          description: Failed to create TLS config. Certificates must be unique.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '200':
+          description: Success
+    delete:
+      tags:
+      - Routers
+      summary: Delete TLS config
+      description: 'Required permission: Device command and configuration, Edit.<br/>Deletes a TLS certificate and key pair from the set of TLS configs that can be reused when saving router configs and only specifying the certificate. Does not affect any router configs that were already saved, just removes it from list of certificates that the matching key will be inserted on save for.'
+      requestBody:
+        description: Request containing certificate and key, both in base64 encoded pem format
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTlsConfigRequest'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to delete TLS config
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/local-content:
+    post:
+      tags:
+      - Routers
+      summary: Upload router local content file
+      description: 'Required permission: Device command and configuration, Edit.<br/>Upload html file to allow it to be configured as the HTTPS server local content file for router configs. File must be HTML, under 4MB, and file name under 100 characters. Files are stored in a public bucket for configured routers to download. File should be attached as multipart/form-data. See https://starlink.readme.io/docs/local-content for example upload script.'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+              - File
+              type: object
+              properties:
+                File:
+                  type: string
+                  format: binary
+            encoding:
+              File:
+                style: form
+          application/json:
+            schema:
+              required:
+              - File
+              type: object
+              properties:
+                File:
+                  type: string
+                  format: binary
+            encoding:
+              File:
+                style: form
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '201':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddRouterLocalContentResponseV2ServiceResponse'
+        '422':
+          description: Failed to upload local content file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    get:
+      tags:
+      - Routers
+      summary: Get list of router local content files
+      description: 'Required permission: Device command and configuration, View.'
+      responses:
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RouterLocalContentResponseListServiceResponse'
+        '422':
+          description: Error getting list of router local content files.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/sandbox/clients:
+    get:
+      tags:
+      - Routers
+      summary: Get sandbox clients
+      description: 'Required permission: Device command and configuration, View.<br/>Returns clients that were unsandboxed through the management API and have access that has not yet expired, paginated 1000 at a time. Clients that are allowed internet access due to sandbox disablement are not returned.'
+      parameters:
+      - name: sandboxId
+        in: query
+        description: Sandbox Id
+        schema:
+          type: integer
+          format: int32
+        example: 123
+      - name: expiryAfter
+        in: query
+        description: Include clients whose access expires after this time
+        schema:
+          type: string
+          format: date-time
+        example: '2020-01-01T01:00:00+00:00'
+      - name: page
+        in: query
+        description: Index of page to get. Page size is 1000
+        schema:
+          type: integer
+          format: int32
+          default: 0
+        example: 0
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SandboxClientResponsePaginatedServiceResponse'
+        '422':
+          description: Failed to get sandbox clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    post:
+      tags:
+      - Routers
+      summary: Batch update sandbox clients
+      description: 'Required permission: Device command and configuration, Edit.<br/>Update the sandbox state for multiple clients. If sandboxing is enabled, sandboxed clients will only have access to domains in the sandbox domain allow list. If a client is duplicated, records the client with the latest expiry.'
+      requestBody:
+        description: UpdateSandboxClientRequest
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdateBatchSandboxClientRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to update sandbox clients
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/routers/sandbox/heartbeat:
+    put:
+      tags:
+      - Routers
+      summary: Update sandbox heartbeat
+      description: 'Required permission: Device command and configuration, Edit.<br/>Heartbeats verify the health of enterprise systems that manage router sandboxing. If heartbeats are not received for an account, Starlink API will instruct routers under the account disable sandboxes until reboot.'
+      requestBody:
+        description: SandboxHeartbeatRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SandboxHeartbeatRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to send heartbeat
+  /public/v2/routers/{routerId}/reboot:
+    post:
+      tags:
+      - Routers
+      summary: Reboot router
+      description: 'Required permission: Device command and configuration, Edit.'
+      parameters:
+      - name: routerId
+        in: path
+        description: Router Id
+        required: true
+        schema:
+          type: string
+        example: '010000000000000000012345'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to reboot router.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    AddRouterLocalContentResponseV2:
+      required:
+      - fileContentHash
+      - fileContentId
+      - nickname
+      type: object
+      properties:
+        nickname:
+          minLength: 1
+          type: string
+          description: File name of uploaded file
+        fileContentId:
+          minLength: 1
+          type: string
+          description: File id to go in router config HTTPS server FileContentId field
+        fileContentHash:
+          minLength: 1
+          type: string
+          description: File MD5 hash to go in router config HTTPS server FileContentHash field
+      additionalProperties: false
+    UpdateBatchSandboxClientRequest:
+      required:
+      - clientId
+      - expiry
+      - sandboxId
+      type: object
+      properties:
+        clientId:
+          minLength: 1
+          type: string
+          description: Identifier of the client to add or remove from a sandbox.
+        sandboxId:
+          type: integer
+          description: Identifier used to separate sandbox environments. Per-client sandboxing is shared within the same SandboxId.
+          format: int32
+        expiry:
+          type: string
+          description: Expiry of the sandbox state as a UTC date time.
+          format: date-time
+      additionalProperties: false
+    RouterConfigResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/RouterConfigResponseV2Paginated'
+      additionalProperties: false
+    SandboxHeartbeatRequest:
+      required:
+      - healthy
+      type: object
+      properties:
+        healthy:
+          type: boolean
+          description: True if client systems are healthy, false otherwise.
+      additionalProperties: false
+    RouterLocalContentResponse:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: Uploaded file name
+        uploadDate:
+          type: string
+          description: Upload timestamp
+          format: date-time
+        fileContentId:
+          type: string
+          description: Id of uploaded local content file, used in router config HTTPS server
+        fileContentHash:
+          type: string
+          description: MD5 hash of the uploaded file used to verify integrity when router downloads the file for hosting. Used in router config HTTPS server
+      additionalProperties: false
+    RouterConfigResponseV2Paginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RouterConfigResponseV2'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    UpdateDefaultConfigRequest:
+      required:
+      - configId
+      type: object
+      properties:
+        configId:
+          minLength: 1
+          type: string
+          description: ConfigId or none to set as account default config. Use empty string to clear default config setting.
+      additionalProperties: false
+    TlsConfigResponseV2:
+      type: object
+      properties:
+        certificateBase64Pem:
+          type: string
+          description: TLS certificate in PEM format, base64 encoded.
+        notBefore:
+          type: string
+          description: Certificate invalid before this date.
+          format: date-time
+        notAfter:
+          type: string
+          description: Certificate invalid after this date.
+          format: date-time
+      additionalProperties: false
+    RouterResponseV2:
+      type: object
+      properties:
+        routerId:
+          type: string
+          description: Router Id.
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname of the router.
+        userTerminalId:
+          type: string
+          description: User terminal Id this router is bonded to.
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Router config this router is assigned to, or null if no config assigned.
+        hardwareVersion:
+          type:
+          - string
+          - 'null'
+          description: Deprecated field. Value will always be null
+        lastBonded:
+          type:
+          - string
+          - 'null'
+          description: Deprecated field. Value will always be null
+          format: date-time
+      additionalProperties: false
+    TlsConfigResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/TlsConfigResponseV2Paginated'
+      additionalProperties: false
+    AddRouterLocalContentResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddRouterLocalContentResponseV2'
+      additionalProperties: false
+    DeleteTlsConfigRequest:
+      required:
+      - certificateBase64Pem
+      type: object
+      properties:
+        certificateBase64Pem:
+          minLength: 1
+          type: string
+          description: Certificate base64 encoded pem string to match on for deletion of the corresponding certificate and key pair
+      additionalProperties: false
+    RouterLocalContentResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RouterLocalContentResponse'
+      additionalProperties: false
+    TlsConfigCreateRequestV2:
+      required:
+      - certificateBase64Pem
+      - keyBase64Pem
+      type: object
+      properties:
+        certificateBase64Pem:
+          minLength: 1
+          type: string
+          description: TLS certificate in PEM format, base64 encoded.
+        keyBase64Pem:
+          minLength: 1
+          type: string
+          description: TLS key in PEM format, base64 encoded. Must match the public key of the certificate.
+      additionalProperties: false
+    SandboxClientResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/SandboxClientResponsePaginated'
+      additionalProperties: false
+    SandboxClientResponse:
+      type: object
+      properties:
+        clientId:
+          type:
+          - string
+          - 'null'
+        sandboxId:
+          type: integer
+          format: int32
+        expiry:
+          type: string
+          format: date-time
+      additionalProperties: false
+    DefaultRouterConfigResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/DefaultRouterConfigResponse'
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    TlsConfigResponseV2Paginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/TlsConfigResponseV2'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    RouterConfigResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/RouterConfigResponseV2'
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    RouterResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/RouterResponseV2'
+      additionalProperties: false
+    RouterConfigResponseV2:
+      type: object
+      properties:
+        configId:
+          type: string
+          description: Config Id.
+        nickname:
+          type: string
+          description: Nickname for this config. Must be less than 100 characters.
+        routerConfigJson:
+          type: string
+          description: Config in JSON format.
+      additionalProperties: false
+    RouterConfigRequest:
+      required:
+      - routerConfigJson
+      type: object
+      properties:
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname
+        routerConfigJson:
+          minLength: 1
+          type: string
+          description: Router config json contents
+      additionalProperties: false
+    DefaultRouterConfigResponse:
+      type: object
+      properties:
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Router configId that will be assigned to routers when they are first added to this account. Does not affect routers that are assigned no config.
+      additionalProperties: false
+    AssignRoutersConfigRequest:
+      required:
+      - routerIds
+      type: object
+      properties:
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Config id (or none) to assign to routers
+        routerIds:
+          type: array
+          items:
+            type: string
+          description: RouterIds to immediately update
+      additionalProperties: false
+    SandboxClientResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SandboxClientResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false

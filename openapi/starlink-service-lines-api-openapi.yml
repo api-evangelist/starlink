@@ -1,0 +1,1083 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Service Lines API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Service Lines
+paths:
+  /public/v2/service-lines/{serviceLineNumber}:
+    get:
+      tags:
+      - Service Lines
+      summary: Get service line
+      description: 'Required permission: Service plan, View.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Service line retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLineResponseServiceResponse'
+        '422':
+          description: Failed to retrieve the service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    delete:
+      tags:
+      - Service Lines
+      summary: Deactivate a service line
+      description: 'Required permission: Service plan, Edit.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      - name: reasonForCancellation
+        in: query
+        description: Optional reason for cancelling this service line
+        schema:
+          type: string
+      - name: endNow
+        in: query
+        description: If service should end now, or on next bill day. Default is false
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully deactivated the service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to deactivate the service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines:
+    get:
+      tags:
+      - Service Lines
+      summary: Get all service lines
+      description: 'Required permission: Service plan, View.'
+      parameters:
+      - name: addressReferenceId
+        in: query
+        description: Filter by an Address Reference ID
+        schema:
+          type: string
+          format: uuid
+        example: 55ec6574-10d8-bd9c-1951-d4184f4ae467
+      - name: searchString
+        in: query
+        description: Filter by fuzzy match of nickname, or exact match on UT ID, UT nickname, UT serial number, or service line number
+        schema:
+          type: string
+      - name: dataPoolId
+        in: query
+        description: Filter for service lines on a given data pool
+        schema:
+          type: string
+      - name: page
+        in: query
+        description: The index of the page, starting at 0. Page size is 100
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: orderByCreatedDateDescending
+        in: query
+        description: Sort the paginated results by created date
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden from retrieving service lines for this account
+        '200':
+          description: Service lines retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLineResponsePaginatedServiceResponse'
+        '422':
+          description: Failed to retrieve service lines
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+    post:
+      tags:
+      - Service Lines
+      summary: Create service line
+      description: 'Required permission: Service plan, Edit.<br/>Service line must be linked to an address and a subscription/product-ID, and can optionally be immediately configured with data blocks.'
+      requestBody:
+        description: ServiceLineCreateRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceLineCreateRequestV2'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden from creating service line on this account
+        '201':
+          description: Service line created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceLineResponseServiceResponse'
+        '422':
+          description: Failed to create service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/nickname:
+    put:
+      tags:
+      - Service Lines
+      summary: Set service line nickname
+      description: 'Required permission: Service plan, Edit.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      requestBody:
+        description: ServiceLineUpdateNicknameRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceLineUpdateNicknameRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully updated service line nickname
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to update service line nickname
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/product:
+    put:
+      tags:
+      - Service Lines
+      summary: Update service line product
+      description: 'Required permission: Service plan, Edit.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      requestBody:
+        description: The recurring data blocks to set on the new product, if it on a compatible product. Leave null if otherwise.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateServiceLineProductRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully updated service line product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to update service line product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/public-ip:
+    put:
+      tags:
+      - Service Lines
+      summary: Set service line public IP setting
+      description: 'Required permission: Device command and configuration, Edit.<br/>Enable or disable public ip setting on a service line'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      requestBody:
+        description: ServiceLineSetPublicIpRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceLineSetPublicIpRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully set public IP setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to set public IP setting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/data/opt-in:
+    post:
+      tags:
+      - Service Lines
+      summary: Opt in priority data
+      description: 'Required permission: Service plan, Edit.<br/>Opt in the service line to continue using priority data after reaching the plan capacity. Only applies to some products.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully opted in service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInResponseServiceResponse'
+        '422':
+          description: Failed to opt in service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/data/opt-out:
+    post:
+      tags:
+      - Service Lines
+      summary: Opt out priority data
+      description: 'Required permission: Service plan, Edit.<br/>Opt out the service line from continuing to use priority data even when plan capacity is exceeded. If the service line reaches the plan capacity, it will switch to using standard data. Only applies to some products.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully opted out service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OptInResponseServiceResponse'
+        '422':
+          description: Failed to opt out service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/user-terminals:
+    post:
+      tags:
+      - Service Lines
+      summary: Add user terminal to service line
+      description: 'Required permission: Service plan, Edit.<br/>User terminal must already be on the account. See POST /v2/user-terminals to add user terminal to account.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      requestBody:
+        description: DeviceIdRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceIdRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: User terminals added to service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to add the user terminal to the service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}:
+    delete:
+      tags:
+      - Service Lines
+      summary: Remove user terminal from service line
+      description: 'Required permission: Service plan, Edit.<br/>This removes the user terminal from the service line, but it remains on the account and can be added to another service line. This clears any L2VPN circuits configured for the terminal.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      - name: deviceId
+        in: path
+        description: User terminal ID, kit serial number, or dish serial number.
+        required: true
+        schema:
+          type: string
+        example: 12345678-12345678-12345678
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Removed user terminal from service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to remove user terminal from service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/data/recurring:
+    put:
+      tags:
+      - Service Lines
+      summary: Set recurring data blocks on service line
+      description: 'Required permission: Service plan, Edit.<br/>Service line must be on a top up plan'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: SetRecurringBlocksRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecurringDataBlocksRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully set recurring blocks on service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to set service line recurring data blocks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/data/top-up:
+    post:
+      tags:
+      - Service Lines
+      summary: Adds one-time top up data block to service line
+      description: 'Required permission: Service plan, Edit.<br/>Service line must be on a top up plan'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: The service line number
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The request object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddDataBlockRequest'
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully added data block
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to update add data block to service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods:
+    get:
+      tags:
+      - Service Lines
+      summary: Get billing partial periods
+      description: 'Required permission: Service plan, View.<br/>Get the previous billing partial periods for this service line. For more information about this endpoint, see https://starlink.readme.io/docs/understanding-proration.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully retrieved partial periods
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartialPeriodResponseListServiceResponse'
+        '422':
+          description: Failed to retrieve partial periods
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+  /public/v2/service-lines/{serviceLineNumber}/consume-from-pool:
+    patch:
+      tags:
+      - Service Lines
+      summary: 'Pre-Release: Set whether a service line should consume from a data pool.'
+      description: 'Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only.'
+      parameters:
+      - name: serviceLineNumber
+        in: path
+        description: Service line number
+        required: true
+        schema:
+          type: string
+        example: AST-511274-31364-54
+      - name: consumeFromPool
+        in: query
+        description: Whether the service line should consume from pool, defaults to true
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '400':
+          description: Bad request. Invalid or missing parameter
+        '401':
+          description: Unauthorized
+        '403':
+          description: Missing required permission for this endpoint or resource
+        '200':
+          description: Successfully updated service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+        '422':
+          description: Failed to update service line
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    ServiceLineUpdateNicknameRequest:
+      required:
+      - nickname
+      type: object
+      properties:
+        nickname:
+          minLength: 1
+          type: string
+          description: New nickname for the existing service line.
+      additionalProperties: false
+    ServiceLineResponse:
+      type: object
+      properties:
+        addressReferenceId:
+          type: string
+          description: 'Address Reference ID of the address associated with the service line. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
+          format: uuid
+        serviceLineNumber:
+          type: string
+          description: 'The Service Line Number. Example: AST-511274-31364-54'
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: A user-defined nickname for this service line.
+        productReferenceId:
+          type: string
+          description: The unique product identifier.
+        delayedProductId:
+          type:
+          - string
+          - 'null'
+          description: Scheduled product change for next bill date.
+        optInProductId:
+          type:
+          - string
+          - 'null'
+          description: Opt-in product id, opted out if empty.
+        startDate:
+          type:
+          - string
+          - 'null'
+          description: The start date of the subscription. This is in UTC.
+          format: date-time
+        endDate:
+          type:
+          - string
+          - 'null'
+          description: The service line deactivation date, which only appears if the service line is deactivated. This is in UTC.
+          format: date-time
+        publicIp:
+          type: boolean
+          description: Indicates if service line is public IP.
+        active:
+          type: boolean
+          description: Indicates if service line is active.
+        aviationMetadata:
+          $ref: '#/components/schemas/AviationMetadataResponse'
+        dataBlocks:
+          $ref: '#/components/schemas/ServiceLineDataBlocksSummaryResponse'
+      additionalProperties: false
+    ServiceLineCreateRequestV2:
+      required:
+      - addressReferenceId
+      - productReferenceId
+      type: object
+      properties:
+        addressReferenceId:
+          type: string
+          description: 'Address Reference ID to associate with the service line. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
+          format: uuid
+        productReferenceId:
+          minLength: 1
+          type: string
+          description: 'Subscription Product ID to associate with the service line. Example: business-subscription-100'
+        dataBlockProducts:
+          $ref: '#/components/schemas/ServiceLineDataBlocksRequest'
+      additionalProperties: false
+    RecurringDataBlocksRequest:
+      type: object
+      properties:
+        recurringDataBlocks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddDataBlockRequest'
+          description: Recurring data blocks to configure
+        dataPoolId:
+          type:
+          - string
+          - 'null'
+          description: If provided, onboard the service line onto an existing data pool. The data pool must be multi-service-line enabled. This parameter is mutually exclusive with RecurringDataBlocks.
+        applyToCurrentMonth:
+          type:
+          - boolean
+          - 'null'
+          description: When true, creates additional blocks for the current billing cycle so the current month data block counts match the new recurring configuration.
+      additionalProperties: false
+    DeviceIdRequest:
+      required:
+      - deviceId
+      type: object
+      properties:
+        deviceId:
+          minLength: 1
+          type: string
+          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
+      additionalProperties: false
+    OptInResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Opt in product Id.
+        activatedDate:
+          type: string
+          description: Activation date.
+          format: date-time
+        deactivatedDate:
+          type:
+          - string
+          - 'null'
+          description: Deactivation date.
+          format: date-time
+        isInOptInCoolDown:
+          type: boolean
+          description: Whether service line is in cool down period from recently changing opted in state
+      additionalProperties: false
+    DataBlockSummaryResponse:
+      type: object
+      properties:
+        productId:
+          type:
+          - string
+          - 'null'
+          description: The block's product id.
+        startDate:
+          type: string
+          description: The block's start date.
+          format: date-time
+        expirationDate:
+          type: string
+          description: The block's end date.
+          format: date-time
+        count:
+          type: integer
+          description: How many blocks of this type there are.
+          format: int32
+        dataAmount:
+          type: number
+          description: The data amount of each block.
+          format: double
+        dataUnitType:
+          type:
+          - string
+          - 'null'
+          description: The unit that the data amount is in.
+      additionalProperties: false
+    ServiceLineDataBlocksRequest:
+      type: object
+      properties:
+        recurringDataBlocks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddDataBlockRequest'
+          description: Recurring data blocks to configure
+        dataPoolId:
+          type:
+          - string
+          - 'null'
+          description: 'Pre-Release: The ID of an existing multi-service-line data pool to which a new service line should be added. This field is mutually exclusive with RecurringDataBlocks and cannot be used together with it. Available for select audiences only.'
+      additionalProperties: false
+    AviationMetadataResponse:
+      type: object
+      properties:
+        tailNumber:
+          type:
+          - string
+          - 'null'
+        seatCount:
+          type: integer
+          format: int32
+        airlineIataCode:
+          type:
+          - string
+          - 'null'
+        aircraftIataCode:
+          type:
+          - string
+          - 'null'
+        airlineIcaoCode:
+          type:
+          - string
+          - 'null'
+        aircraftIcaoCode:
+          type:
+          - string
+          - 'null'
+        stcNumber:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AddDataBlockRequest:
+      required:
+      - count
+      - productId
+      type: object
+      properties:
+        productId:
+          minLength: 1
+          type: string
+          description: Product Id for data blocks
+        count:
+          type: integer
+          description: Quantity of the specified data block to add
+          format: int32
+      additionalProperties: false
+    ServiceLineDataBlocksSummaryResponse:
+      type: object
+      properties:
+        recurringBlocksCurrentBillingCycle:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: The current billing cycle's monthly recurring data blocks.
+        recurringBlocksNextBillingCycle:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: Next billing cycle's monthly recurring data blocks.
+        delayedProductRecurringBlocksNextCycle:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: What recurring blocks will be when the service line switches to the delayed product.
+        topUpBlocksOptInPurchase:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: What top up blocks were automatically purchased because the service line was out of data and opted in.
+        topUpBlocksOneTimePurchase:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: What top up blocks were manually purchased.
+      additionalProperties: false
+    ServiceLineSetPublicIpRequest:
+      required:
+      - publicIp
+      type: object
+      properties:
+        publicIp:
+          type: boolean
+          description: If public IP should be enabled or not
+      additionalProperties: false
+    PartialPeriodResponse:
+      type: object
+      properties:
+        productReferenceId:
+          type: string
+          description: The unique product identifier
+        periodStart:
+          type: string
+          description: The timestamp of the start of the partial period
+          format: date-time
+        periodEnd:
+          type: string
+          description: The timestamp of the end of the partial period
+          format: date-time
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    ServiceLineResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/ServiceLineResponse'
+      additionalProperties: false
+    ServiceLineResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/ServiceLineResponsePaginated'
+      additionalProperties: false
+    OptInResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/OptInResponse'
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ServiceLineResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ServiceLineResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    UpdateServiceLineProductRequest:
+      required:
+      - productReferenceId
+      type: object
+      properties:
+        productReferenceId:
+          minLength: 1
+          type: string
+          description: Product Id.
+        recurringDataBlocks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddDataBlockRequest'
+          description: Recurring data blocks to configure.
+        dataPoolId:
+          type:
+          - string
+          - 'null'
+          description: 'Pre-Release: If provided, onboard the service line onto an existing multi-service-line data pool. This parameter is mutually exclusive with RecurringDataBlocks. Available for select audiences only.'
+        delayUpdate:
+          type:
+          - boolean
+          - 'null'
+          description: Specifies when the change will be applied. True forces changes to be scheduled on the next billing cycle, False forces changes to occur immediately, Null uses legacy logic allowing upgrades to occur immediately and downgrades to be delayed.
+      additionalProperties: false
+    PartialPeriodResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/PartialPeriodResponse'
+      additionalProperties: false

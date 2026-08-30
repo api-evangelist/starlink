@@ -1,0 +1,167 @@
+openapi: 3.2.0
+info:
+  title: Starlink Public Managed API
+  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  version: '2'
+servers:
+- url: /api
+tags:
+- name: Managed
+paths:
+  /public/v2/managed/customers:
+    post:
+      tags:
+      - Managed
+      summary: Create a managed customer account
+      description: This endpoint is only callable with an authorized provider account.
+      requestBody:
+        description: CreateManagedCustomerRequest
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateManagedCustomerRequest'
+      responses:
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden from creating customer accounts
+        '200':
+          description: Successfully created customer account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateManagedCustomerResponseServiceResponse'
+        '422':
+          description: Failed to create customer account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceResponse'
+components:
+  schemas:
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    CreateManagedCustomerResponse:
+      type: object
+      properties:
+        accountNumber:
+          type:
+          - string
+          - 'null'
+        serviceAccountClientId:
+          type:
+          - string
+          - 'null'
+        serviceAccountSecret:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CreateManagedCustomerRequest:
+      required:
+      - email
+      - firstName
+      - lastName
+      - locale
+      - phone
+      type: object
+      properties:
+        firstName:
+          minLength: 1
+          type: string
+          description: First name.
+        lastName:
+          minLength: 1
+          type: string
+          description: Last name.
+        email:
+          minLength: 1
+          type: string
+          description: Email address.
+        phone:
+          minLength: 1
+          type: string
+          description: Phone number.
+        locale:
+          minLength: 1
+          type: string
+          description: ISO 639-1 language code.
+        businessName:
+          type:
+          - string
+          - 'null'
+          description: Business name only required for enterprise customers.
+      additionalProperties: false
+    CreateManagedCustomerResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/CreateManagedCustomerResponse'
+      additionalProperties: false

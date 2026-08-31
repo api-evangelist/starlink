@@ -440,6 +440,8 @@ apis:
   humanURL: https://starlink.readme.io/reference
   baseURL: https://starlink.com/api/public/v2
   tags:
+  - Router
+  tags_raw:
   - Routers
   properties:
   - type: OpenAPI

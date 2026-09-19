@@ -2,15 +2,16 @@
 kin_checks:
   slug: starlink
   schema_version: 0.22.0
-  scored_at: '2026-09-15'
-  run_ts: 2026-09-15T230249
-  note: Actionable checks only (missed + partial). earned/na are every other check
-    in rubric/scoring-0.22.0.yml; counts below let you verify that.
+  scored_at: '2026-09-18'
+  run_ts: 2026-09-18T205255
+  note: Actionable checks (missed + partial) in `checks`, plus the ids that did not
+    apply in `na`. Everything else in rubric/scoring-0.22.0.yml was earned; counts
+    below let you verify that.
   counts:
     total: 136
-    earned: 40
+    earned: 41
     partial: 16
-    missed: 64
+    missed: 63
     na: 16
   checks:
   - id: multiple_apis
@@ -32,9 +33,6 @@ kin_checks:
     detail: 0 of 12 openapi documents pass
   - id: servers_resolvable
     status: missed
-  - id: operations_operation_ids
-    status: missed
-    detail: 0 of 12 openapi documents pass
   - id: security_schemes_defined
     status: missed
     detail: 0 of 12 openapi documents pass
@@ -219,3 +217,20 @@ kin_checks:
     status: partial
     earned: 1.25
     detail: 'authorship: derived'
+  na:
+  - contract_self_operated
+  - fhir_capability_statement
+  - fhir_resource_coverage
+  - graphql_descriptions
+  - graphql_sdl_present
+  - graphql_type_depth
+  - os_code_of_conduct
+  - os_contribution_guide
+  - os_releases
+  - os_security_policy
+  - reg_entitlement_terms
+  - reg_fapi_profile
+  - reg_mandate_verified
+  - reg_pci_sca
+  - reg_smart_configuration
+  - reg_write_surface

@@ -52,6 +52,20 @@ tags:
 - United States
 - Satellite
 - Broadband
+- Non-Terrestrial Network
+- Connectivity
+- Device Management
+- Telemetry
+- Aviation
+- Maritime
+- Enterprise
+tags_raw:
+- Non-Terrestrial Networks
+- Starlink
+- Telecommunications
+- United States
+- Satellite
+- Broadband
 - Non-Terrestrial Networks
 - Connectivity
 - Device Management
@@ -59,7 +73,6 @@ tags:
 - Aviation
 - Maritime
 - Enterprise
-- Starlink
 created: '2026-07-25'
 modified: '2026-07-25'
 specificationVersion: '0.23'

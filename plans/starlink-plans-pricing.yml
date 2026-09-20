@@ -11,6 +11,11 @@ provenance:
   grounding: every price_text was found verbatim in the fetched page text
 audience: business-product
 pricing_basis: tiered-subscription
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-09-20'
+  managed_tier: Starlink for Business
 published: true
 note: Marketing page for Starlink for Business; only a starting monthly price and hardware cost shown,
   no per-plan breakdown. Sales contact offered for enterprise.

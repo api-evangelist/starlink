@@ -11,7 +11,7 @@ capability_model:
   attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
     CC BY 4.0
   notice: NOTICE
-edge_count: 2
+edge_count: 3
 edges:
 - tag: Billing
   spec_file: starlink-billing-api-openapi.yml
@@ -23,6 +23,17 @@ edges:
     account balance; schemas InvoiceDetailResponse, InvoiceLineDetailResponse, PublicInvoiceStatus
   reason: Invoice summary/detail and account balance exposure for a recurring connectivity subscription
     is invoicing and statement management in the subscription billing lifecycle.
+- tag: Mobile
+  spec_file: starlink-mobile-api-openapi.yml
+  capability_id: BC-2600.30
+  capability_id_l1: BC-2600
+  capability_name: Network Performance Management
+  confidence: 0.7
+  evidence: GET /public/v2/mobile/radio-access-network/{timestamp}  Get Radio Access Network Data; GET
+    /public/v2/mobile/timeseries/{timestamp}  Get Timeseries Data of Starlink Mobile Usage and Beam Reliability
+  reason: RAN data and time-series of beam reliability are access-network performance counters/KPIs, i.e.
+    network performance monitoring rather than a commercial capability.
+  recovered_from: vertical-telecommunications-edges.json
 - tag: Routers
   spec_file: starlink-routers-api-openapi.yml
   capability_id: BC-600.50

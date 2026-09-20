@@ -1,0 +1,26 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-09-20'
+method: searched
+source: https://starlink.com/business
+sources:
+- https://starlink.com/business
+- https://www.starlink.com/business
+provenance:
+  tool: planning/api-economics/harvest_pricing.py
+  run: 20260920T131751
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: tiered-subscription
+published: true
+note: Marketing page for Starlink for Business; only a starting monthly price and hardware cost shown,
+  no per-plan breakdown. Sales contact offered for enterprise.
+plan_count: 1
+currency: USD
+plans:
+- name: Starlink for Business
+  price_text: Starting at $55/mo with a hardware cost of $349.
+  currency: USD
+  period: month
+  overage: adjust by adding blocks of data in increments of 50GB or 500GB
+rate_limit_statements:
+- The Starlink Performance Kit is currently capable of download speeds up to 400+ Mbps

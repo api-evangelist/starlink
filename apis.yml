@@ -564,6 +564,8 @@ apis:
   - type: Documentation
     url: https://starlink.readme.io/docs/location-in-aviation
 common:
+- type: Plans
+  url: plans/starlink-plans-pricing.yml
 - type: CapabilityMap
   url: capabilities/starlink-capability-edges.yml
   name: Starlink Business Capability Map

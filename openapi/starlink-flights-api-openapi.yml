@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public Flights API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -13,7 +20,9 @@ paths:
       tags:
       - Flights
       summary: Post a flight event
-      description: 'Required permission: Aviation flight status management, Edit.<br/>Post a real-time flight event on a Starlink-enabled plane. This endpoint is only accessible from an aviation account.'
+      description: 'Required permission: Aviation flight status management, Edit.
+
+        Post a real-time flight event on a Starlink-enabled plane. This endpoint is only accessible from an aviation account.'
       requestBody:
         content:
           application/json:
@@ -32,63 +41,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2FlightsStatus
+      x-operation-id-source: derived
 components:
   schemas:
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    EventType:
-      enum:
-      - EventUnknown
-      - Departure
-      - Arrival
-      - MetadataUpdate
-      type: string
-      x-enumNames:
-      - EventUnknown
-      - Departure
-      - Arrival
-      - MetadataUpdate
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     StarlinkFlightRequest:
       required:
       - eventType
@@ -134,6 +90,49 @@ components:
           description: Optional Metadata. Exclude this flight from Starlink SLA commitments. Default is false.
           default: false
       additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
     AirportCode:
       type: object
       properties:
@@ -152,3 +151,15 @@ components:
           - 'null'
           description: 4 character string representing airport code in ICAO format.
       additionalProperties: false
+    EventType:
+      enum:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
+      type: string
+      x-enumNames:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate

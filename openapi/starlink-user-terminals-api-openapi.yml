@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public User Terminals API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -13,7 +20,9 @@ paths:
       tags:
       - User Terminals
       summary: Get all user terminals
-      description: 'Required permission: Device management, View.<br/>Gets all user terminals on the account, filtered by the optional filter parameters, in paginated form'
+      description: 'Required permission: Device management, View.
+
+        Gets all user terminals on the account, filtered by the optional filter parameters, in paginated form'
       parameters:
       - name: serviceLineNumbers
         in: query
@@ -65,11 +74,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2UserTerminals
+      x-operation-id-source: derived
     post:
       tags:
       - User Terminals
       summary: Add user terminal to account
-      description: 'Required permission: Device management, Edit.<br/>This will add the user terminal to the account, but won''t start service. User terminals must be present on the account before adding to a service line.'
+      description: 'Required permission: Device management, Edit.
+
+        This will add the user terminal to the account, but won''t start service. User terminals must be present on the account before adding to a service line.'
       requestBody:
         description: DeviceIdRequest
         content:
@@ -95,12 +108,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2UserTerminals
+      x-operation-id-source: derived
   /public/v2/user-terminals/{deviceId}:
     delete:
       tags:
       - User Terminals
       summary: Remove user terminal from account
-      description: 'Required permission: Device management, Edit.<br/>User terminal must already be removed from service lines before it can be removed from the account. See /v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}'
+      description: 'Required permission: Device management, Edit.
+
+        User terminal must already be removed from service lines before it can be removed from the account. See /v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}'
       parameters:
       - name: deviceId
         in: path
@@ -128,6 +145,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: deletePublicV2UserTerminalsByDeviceId
+      x-operation-id-source: derived
   /public/v2/user-terminals/{deviceId}/reboot:
     post:
       tags:
@@ -161,12 +180,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2UserTerminalsByDeviceIdReboot
+      x-operation-id-source: derived
   /public/v2/user-terminals/configs/assign:
     put:
       tags:
       - User Terminals
       summary: User terminal config assignment
-      description: 'Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the user terminals. For each terminal if it is currently online, the config will immediately be sent. Else, the config will be sent when it comes online. On error no assignment occurs. Currently terminal configIds are only visible on starlink website.'
+      description: 'Required permission: Device configuration assignment, Edit.
+
+        Assign the config (or none) to the user terminals. For each terminal if it is currently online, the config will immediately be sent. Else, the config will be sent when it comes online. On error no assignment occurs. Currently terminal configIds are only visible on starlink website.'
       requestBody:
         description: Request containing config id (or empty) and list of userTerminalIds to assign to
         content:
@@ -192,6 +215,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2UserTerminalsConfigsAssign
+      x-operation-id-source: derived
   /public/v2/user-terminals/l2vpn:
     get:
       tags:
@@ -215,12 +240,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2UserTerminalsL2vpn
+      x-operation-id-source: derived
   /public/v2/user-terminals/{deviceId}/l2vpn:
     put:
       tags:
       - User Terminals
       summary: Set L2VPN VLANs for user terminal
-      description: 'Required permission: Device configuration assignment, Edit.<br/>Terminal must be on subscription that allows L2VPN. Maximum 2 circuits per Starlink PoP. Use null or empty circuit list to clear all L2VPN circuits for terminal. See /user-terminals/available-circuits for all configurable circuits and associated Starlink PoP.'
+      description: 'Required permission: Device configuration assignment, Edit.
+
+        Terminal must be on subscription that allows L2VPN. Maximum 2 circuits per Starlink PoP. Use null or empty circuit list to clear all L2VPN circuits for terminal. See /user-terminals/available-circuits for all configurable circuits and associated Starlink PoP.'
       parameters:
       - name: deviceId
         in: path
@@ -256,113 +285,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2UserTerminalsByDeviceIdL2vpn
+      x-operation-id-source: derived
 components:
   schemas:
-    UserTerminalResponseV2:
-      type: object
-      properties:
-        userTerminalId:
-          type: string
-          description: 'User Terminal ID. This ID is not printed anywhere on the kit or hardware. Example: 00020900-002220cc-225b9199'
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname of the user terminal.
-        kitSerialNumber:
-          type: string
-          description: 'Kit Serial Number. This ID can be found on the box that the hardware came in. Example: KIT00142069'
-        dishSerialNumber:
-          type: string
-          description: 'Dish Serial Number. This ID can be found on the dish itself. Example: 2DHT00542069'
-        serviceLineNumber:
-          type:
-          - string
-          - 'null'
-          description: 'The service line the user terminal is associated with if it has service, Example: AST-511274-31364-54'
-        l2VpnCircuits:
-          type: array
-          items:
-            $ref: '#/components/schemas/L2VpnCircuitDefinition'
-          description: List of L2VPN circuits and associated VLANs configured for this terminal.
-        routers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RouterResponseV2'
-          description: Routers currently bonded to this UT.
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    L2VpnSetCircuitRequest:
+    AssignUserTerminalsConfigRequest:
       required:
-      - circuitIds
-      - customerVlans
+      - userTerminalIds
       type: object
       properties:
-        circuitId:
+        configId:
           type:
           - string
           - 'null'
-          description: 'Deprecated field: use CircuitIds instead. Mutually exclusive with CircuitIds. Starlink generated Id of L2VPN circuit.'
-        circuitIds:
+          description: Config id (or none) to assign to user terminals
+        userTerminalIds:
           type: array
           items:
             type: string
-          description: Starlink generated Ids of L2VPN circuit(s) in this circuit group. If multiple circuitIds are present then they are functioning as a redundant group and must be located at the same PoP. Mutually exclusive with deprecated CircuitId field.
-        customerVlans:
-          type: array
-          items:
-            type: integer
-            format: int32
-          description: Customer VLANs are the inner tag and identify L2VPN customer traffic to and from a user terminal.
-        serviceVlan:
-          type:
-          - integer
-          - 'null'
-          description: Outer VLAN tag used for Q-in-Q and identifies a single ethernet virtual circuit (EVC) for a user terminal. Null or 0 if no service VLAN tag should be added.
-          format: int32
-        customerVlanRemap:
-          type:
-          - integer
-          - 'null'
-          description: Traffic tagged with the specified customer VLAN will have that VLAN tag remapped en-route to the value of customerVlanRemap if present. If remapping is occurring then CustomerVlans must contain a single value. Set value to null or 0 for no remapping.
-          format: int32
-      additionalProperties: false
-    DeviceIdRequest:
-      required:
-      - deviceId
-      type: object
-      properties:
-        deviceId:
-          minLength: 1
-          type: string
-          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
+          description: UserTerminalIds to immediately update
       additionalProperties: false
     L2VpnCircuitResponse:
       type: object
@@ -421,6 +362,145 @@ components:
           description: Traffic tagged with the specified customer VLAN will have that VLAN tag remapped en-route to the value of customerVlanRemap if present. Value is null if no remapping.
           format: int32
       additionalProperties: false
+    RouterResponseV2:
+      type: object
+      properties:
+        routerId:
+          type: string
+          description: Router Id.
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname of the router.
+        userTerminalId:
+          type: string
+          description: User terminal Id this router is bonded to.
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Router config this router is assigned to, or null if no config assigned.
+        hardwareVersion:
+          type:
+          - string
+          - 'null'
+          description: Deprecated field. Value will always be null
+        lastBonded:
+          type:
+          - string
+          - 'null'
+          description: Deprecated field. Value will always be null
+          format: date-time
+      additionalProperties: false
+    DeviceIdRequest:
+      required:
+      - deviceId
+      type: object
+      properties:
+        deviceId:
+          minLength: 1
+          type: string
+          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
+      additionalProperties: false
+    UserTerminalResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/UserTerminalResponseV2Paginated'
+      additionalProperties: false
+    L2VpnSetCircuitRequest:
+      required:
+      - circuitIds
+      - customerVlans
+      type: object
+      properties:
+        circuitId:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: use CircuitIds instead. Mutually exclusive with CircuitIds. Starlink generated Id of L2VPN circuit.'
+        circuitIds:
+          type: array
+          items:
+            type: string
+          description: Starlink generated Ids of L2VPN circuit(s) in this circuit group. If multiple circuitIds are present then they are functioning as a redundant group and must be located at the same PoP. Mutually exclusive with deprecated CircuitId field.
+        customerVlans:
+          type: array
+          items:
+            type: integer
+            format: int32
+          description: Customer VLANs are the inner tag and identify L2VPN customer traffic to and from a user terminal.
+        serviceVlan:
+          type:
+          - integer
+          - 'null'
+          description: Outer VLAN tag used for Q-in-Q and identifies a single ethernet virtual circuit (EVC) for a user terminal. Null or 0 if no service VLAN tag should be added.
+          format: int32
+        customerVlanRemap:
+          type:
+          - integer
+          - 'null'
+          description: Traffic tagged with the specified customer VLAN will have that VLAN tag remapped en-route to the value of customerVlanRemap if present. If remapping is occurring then CustomerVlans must contain a single value. Set value to null or 0 for no remapping.
+          format: int32
+      additionalProperties: false
+    UserTerminalResponseV2:
+      type: object
+      properties:
+        userTerminalId:
+          type: string
+          description: 'User Terminal ID. This ID is not printed anywhere on the kit or hardware. Example: 00020900-002220cc-225b9199'
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname of the user terminal.
+        kitSerialNumber:
+          type: string
+          description: 'Kit Serial Number. This ID can be found on the box that the hardware came in. Example: KIT00142069'
+        dishSerialNumber:
+          type: string
+          description: 'Dish Serial Number. This ID can be found on the dish itself. Example: 2DHT00542069'
+        serviceLineNumber:
+          type:
+          - string
+          - 'null'
+          description: 'The service line the user terminal is associated with if it has service, Example: AST-511274-31364-54'
+        l2VpnCircuits:
+          type: array
+          items:
+            $ref: '#/components/schemas/L2VpnCircuitDefinition'
+          description: List of L2VPN circuits and associated VLANs configured for this terminal.
+        routers:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouterResponseV2'
+          description: Routers currently bonded to this UT.
+      additionalProperties: false
     ValidationResult:
       type: object
       properties:
@@ -435,22 +515,6 @@ components:
           type:
           - string
           - 'null'
-      additionalProperties: false
-    AssignUserTerminalsConfigRequest:
-      required:
-      - userTerminalIds
-      type: object
-      properties:
-        configId:
-          type:
-          - string
-          - 'null'
-          description: Config id (or none) to assign to user terminals
-        userTerminalIds:
-          type: array
-          items:
-            type: string
-          description: UserTerminalIds to immediately update
       additionalProperties: false
     L2VpnCircuitResponseListServiceResponse:
       type: object
@@ -507,7 +571,7 @@ components:
           type: integer
           format: int32
       additionalProperties: false
-    UserTerminalResponseV2PaginatedServiceResponse:
+    ServiceResponse:
       type: object
       properties:
         errors:
@@ -534,37 +598,4 @@ components:
         isValid:
           type: boolean
           readOnly: true
-        content:
-          $ref: '#/components/schemas/UserTerminalResponseV2Paginated'
-      additionalProperties: false
-    RouterResponseV2:
-      type: object
-      properties:
-        routerId:
-          type: string
-          description: Router Id.
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname of the router.
-        userTerminalId:
-          type: string
-          description: User terminal Id this router is bonded to.
-        configId:
-          type:
-          - string
-          - 'null'
-          description: Router config this router is assigned to, or null if no config assigned.
-        hardwareVersion:
-          type:
-          - string
-          - 'null'
-          description: Deprecated field. Value will always be null
-        lastBonded:
-          type:
-          - string
-          - 'null'
-          description: Deprecated field. Value will always be null
-          format: date-time
       additionalProperties: false

@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public Mobile API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -13,7 +20,9 @@ paths:
       tags:
       - Mobile
       summary: Get Radio Access Network Data
-      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Radio Access Network (RAN) data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
+      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.
+
+        Gets Radio Access Network (RAN) data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
       parameters:
       - name: timestamp
         in: path
@@ -48,12 +57,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2MobileRadioAccessNetworkByTimestamp
+      x-operation-id-source: derived
   /public/v2/mobile/timeseries/{timestamp}:
     get:
       tags:
       - Mobile
       summary: Get Timeseries Data of Starlink Mobile Usage and Beam Reliability
-      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Timeseries data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
+      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.
+
+        Gets Timeseries data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
       parameters:
       - name: timestamp
         in: path
@@ -88,12 +101,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2MobileTimeseriesByTimestamp
+      x-operation-id-source: derived
   /public/v2/mobile/map/{timestamp}:
     get:
       tags:
       - Mobile
       summary: Get Map Data
-      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.<br/>Gets Map data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
+      description: 'Required permission: Gated Feature - Starlink Mobile Data, View.
+
+        Gets Map data. Data is partitioned by timestamp_date, timestamp_hour. Only able to get data from one hour per request. Data from the timestamp date and hour supplied will be returned, ignoring minutes and seconds.'
       parameters:
       - name: timestamp
         in: path
@@ -128,9 +145,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2MobileMapByTimestamp
+      x-operation-id-source: derived
 components:
   schemas:
-    ServiceResponse:
+    MobileTimeSeriesResponseListServiceResponse:
       type: object
       properties:
         errors:
@@ -157,6 +176,12 @@ components:
         isValid:
           type: boolean
           readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileTimeSeriesResponse'
       additionalProperties: false
     MobileRanResponse:
       type: object
@@ -273,112 +298,6 @@ components:
           type: number
           description: Maximum uplink data throughput at eNode-B kilobits per second
           format: float
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    MobileTimeSeriesResponseListServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/MobileTimeSeriesResponse'
-      additionalProperties: false
-    MobileMapResponse:
-      type: object
-      properties:
-        trackingAreaCode:
-          type: integer
-          description: Tracking area code
-          format: int32
-        broadcastPublicLandMobileNumber:
-          type: integer
-          description: Broadcast Public Land Mobile Number of serving network
-          format: int32
-        timestamp:
-          type: string
-          description: Timestamp in UTC of the start of the returned hour of data
-          format: date-time
-        accessType:
-          type: string
-          description: Network Access Type - home or reciprocal users
-        deviceType:
-          type: string
-          description: Device Type - commercial (phone/user equipment) or Internet of Things (IOT) device
-        serviceType:
-          type: string
-          description: Service Type - Commercial or Emergency
-        gapTimeSecondsByTrackingAreaCodeAverage:
-          type: number
-          description: Average duration of gaps in satellite coverage in seconds per tracking area code
-          format: double
-        gapTimeSecondsByTrackingAreaCodeP90:
-          type: number
-          description: 90th percentile duration of gaps in satellite coverage in seconds per tracking area code
-          format: double
-        gapTimeSecondsByTrackingAreaCodeP50:
-          type: number
-          description: 50th percentile duration of gaps in satellite coverage in seconds per tracking area code
-          format: double
-        trackingAreaCodeBeamAvailabilitySeconds:
-          type: number
-          description: Total time of beam coverage/placement in seconds per tracking area code (0-3600)
-          format: double
-        totalShortMessageServiceMessages:
-          type: integer
-          description: Total number of Mobile Originated (MO) and Mobile Terminated (MT) Short Message Services sent per tracking area code
-          format: int32
-        uniqueInternationalMobileSubscriberIdentities:
-          type: integer
-          description: Unique International Mobile Subscriber Identity (IMSI) count of users that connect with 'NAS_ATTACH_COMPLETE' message received per tracking area code
-          format: int32
-        upLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
-          type: number
-          description: Average value of uplink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
-          format: double
-        downLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
-          type: number
-          description: Average value of downlink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
-          format: double
       additionalProperties: false
     MobileRanResponseListServiceResponse:
       type: object
@@ -508,4 +427,104 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/MobileMapResponse'
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    MobileMapResponse:
+      type: object
+      properties:
+        trackingAreaCode:
+          type: integer
+          description: Tracking area code
+          format: int32
+        broadcastPublicLandMobileNumber:
+          type: integer
+          description: Broadcast Public Land Mobile Number of serving network
+          format: int32
+        timestamp:
+          type: string
+          description: Timestamp in UTC of the start of the returned hour of data
+          format: date-time
+        accessType:
+          type: string
+          description: Network Access Type - home or reciprocal users
+        deviceType:
+          type: string
+          description: Device Type - commercial (phone/user equipment) or Internet of Things (IOT) device
+        serviceType:
+          type: string
+          description: Service Type - Commercial or Emergency
+        gapTimeSecondsByTrackingAreaCodeAverage:
+          type: number
+          description: Average duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        gapTimeSecondsByTrackingAreaCodeP90:
+          type: number
+          description: 90th percentile duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        gapTimeSecondsByTrackingAreaCodeP50:
+          type: number
+          description: 50th percentile duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        trackingAreaCodeBeamAvailabilitySeconds:
+          type: number
+          description: Total time of beam coverage/placement in seconds per tracking area code (0-3600)
+          format: double
+        totalShortMessageServiceMessages:
+          type: integer
+          description: Total number of Mobile Originated (MO) and Mobile Terminated (MT) Short Message Services sent per tracking area code
+          format: int32
+        uniqueInternationalMobileSubscriberIdentities:
+          type: integer
+          description: Unique International Mobile Subscriber Identity (IMSI) count of users that connect with 'NAS_ATTACH_COMPLETE' message received per tracking area code
+          format: int32
+        upLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
+          type: number
+          description: Average value of uplink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
+          format: double
+        downLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
+          type: number
+          description: Average value of downlink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
+          format: double
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
       additionalProperties: false

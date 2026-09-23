@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public Service Lines API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -41,6 +48,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2ServiceLinesByServiceLineNumber
+      x-operation-id-source: derived
     delete:
       tags:
       - Service Lines
@@ -84,6 +93,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: deletePublicV2ServiceLinesByServiceLineNumber
+      x-operation-id-source: derived
   /public/v2/service-lines:
     get:
       tags:
@@ -140,11 +151,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2ServiceLines
+      x-operation-id-source: derived
     post:
       tags:
       - Service Lines
       summary: Create service line
-      description: 'Required permission: Service plan, Edit.<br/>Service line must be linked to an address and a subscription/product-ID, and can optionally be immediately configured with data blocks.'
+      description: 'Required permission: Service plan, Edit.
+
+        Service line must be linked to an address and a subscription/product-ID, and can optionally be immediately configured with data blocks.'
       requestBody:
         description: ServiceLineCreateRequest
         content:
@@ -170,6 +185,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2ServiceLines
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/nickname:
     put:
       tags:
@@ -209,6 +226,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2ServiceLinesByServiceLineNumberNickname
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/product:
     put:
       tags:
@@ -248,12 +267,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2ServiceLinesByServiceLineNumberProduct
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/public-ip:
     put:
       tags:
       - Service Lines
       summary: Set service line public IP setting
-      description: 'Required permission: Device command and configuration, Edit.<br/>Enable or disable public ip setting on a service line'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Enable or disable public ip setting on a service line'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -287,12 +310,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2ServiceLinesByServiceLineNumberPublicIp
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/data/opt-in:
     post:
       tags:
       - Service Lines
       summary: Opt in priority data
-      description: 'Required permission: Service plan, Edit.<br/>Opt in the service line to continue using priority data after reaching the plan capacity. Only applies to some products.'
+      description: 'Required permission: Service plan, Edit.
+
+        Opt in the service line to continue using priority data after reaching the plan capacity. Only applies to some products.'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -320,12 +347,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2ServiceLinesByServiceLineNumberDataOptIn
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/data/opt-out:
     post:
       tags:
       - Service Lines
       summary: Opt out priority data
-      description: 'Required permission: Service plan, Edit.<br/>Opt out the service line from continuing to use priority data even when plan capacity is exceeded. If the service line reaches the plan capacity, it will switch to using standard data. Only applies to some products.'
+      description: 'Required permission: Service plan, Edit.
+
+        Opt out the service line from continuing to use priority data even when plan capacity is exceeded. If the service line reaches the plan capacity, it will switch to using standard data. Only applies to some products.'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -353,12 +384,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2ServiceLinesByServiceLineNumberDataOptOut
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/user-terminals:
     post:
       tags:
       - Service Lines
       summary: Add user terminal to service line
-      description: 'Required permission: Service plan, Edit.<br/>User terminal must already be on the account. See POST /v2/user-terminals to add user terminal to account.'
+      description: 'Required permission: Service plan, Edit.
+
+        User terminal must already be on the account. See POST /v2/user-terminals to add user terminal to account.'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -392,12 +427,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2ServiceLinesByServiceLineNumberUserTerminals
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}:
     delete:
       tags:
       - Service Lines
       summary: Remove user terminal from service line
-      description: 'Required permission: Service plan, Edit.<br/>This removes the user terminal from the service line, but it remains on the account and can be added to another service line. This clears any L2VPN circuits configured for the terminal.'
+      description: 'Required permission: Service plan, Edit.
+
+        This removes the user terminal from the service line, but it remains on the account and can be added to another service line. This clears any L2VPN circuits configured for the terminal.'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -432,12 +471,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: deletePublicV2ServiceLinesByServiceLineNumberUserTerminalsByDeviceId
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/data/recurring:
     put:
       tags:
       - Service Lines
       summary: Set recurring data blocks on service line
-      description: 'Required permission: Service plan, Edit.<br/>Service line must be on a top up plan'
+      description: 'Required permission: Service plan, Edit.
+
+        Service line must be on a top up plan'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -470,12 +513,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2ServiceLinesByServiceLineNumberDataRecurring
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/data/top-up:
     post:
       tags:
       - Service Lines
       summary: Adds one-time top up data block to service line
-      description: 'Required permission: Service plan, Edit.<br/>Service line must be on a top up plan'
+      description: 'Required permission: Service plan, Edit.
+
+        Service line must be on a top up plan'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -508,12 +555,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2ServiceLinesByServiceLineNumberDataTopUp
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods:
     get:
       tags:
       - Service Lines
       summary: Get billing partial periods
-      description: 'Required permission: Service plan, View.<br/>Get the previous billing partial periods for this service line. For more information about this endpoint, see https://starlink.readme.io/docs/understanding-proration.'
+      description: 'Required permission: Service plan, View.
+
+        Get the previous billing partial periods for this service line. For more information about this endpoint, see https://starlink.readme.io/docs/understanding-proration.'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -541,12 +592,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2ServiceLinesByServiceLineNumberBillingCyclesPartialPeriods
+      x-operation-id-source: derived
   /public/v2/service-lines/{serviceLineNumber}/consume-from-pool:
     patch:
       tags:
       - Service Lines
-      summary: 'Pre-Release: Set whether a service line should consume from a data pool.'
-      description: 'Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only.'
+      summary: 'Pre-Release: Set whether a service line should consume from a data pool'
+      description: 'Required permission: Service plan, Edit.
+
+        This endpoint is available for select audiences only.'
       parameters:
       - name: serviceLineNumber
         in: path
@@ -580,17 +635,287 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: patchPublicV2ServiceLinesByServiceLineNumberConsumeFromPool
+      x-operation-id-source: derived
 components:
   schemas:
-    ServiceLineUpdateNicknameRequest:
-      required:
-      - nickname
+    OptInResponseServiceResponse:
       type: object
       properties:
-        nickname:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/OptInResponse'
+      additionalProperties: false
+    OptInResponse:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Opt in product Id.
+        activatedDate:
+          type: string
+          description: Activation date.
+          format: date-time
+        deactivatedDate:
+          type:
+          - string
+          - 'null'
+          description: Deactivation date.
+          format: date-time
+        isInOptInCoolDown:
+          type: boolean
+          description: Whether service line is in cool down period from recently changing opted in state
+      additionalProperties: false
+    DeviceIdRequest:
+      required:
+      - deviceId
+      type: object
+      properties:
+        deviceId:
           minLength: 1
           type: string
-          description: New nickname for the existing service line.
+          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
+      additionalProperties: false
+    ServiceLineDataBlocksRequest:
+      type: object
+      properties:
+        recurringDataBlocks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddDataBlockRequest'
+          description: Recurring data blocks to configure
+        dataPoolId:
+          type:
+          - string
+          - 'null'
+          description: 'Pre-Release: The ID of an existing multi-service-line data pool to which a new service line should be added. This field is mutually exclusive with RecurringDataBlocks and cannot be used together with it. Available for select audiences only.'
+      additionalProperties: false
+    ServiceLineCreateRequestV2:
+      required:
+      - addressReferenceId
+      - productReferenceId
+      type: object
+      properties:
+        addressReferenceId:
+          type: string
+          description: 'Address Reference ID to associate with the service line. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
+          format: uuid
+        productReferenceId:
+          minLength: 1
+          type: string
+          description: 'Subscription Product ID to associate with the service line. Example: business-subscription-100'
+        dataBlockProducts:
+          $ref: '#/components/schemas/ServiceLineDataBlocksRequest'
+      additionalProperties: false
+    ServiceLineDataBlocksSummaryResponse:
+      type: object
+      properties:
+        recurringBlocksCurrentBillingCycle:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: The current billing cycle's monthly recurring data blocks.
+        recurringBlocksNextBillingCycle:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: Next billing cycle's monthly recurring data blocks.
+        delayedProductRecurringBlocksNextCycle:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: What recurring blocks will be when the service line switches to the delayed product.
+        topUpBlocksOptInPurchase:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: What top up blocks were automatically purchased because the service line was out of data and opted in.
+        topUpBlocksOneTimePurchase:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataBlockSummaryResponse'
+          description: What top up blocks were manually purchased.
+      additionalProperties: false
+    UpdateServiceLineProductRequest:
+      required:
+      - productReferenceId
+      type: object
+      properties:
+        productReferenceId:
+          minLength: 1
+          type: string
+          description: Product Id.
+        recurringDataBlocks:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddDataBlockRequest'
+          description: Recurring data blocks to configure.
+        dataPoolId:
+          type:
+          - string
+          - 'null'
+          description: 'Pre-Release: If provided, onboard the service line onto an existing multi-service-line data pool. This parameter is mutually exclusive with RecurringDataBlocks. Available for select audiences only.'
+        delayUpdate:
+          type:
+          - boolean
+          - 'null'
+          description: Specifies when the change will be applied. True forces changes to be scheduled on the next billing cycle, False forces changes to occur immediately, Null uses legacy logic allowing upgrades to occur immediately and downgrades to be delayed.
+      additionalProperties: false
+    DataBlockSummaryResponse:
+      type: object
+      properties:
+        productId:
+          type:
+          - string
+          - 'null'
+          description: The block's product id.
+        startDate:
+          type: string
+          description: The block's start date.
+          format: date-time
+        expirationDate:
+          type: string
+          description: The block's end date.
+          format: date-time
+        count:
+          type: integer
+          description: How many blocks of this type there are.
+          format: int32
+        dataAmount:
+          type: number
+          description: The data amount of each block.
+          format: double
+        dataUnitType:
+          type:
+          - string
+          - 'null'
+          description: The unit that the data amount is in.
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    AviationMetadataResponse:
+      type: object
+      properties:
+        tailNumber:
+          type:
+          - string
+          - 'null'
+        seatCount:
+          type: integer
+          format: int32
+        airlineIataCode:
+          type:
+          - string
+          - 'null'
+        aircraftIataCode:
+          type:
+          - string
+          - 'null'
+        airlineIcaoCode:
+          type:
+          - string
+          - 'null'
+        aircraftIcaoCode:
+          type:
+          - string
+          - 'null'
+        stcNumber:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ServiceLineResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/ServiceLineResponse'
       additionalProperties: false
     ServiceLineResponse:
       type: object
@@ -643,22 +968,15 @@ components:
         dataBlocks:
           $ref: '#/components/schemas/ServiceLineDataBlocksSummaryResponse'
       additionalProperties: false
-    ServiceLineCreateRequestV2:
+    ServiceLineUpdateNicknameRequest:
       required:
-      - addressReferenceId
-      - productReferenceId
+      - nickname
       type: object
       properties:
-        addressReferenceId:
-          type: string
-          description: 'Address Reference ID to associate with the service line. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
-          format: uuid
-        productReferenceId:
+        nickname:
           minLength: 1
           type: string
-          description: 'Subscription Product ID to associate with the service line. Example: business-subscription-100'
-        dataBlockProducts:
-          $ref: '#/components/schemas/ServiceLineDataBlocksRequest'
+          description: New nickname for the existing service line.
       additionalProperties: false
     RecurringDataBlocksRequest:
       type: object
@@ -681,112 +999,14 @@ components:
           - 'null'
           description: When true, creates additional blocks for the current billing cycle so the current month data block counts match the new recurring configuration.
       additionalProperties: false
-    DeviceIdRequest:
+    ServiceLineSetPublicIpRequest:
       required:
-      - deviceId
+      - publicIp
       type: object
       properties:
-        deviceId:
-          minLength: 1
-          type: string
-          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
-      additionalProperties: false
-    OptInResponse:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: Opt in product Id.
-        activatedDate:
-          type: string
-          description: Activation date.
-          format: date-time
-        deactivatedDate:
-          type:
-          - string
-          - 'null'
-          description: Deactivation date.
-          format: date-time
-        isInOptInCoolDown:
+        publicIp:
           type: boolean
-          description: Whether service line is in cool down period from recently changing opted in state
-      additionalProperties: false
-    DataBlockSummaryResponse:
-      type: object
-      properties:
-        productId:
-          type:
-          - string
-          - 'null'
-          description: The block's product id.
-        startDate:
-          type: string
-          description: The block's start date.
-          format: date-time
-        expirationDate:
-          type: string
-          description: The block's end date.
-          format: date-time
-        count:
-          type: integer
-          description: How many blocks of this type there are.
-          format: int32
-        dataAmount:
-          type: number
-          description: The data amount of each block.
-          format: double
-        dataUnitType:
-          type:
-          - string
-          - 'null'
-          description: The unit that the data amount is in.
-      additionalProperties: false
-    ServiceLineDataBlocksRequest:
-      type: object
-      properties:
-        recurringDataBlocks:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AddDataBlockRequest'
-          description: Recurring data blocks to configure
-        dataPoolId:
-          type:
-          - string
-          - 'null'
-          description: 'Pre-Release: The ID of an existing multi-service-line data pool to which a new service line should be added. This field is mutually exclusive with RecurringDataBlocks and cannot be used together with it. Available for select audiences only.'
-      additionalProperties: false
-    AviationMetadataResponse:
-      type: object
-      properties:
-        tailNumber:
-          type:
-          - string
-          - 'null'
-        seatCount:
-          type: integer
-          format: int32
-        airlineIataCode:
-          type:
-          - string
-          - 'null'
-        aircraftIataCode:
-          type:
-          - string
-          - 'null'
-        airlineIcaoCode:
-          type:
-          - string
-          - 'null'
-        aircraftIcaoCode:
-          type:
-          - string
-          - 'null'
-        stcNumber:
-          type:
-          - string
-          - 'null'
+          description: If public IP should be enabled or not
       additionalProperties: false
     AddDataBlockRequest:
       required:
@@ -803,54 +1023,6 @@ components:
           description: Quantity of the specified data block to add
           format: int32
       additionalProperties: false
-    ServiceLineDataBlocksSummaryResponse:
-      type: object
-      properties:
-        recurringBlocksCurrentBillingCycle:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataBlockSummaryResponse'
-          description: The current billing cycle's monthly recurring data blocks.
-        recurringBlocksNextBillingCycle:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataBlockSummaryResponse'
-          description: Next billing cycle's monthly recurring data blocks.
-        delayedProductRecurringBlocksNextCycle:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataBlockSummaryResponse'
-          description: What recurring blocks will be when the service line switches to the delayed product.
-        topUpBlocksOptInPurchase:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataBlockSummaryResponse'
-          description: What top up blocks were automatically purchased because the service line was out of data and opted in.
-        topUpBlocksOneTimePurchase:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataBlockSummaryResponse'
-          description: What top up blocks were manually purchased.
-      additionalProperties: false
-    ServiceLineSetPublicIpRequest:
-      required:
-      - publicIp
-      type: object
-      properties:
-        publicIp:
-          type: boolean
-          description: If public IP should be enabled or not
-      additionalProperties: false
     PartialPeriodResponse:
       type: object
       properties:
@@ -865,64 +1037,6 @@ components:
           type: string
           description: The timestamp of the end of the partial period
           format: date-time
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    ServiceLineResponseServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/ServiceLineResponse'
       additionalProperties: false
     ServiceLineResponsePaginatedServiceResponse:
       type: object
@@ -954,36 +1068,6 @@ components:
         content:
           $ref: '#/components/schemas/ServiceLineResponsePaginated'
       additionalProperties: false
-    OptInResponseServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/OptInResponse'
-      additionalProperties: false
     ValidationResult:
       type: object
       properties:
@@ -998,54 +1082,6 @@ components:
           type:
           - string
           - 'null'
-      additionalProperties: false
-    ServiceLineResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ServiceLineResponse'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    UpdateServiceLineProductRequest:
-      required:
-      - productReferenceId
-      type: object
-      properties:
-        productReferenceId:
-          minLength: 1
-          type: string
-          description: Product Id.
-        recurringDataBlocks:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AddDataBlockRequest'
-          description: Recurring data blocks to configure.
-        dataPoolId:
-          type:
-          - string
-          - 'null'
-          description: 'Pre-Release: If provided, onboard the service line onto an existing multi-service-line data pool. This parameter is mutually exclusive with RecurringDataBlocks. Available for select audiences only.'
-        delayUpdate:
-          type:
-          - boolean
-          - 'null'
-          description: Specifies when the change will be applied. True forces changes to be scheduled on the next billing cycle, False forces changes to occur immediately, Null uses legacy logic allowing upgrades to occur immediately and downgrades to be delayed.
       additionalProperties: false
     PartialPeriodResponseListServiceResponse:
       type: object
@@ -1080,4 +1116,25 @@ components:
           - 'null'
           items:
             $ref: '#/components/schemas/PartialPeriodResponse'
+      additionalProperties: false
+    ServiceLineResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ServiceLineResponse'
+        totalCount:
+          type: integer
+          format: int32
       additionalProperties: false

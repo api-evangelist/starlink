@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public Data Pools API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -12,8 +19,10 @@ paths:
     get:
       tags:
       - Data Pools
-      summary: 'Pre-Release: Get all multi-service line enabled data pools.'
-      description: 'Required permission: Service plan, View.<br/>This endpoint is available for select audiences only.'
+      summary: 'Pre-Release: Get all multi-service line enabled data pools'
+      description: 'Required permission: Service plan, View.
+
+        This endpoint is available for select audiences only.'
       parameters:
       - name: productReferenceId
         in: query
@@ -53,12 +62,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2DataPools
+      x-operation-id-source: derived
   /public/v2/data-pools/usage:
     get:
       tags:
       - Data Pools
-      summary: 'Pre-Release: Query data pool usage with service line and monthly breakdowns.'
-      description: 'Required permission: Service plan, View.<br/>This endpoint is available for select audiences only.'
+      summary: 'Pre-Release: Query data pool usage with service line and monthly breakdowns'
+      description: 'Required permission: Service plan, View.
+
+        This endpoint is available for select audiences only.'
       parameters:
       - name: dataPoolIds
         in: query
@@ -106,12 +119,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2DataPoolsUsage
+      x-operation-id-source: derived
   /public/v2/data-pools/{dataPoolId}/set-automatic-top-up:
     post:
       tags:
       - Data Pools
-      summary: 'Pre-Release: Enable or disable automatic top-up for a data pool.'
-      description: 'Required permission: Service plan, Edit.<br/>This endpoint is available for select audiences only.'
+      summary: 'Pre-Release: Enable or disable automatic top-up for a data pool'
+      description: 'Required permission: Service plan, Edit.
+
+        This endpoint is available for select audiences only.'
       parameters:
       - name: dataPoolId
         in: path
@@ -144,8 +161,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2DataPoolsByDataPoolIdSetAutomaticTopUp
+      x-operation-id-source: derived
 components:
   schemas:
+    DataPoolResponseV2Paginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataPoolResponseV2'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
     ServiceResponse:
       type: object
       properties:
@@ -173,128 +213,6 @@ components:
         isValid:
           type: boolean
           readOnly: true
-      additionalProperties: false
-    DataPoolResponseV2PaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/DataPoolResponseV2Paginated'
-      additionalProperties: false
-    DataBlockMonthlyResponseV2:
-      type: object
-      properties:
-        startDate:
-          type: string
-          description: Start date of the respective month.
-          format: date-time
-        endDate:
-          type: string
-          description: End date of the respective month.
-          format: date-time
-        serviceLineUsage:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataBlockServiceLineUsagePublicResponseV2'
-          description: Montly usage breakdown by service lines.
-      additionalProperties: false
-    DataBlockServiceLineUsagePublicResponseV2:
-      type: object
-      properties:
-        serviceLineNumber:
-          type: string
-          description: Service line number.
-        consumedAmountGB:
-          type: number
-          description: GB amount that the service line consumed from the block.
-          format: double
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    DataPoolUsageResponseV2Paginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataPoolUsageResponseV2'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    DataPoolResponseV2:
-      type: object
-      properties:
-        dataPoolId:
-          type: string
-          description: Data pool ID.
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname of the data pool.
-        automaticTopUpEnabled:
-          type: boolean
-          description: If the data pool is opted-in to overage top-ups.
-        restricted:
-          type: boolean
-          description: If the data pool and service lines on it are restricted due to exhausting their data
-        dataProductType:
-          $ref: '#/components/schemas/DataProductType'
-        dataBlocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataBlockResponseV2'
-          description: Active data blocks on the data pool.
-        productId:
-          type: string
-          description: Product ID of the data pool.
       additionalProperties: false
     DataBlockUsageResponseV2:
       type: object
@@ -339,29 +257,19 @@ components:
             $ref: '#/components/schemas/DataBlockMonthlyResponseV2'
           description: Usage breakdown by month.
       additionalProperties: false
-    DataBlockType:
-      enum:
-      - IncludedWithBaseSubscription
-      - RecurringPerBillingCycle
-      - Overage
-      - OneTimePurchase
-      type: string
-      x-enumNames:
-      - IncludedWithBaseSubscription
-      - RecurringPerBillingCycle
-      - Overage
-      - OneTimePurchase
-    DataProductType:
-      enum:
-      - Ocean
-      - Land
-      - Aviation
-      type: string
-      x-enumNames:
-      - Ocean
-      - Land
-      - Aviation
-    DataPoolResponseV2Paginated:
+    DataPoolUsageResponseV2:
+      type: object
+      properties:
+        dataPoolId:
+          type: string
+          description: Data pool ID.
+        dataBlocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockUsageResponseV2'
+          description: Usage by data blocks in the pool.
+      additionalProperties: false
+    DataPoolUsageResponseV2Paginated:
       type: object
       properties:
         pageIndex:
@@ -377,50 +285,40 @@ components:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/DataPoolResponseV2'
+            $ref: '#/components/schemas/DataPoolUsageResponseV2'
         totalCount:
           type: integer
           format: int32
       additionalProperties: false
-    DataPoolUsageResponseV2:
+    DataPoolResponseV2PaginatedServiceResponse:
       type: object
       properties:
-        dataPoolId:
-          type: string
-          description: Data pool ID.
-        dataBlocks:
-          type: array
+        errors:
+          type:
+          - array
+          - 'null'
           items:
-            $ref: '#/components/schemas/DataBlockUsageResponseV2'
-          description: Usage by data blocks in the pool.
-      additionalProperties: false
-    DataBlockResponseV2:
-      type: object
-      properties:
-        productId:
-          type: string
-          description: Product ID of the data block.
-        startDate:
-          type: string
-          description: Start date of the data block, i.e. when it is active for consumption.
-          format: date-time
-        endDate:
-          type: string
-          description: End date of the data block, i.e. when it is no longer active for consumption.
-          format: date-time
-        isPrepaid:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
           type: boolean
-          description: If the data block is prepaid.
-        blocksCount:
-          type: integer
-          description: Number of data blocks.
-          format: int32
-        type:
-          $ref: '#/components/schemas/DataBlockType'
-        dataAmountGB:
-          type: number
-          description: GB capacity per individual block.
-          format: double
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/DataPoolResponseV2Paginated'
       additionalProperties: false
     DataPoolUsageResponseV2PaginatedServiceResponse:
       type: object
@@ -452,3 +350,124 @@ components:
         content:
           $ref: '#/components/schemas/DataPoolUsageResponseV2Paginated'
       additionalProperties: false
+    DataBlockMonthlyResponseV2:
+      type: object
+      properties:
+        startDate:
+          type: string
+          description: Start date of the respective month.
+          format: date-time
+        endDate:
+          type: string
+          description: End date of the respective month.
+          format: date-time
+        serviceLineUsage:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockServiceLineUsagePublicResponseV2'
+          description: Montly usage breakdown by service lines.
+      additionalProperties: false
+    DataPoolResponseV2:
+      type: object
+      properties:
+        dataPoolId:
+          type: string
+          description: Data pool ID.
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname of the data pool.
+        automaticTopUpEnabled:
+          type: boolean
+          description: If the data pool is opted-in to overage top-ups.
+        restricted:
+          type: boolean
+          description: If the data pool and service lines on it are restricted due to exhausting their data
+        dataProductType:
+          $ref: '#/components/schemas/DataProductType'
+        dataBlocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockResponseV2'
+          description: Active data blocks on the data pool.
+        productId:
+          type: string
+          description: Product ID of the data pool.
+      additionalProperties: false
+    DataProductType:
+      enum:
+      - Ocean
+      - Land
+      - Aviation
+      type: string
+      x-enumNames:
+      - Ocean
+      - Land
+      - Aviation
+    DataBlockServiceLineUsagePublicResponseV2:
+      type: object
+      properties:
+        serviceLineNumber:
+          type: string
+          description: Service line number.
+        consumedAmountGB:
+          type: number
+          description: GB amount that the service line consumed from the block.
+          format: double
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DataBlockResponseV2:
+      type: object
+      properties:
+        productId:
+          type: string
+          description: Product ID of the data block.
+        startDate:
+          type: string
+          description: Start date of the data block, i.e. when it is active for consumption.
+          format: date-time
+        endDate:
+          type: string
+          description: End date of the data block, i.e. when it is no longer active for consumption.
+          format: date-time
+        isPrepaid:
+          type: boolean
+          description: If the data block is prepaid.
+        blocksCount:
+          type: integer
+          description: Number of data blocks.
+          format: int32
+        type:
+          $ref: '#/components/schemas/DataBlockType'
+        dataAmountGB:
+          type: number
+          description: GB capacity per individual block.
+          format: double
+      additionalProperties: false
+    DataBlockType:
+      enum:
+      - IncludedWithBaseSubscription
+      - RecurringPerBillingCycle
+      - Overage
+      - OneTimePurchase
+      type: string
+      x-enumNames:
+      - IncludedWithBaseSubscription
+      - RecurringPerBillingCycle
+      - Overage
+      - OneTimePurchase

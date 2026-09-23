@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public Addresses API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -13,7 +20,9 @@ paths:
       tags:
       - Addresses
       summary: Get all addresses
-      description: 'Required permission: Account information, View.<br/>Returns all addresses on the account in paginated form.'
+      description: 'Required permission: Account information, View.
+
+        Returns all addresses on the account in paginated form.'
       parameters:
       - name: addressIds
         in: query
@@ -55,6 +64,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2Addresses
+      x-operation-id-source: derived
     post:
       tags:
       - Addresses
@@ -85,6 +96,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AddressResponseServiceResponse'
+      operationId: postPublicV2Addresses
+      x-operation-id-source: derived
   /public/v2/addresses/{addressReferenceId}:
     get:
       tags:
@@ -119,6 +132,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2AddressesByAddressReferenceId
+      x-operation-id-source: derived
     put:
       tags:
       - Addresses
@@ -158,9 +173,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2AddressesByAddressReferenceId
+      x-operation-id-source: derived
 components:
   schemas:
-    ServiceResponse:
+    AddressResponseServiceResponse:
       type: object
       properties:
         errors:
@@ -187,6 +204,122 @@ components:
         isValid:
           type: boolean
           readOnly: true
+        content:
+          $ref: '#/components/schemas/AddressResponse'
+      additionalProperties: false
+    AddressResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddressResponsePaginated'
+      additionalProperties: false
+    AddressResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddressResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    AddressCreateRequest:
+      required:
+      - addressLines
+      - formattedAddress
+      - latitude
+      - longitude
+      type: object
+      properties:
+        addressLines:
+          type: array
+          items:
+            type: string
+          description: 'The address lines for the address. Example: 1 Rocket Road'
+        locality:
+          type:
+          - string
+          - 'null'
+          description: 'The town/locality of the address. Example: Hawthorne'
+        administrativeArea:
+          type:
+          - string
+          - 'null'
+          description: 'The administrative area of the address. Example: California'
+        administrativeAreaCode:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: value will be ignored. Administrative area code will be determined from latitude and longitude.'
+          deprecated: true
+        region:
+          type:
+          - string
+          - 'null'
+          description: 'The region of the address. Example: United States'
+        regionCode:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated field: value will be ignored. Region Code will be determined from latitude and longitude.'
+          deprecated: true
+        postalCode:
+          type:
+          - string
+          - 'null'
+          description: 'The postal code of the address. Example: 90250-6844'
+        metadata:
+          type:
+          - string
+          - 'null'
+          description: Optional field that can be used to store information about the address for external purposes
+        formattedAddress:
+          minLength: 1
+          type: string
+          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
+        latitude:
+          type: number
+          description: 'The required latitude of the address. Example: 33.92'
+          format: double
+        longitude:
+          type: number
+          description: 'The required longitude of the address. Example: -118.32'
+          format: double
       additionalProperties: false
     ValidationResult:
       type: object
@@ -319,7 +452,7 @@ components:
           description: 'The required longitude of the address. Example: -118.32'
           format: double
       additionalProperties: false
-    AddressResponseServiceResponse:
+    ServiceResponse:
       type: object
       properties:
         errors:
@@ -346,120 +479,4 @@ components:
         isValid:
           type: boolean
           readOnly: true
-        content:
-          $ref: '#/components/schemas/AddressResponse'
-      additionalProperties: false
-    AddressResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/AddressResponse'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    AddressResponsePaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/AddressResponsePaginated'
-      additionalProperties: false
-    AddressCreateRequest:
-      required:
-      - addressLines
-      - formattedAddress
-      - latitude
-      - longitude
-      type: object
-      properties:
-        addressLines:
-          type: array
-          items:
-            type: string
-          description: 'The address lines for the address. Example: 1 Rocket Road'
-        locality:
-          type:
-          - string
-          - 'null'
-          description: 'The town/locality of the address. Example: Hawthorne'
-        administrativeArea:
-          type:
-          - string
-          - 'null'
-          description: 'The administrative area of the address. Example: California'
-        administrativeAreaCode:
-          type:
-          - string
-          - 'null'
-          description: 'Deprecated field: value will be ignored. Administrative area code will be determined from latitude and longitude.'
-          deprecated: true
-        region:
-          type:
-          - string
-          - 'null'
-          description: 'The region of the address. Example: United States'
-        regionCode:
-          type:
-          - string
-          - 'null'
-          description: 'Deprecated field: value will be ignored. Region Code will be determined from latitude and longitude.'
-          deprecated: true
-        postalCode:
-          type:
-          - string
-          - 'null'
-          description: 'The postal code of the address. Example: 90250-6844'
-        metadata:
-          type:
-          - string
-          - 'null'
-          description: Optional field that can be used to store information about the address for external purposes
-        formattedAddress:
-          minLength: 1
-          type: string
-          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
-        latitude:
-          type: number
-          description: 'The required latitude of the address. Example: 33.92'
-          format: double
-        longitude:
-          type: number
-          description: 'The required longitude of the address. Example: -118.32'
-          format: double
       additionalProperties: false

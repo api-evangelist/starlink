@@ -1,0 +1,54 @@
+{
+  "provider": "starlink",
+  "sources": [
+    "_original/starlink-public-api-v2-openapi.json"
+  ],
+  "outputs": [
+    "starlink-account-api-openapi.yml",
+    "starlink-addresses-api-openapi.yml",
+    "starlink-billing-api-openapi.yml",
+    "starlink-contacts-api-openapi.yml",
+    "starlink-data-pools-api-openapi.yml",
+    "starlink-flights-api-openapi.yml",
+    "starlink-managed-api-openapi.yml",
+    "starlink-managed-accounts-api-openapi.yml",
+    "starlink-mobile-api-openapi.yml",
+    "starlink-routers-api-openapi.yml",
+    "starlink-service-lines-api-openapi.yml",
+    "starlink-user-terminals-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "starlink-public-api-v2-openapi.json: upgraded openapi 3.0.4 -> OpenAPI 3.2.0",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Account",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Addresses",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Billing",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Contacts",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Data Pools",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Flights",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Managed",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Managed Accounts",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Mobile",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Routers",
+    "starlink-public-api-v2-openapi.json: declared missing tag: Service Lines",
+    "starlink-public-api-v2-openapi.json: declared missing tag: User Terminals",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "starlink-account-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-addresses-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-contacts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-data-pools-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-flights-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-managed-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-managed-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-mobile-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-routers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-service-lines-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "starlink-user-terminals-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

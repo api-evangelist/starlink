@@ -1,7 +1,14 @@
 openapi: 3.2.0
 info:
   title: Starlink Public Routers API
-  description: '<h3>Description</h3>API to manage Starlink accounts and devices. For interactive endpoints list see: <a href=''https://starlink.readme.io/''>https://starlink.readme.io/</a><h3>Authentication - OIDC</h3><p>To authenticate with this API using OIDC, <a target=''_blank'' href=''/api/auth/.well-known/openid-configuration''>Well Known URL</a> and attach the result to your requests with the <strong>Authorize</strong> button below.</p>'
+  description: 'Description
+
+    API to manage Starlink accounts and devices. For interactive endpoints list see: https://starlink.readme.io/
+
+    Authentication - OIDC
+
+
+    To authenticate with this API using OIDC, Well Known URL and attach the result to your requests with the Authorize button below.'
   version: '2'
 servers:
 - url: /api
@@ -41,12 +48,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersByRouterId
+      x-operation-id-source: derived
   /public/v2/routers/configs:
     get:
       tags:
       - Routers
       summary: Get all router configs
-      description: 'Required permission: Device command and configuration, View.<br/>Return all router configs on this account in paginated form'
+      description: 'Required permission: Device command and configuration, View.
+
+        Return all router configs on this account in paginated form'
       parameters:
       - name: page
         in: query
@@ -75,6 +86,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersConfigs
+      x-operation-id-source: derived
     post:
       tags:
       - Routers
@@ -107,6 +120,8 @@ paths:
                 $ref: '#/components/schemas/ServiceResponse'
         '200':
           description: Success
+      operationId: postPublicV2RoutersConfigs
+      x-operation-id-source: derived
   /public/v2/routers/configs/{configId}:
     get:
       tags:
@@ -140,11 +155,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersConfigsByConfigId
+      x-operation-id-source: derived
     put:
       tags:
       - Routers
       summary: Update router config
-      description: 'Required permission: Device command and configuration, Edit.<br/>Update a given router config. Any router assigned to this config will immediately receive the update if it is online. Otherwise, the router will receive the update when it comes online.'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Update a given router config. Any router assigned to this config will immediately receive the update if it is online. Otherwise, the router will receive the update when it comes online.'
       parameters:
       - name: configId
         in: path
@@ -178,12 +197,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2RoutersConfigsByConfigId
+      x-operation-id-source: derived
   /public/v2/routers/configs/assign:
     put:
       tags:
       - Routers
       summary: Router config assignment
-      description: 'Required permission: Device configuration assignment, Edit.<br/>Assign the config (or none) to the routers. For each router if it is currently online, the config will immediately be sent to the router. Else, the config will be sent to the router when it comes online. Configs are sent to the router within 1-2 minutes. On error no assignment occurs.'
+      description: 'Required permission: Device configuration assignment, Edit.
+
+        Assign the config (or none) to the routers. For each router if it is currently online, the config will immediately be sent to the router. Else, the config will be sent to the router when it comes online. Configs are sent to the router within 1-2 minutes. On error no assignment occurs.'
       requestBody:
         description: Request containing config id (or empty) and list of deviceId's to assign to
         content:
@@ -209,12 +232,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2RoutersConfigsAssign
+      x-operation-id-source: derived
   /public/v2/routers/configs/default:
     get:
       tags:
       - Routers
       summary: Get default router config
-      description: 'Required permission: Device command and configuration, View.<br/>Gets the router config id that will be assigned to any routers when they are first added to this account.'
+      description: 'Required permission: Device command and configuration, View.
+
+        Gets the router config id that will be assigned to any routers when they are first added to this account.'
       responses:
         '401':
           description: Unauthorized
@@ -232,11 +259,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersConfigsDefault
+      x-operation-id-source: derived
     put:
       tags:
       - Routers
       summary: Set default router config
-      description: 'Required permission: Device configuration assignment, Edit.<br/>Set the default router config on the account. Use an empty string to remove the default config from the account. Any NEW routers on this account will be assigned this config.'
+      description: 'Required permission: Device configuration assignment, Edit.
+
+        Set the default router config on the account. Use an empty string to remove the default config from the account. Any NEW routers on this account will be assigned this config.'
       requestBody:
         description: UpdateDefaultConfigRequest
         content:
@@ -262,12 +293,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: putPublicV2RoutersConfigsDefault
+      x-operation-id-source: derived
   /public/v2/routers/configs/tls:
     get:
       tags:
       - Routers
       summary: Get TLS configs
-      description: 'Required permission: Device command and configuration, View.<br/>Gets a paginated list of TLS configs on this account.'
+      description: 'Required permission: Device command and configuration, View.
+
+        Gets a paginated list of TLS configs on this account.'
       parameters:
       - name: page
         in: query
@@ -296,11 +331,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersConfigsTls
+      x-operation-id-source: derived
     post:
       tags:
       - Routers
       summary: Create TLS config
-      description: 'Required permission: Device command and configuration, Edit.<br/>Creates a TLS config that allows this certificate and key to be used in router configs when a certificate and key are required by only specifying the certificate (matching key will be added). TLS configs are identified by their certificate string base64 encoded which must be unique on the account.'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Creates a TLS config that allows this certificate and key to be used in router configs when a certificate and key are required by only specifying the certificate (matching key will be added). TLS configs are identified by their certificate string base64 encoded which must be unique on the account.'
       requestBody:
         description: Request containing certificate and key, both in base64 encoded pem format
         content:
@@ -328,11 +367,15 @@ paths:
                 $ref: '#/components/schemas/ServiceResponse'
         '200':
           description: Success
+      operationId: postPublicV2RoutersConfigsTls
+      x-operation-id-source: derived
     delete:
       tags:
       - Routers
       summary: Delete TLS config
-      description: 'Required permission: Device command and configuration, Edit.<br/>Deletes a TLS certificate and key pair from the set of TLS configs that can be reused when saving router configs and only specifying the certificate. Does not affect any router configs that were already saved, just removes it from list of certificates that the matching key will be inserted on save for.'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Deletes a TLS certificate and key pair from the set of TLS configs that can be reused when saving router configs and only specifying the certificate. Does not affect any router configs that were already saved, just removes it from list of certificates that the matching key will be inserted on save for.'
       requestBody:
         description: Request containing certificate and key, both in base64 encoded pem format
         content:
@@ -358,12 +401,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: deletePublicV2RoutersConfigsTls
+      x-operation-id-source: derived
   /public/v2/routers/local-content:
     post:
       tags:
       - Routers
       summary: Upload router local content file
-      description: 'Required permission: Device command and configuration, Edit.<br/>Upload html file to allow it to be configured as the HTTPS server local content file for router configs. File must be HTML, under 4MB, and file name under 100 characters. Files are stored in a public bucket for configured routers to download. File should be attached as multipart/form-data. See https://starlink.readme.io/docs/local-content for example upload script.'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Upload html file to allow it to be configured as the HTTPS server local content file for router configs. File must be HTML, under 4MB, and file name under 100 characters. Files are stored in a public bucket for configured routers to download. File should be attached as multipart/form-data. See https://starlink.readme.io/docs/local-content for example upload script.'
       requestBody:
         content:
           multipart/form-data:
@@ -409,6 +456,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2RoutersLocalContent
+      x-operation-id-source: derived
     get:
       tags:
       - Routers
@@ -431,12 +480,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersLocalContent
+      x-operation-id-source: derived
   /public/v2/routers/sandbox/clients:
     get:
       tags:
       - Routers
       summary: Get sandbox clients
-      description: 'Required permission: Device command and configuration, View.<br/>Returns clients that were unsandboxed through the management API and have access that has not yet expired, paginated 1000 at a time. Clients that are allowed internet access due to sandbox disablement are not returned.'
+      description: 'Required permission: Device command and configuration, View.
+
+        Returns clients that were unsandboxed through the management API and have access that has not yet expired, paginated 1000 at a time. Clients that are allowed internet access due to sandbox disablement are not returned.'
       parameters:
       - name: sandboxId
         in: query
@@ -479,11 +532,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: getPublicV2RoutersSandboxClients
+      x-operation-id-source: derived
     post:
       tags:
       - Routers
       summary: Batch update sandbox clients
-      description: 'Required permission: Device command and configuration, Edit.<br/>Update the sandbox state for multiple clients. If sandboxing is enabled, sandboxed clients will only have access to domains in the sandbox domain allow list. If a client is duplicated, records the client with the latest expiry.'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Update the sandbox state for multiple clients. If sandboxing is enabled, sandboxed clients will only have access to domains in the sandbox domain allow list. If a client is duplicated, records the client with the latest expiry.'
       requestBody:
         description: UpdateSandboxClientRequest
         content:
@@ -511,12 +568,16 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2RoutersSandboxClients
+      x-operation-id-source: derived
   /public/v2/routers/sandbox/heartbeat:
     put:
       tags:
       - Routers
       summary: Update sandbox heartbeat
-      description: 'Required permission: Device command and configuration, Edit.<br/>Heartbeats verify the health of enterprise systems that manage router sandboxing. If heartbeats are not received for an account, Starlink API will instruct routers under the account disable sandboxes until reboot.'
+      description: 'Required permission: Device command and configuration, Edit.
+
+        Heartbeats verify the health of enterprise systems that manage router sandboxing. If heartbeats are not received for an account, Starlink API will instruct routers under the account disable sandboxes until reboot.'
       requestBody:
         description: SandboxHeartbeatRequest
         content:
@@ -538,6 +599,8 @@ paths:
                 $ref: '#/components/schemas/ServiceResponse'
         '422':
           description: Failed to send heartbeat
+      operationId: putPublicV2RoutersSandboxHeartbeat
+      x-operation-id-source: derived
   /public/v2/routers/{routerId}/reboot:
     post:
       tags:
@@ -571,48 +634,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ServiceResponse'
+      operationId: postPublicV2RoutersByRouterIdReboot
+      x-operation-id-source: derived
 components:
   schemas:
-    AddRouterLocalContentResponseV2:
-      required:
-      - fileContentHash
-      - fileContentId
-      - nickname
-      type: object
-      properties:
-        nickname:
-          minLength: 1
-          type: string
-          description: File name of uploaded file
-        fileContentId:
-          minLength: 1
-          type: string
-          description: File id to go in router config HTTPS server FileContentId field
-        fileContentHash:
-          minLength: 1
-          type: string
-          description: File MD5 hash to go in router config HTTPS server FileContentHash field
-      additionalProperties: false
-    UpdateBatchSandboxClientRequest:
-      required:
-      - clientId
-      - expiry
-      - sandboxId
-      type: object
-      properties:
-        clientId:
-          minLength: 1
-          type: string
-          description: Identifier of the client to add or remove from a sandbox.
-        sandboxId:
-          type: integer
-          description: Identifier used to separate sandbox environments. Per-client sandboxing is shared within the same SandboxId.
-          format: int32
-        expiry:
-          type: string
-          description: Expiry of the sandbox state as a UTC date time.
-          format: date-time
-      additionalProperties: false
     RouterConfigResponseV2PaginatedServiceResponse:
       type: object
       properties:
@@ -642,179 +667,6 @@ components:
           readOnly: true
         content:
           $ref: '#/components/schemas/RouterConfigResponseV2Paginated'
-      additionalProperties: false
-    SandboxHeartbeatRequest:
-      required:
-      - healthy
-      type: object
-      properties:
-        healthy:
-          type: boolean
-          description: True if client systems are healthy, false otherwise.
-      additionalProperties: false
-    RouterLocalContentResponse:
-      type: object
-      properties:
-        nickname:
-          type: string
-          description: Uploaded file name
-        uploadDate:
-          type: string
-          description: Upload timestamp
-          format: date-time
-        fileContentId:
-          type: string
-          description: Id of uploaded local content file, used in router config HTTPS server
-        fileContentHash:
-          type: string
-          description: MD5 hash of the uploaded file used to verify integrity when router downloads the file for hosting. Used in router config HTTPS server
-      additionalProperties: false
-    RouterConfigResponseV2Paginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/RouterConfigResponseV2'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    UpdateDefaultConfigRequest:
-      required:
-      - configId
-      type: object
-      properties:
-        configId:
-          minLength: 1
-          type: string
-          description: ConfigId or none to set as account default config. Use empty string to clear default config setting.
-      additionalProperties: false
-    TlsConfigResponseV2:
-      type: object
-      properties:
-        certificateBase64Pem:
-          type: string
-          description: TLS certificate in PEM format, base64 encoded.
-        notBefore:
-          type: string
-          description: Certificate invalid before this date.
-          format: date-time
-        notAfter:
-          type: string
-          description: Certificate invalid after this date.
-          format: date-time
-      additionalProperties: false
-    RouterResponseV2:
-      type: object
-      properties:
-        routerId:
-          type: string
-          description: Router Id.
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname of the router.
-        userTerminalId:
-          type: string
-          description: User terminal Id this router is bonded to.
-        configId:
-          type:
-          - string
-          - 'null'
-          description: Router config this router is assigned to, or null if no config assigned.
-        hardwareVersion:
-          type:
-          - string
-          - 'null'
-          description: Deprecated field. Value will always be null
-        lastBonded:
-          type:
-          - string
-          - 'null'
-          description: Deprecated field. Value will always be null
-          format: date-time
-      additionalProperties: false
-    TlsConfigResponseV2PaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/TlsConfigResponseV2Paginated'
-      additionalProperties: false
-    AddRouterLocalContentResponseV2ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/AddRouterLocalContentResponseV2'
-      additionalProperties: false
-    DeleteTlsConfigRequest:
-      required:
-      - certificateBase64Pem
-      type: object
-      properties:
-        certificateBase64Pem:
-          minLength: 1
-          type: string
-          description: Certificate base64 encoded pem string to match on for deletion of the corresponding certificate and key pair
       additionalProperties: false
     RouterLocalContentResponseListServiceResponse:
       type: object
@@ -850,94 +702,70 @@ components:
           items:
             $ref: '#/components/schemas/RouterLocalContentResponse'
       additionalProperties: false
-    TlsConfigCreateRequestV2:
+    UpdateDefaultConfigRequest:
       required:
-      - certificateBase64Pem
-      - keyBase64Pem
+      - configId
       type: object
       properties:
-        certificateBase64Pem:
+        configId:
           minLength: 1
           type: string
-          description: TLS certificate in PEM format, base64 encoded.
-        keyBase64Pem:
-          minLength: 1
-          type: string
-          description: TLS key in PEM format, base64 encoded. Must match the public key of the certificate.
+          description: ConfigId or none to set as account default config. Use empty string to clear default config setting.
       additionalProperties: false
-    SandboxClientResponsePaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/SandboxClientResponsePaginated'
-      additionalProperties: false
-    SandboxClientResponse:
+    UpdateBatchSandboxClientRequest:
+      required:
+      - clientId
+      - expiry
+      - sandboxId
       type: object
       properties:
         clientId:
-          type:
-          - string
-          - 'null'
+          minLength: 1
+          type: string
+          description: Identifier of the client to add or remove from a sandbox.
         sandboxId:
           type: integer
+          description: Identifier used to separate sandbox environments. Per-client sandboxing is shared within the same SandboxId.
           format: int32
         expiry:
           type: string
+          description: Expiry of the sandbox state as a UTC date time.
           format: date-time
       additionalProperties: false
-    DefaultRouterConfigResponseServiceResponse:
+    AddRouterLocalContentResponseV2:
+      required:
+      - fileContentHash
+      - fileContentId
+      - nickname
       type: object
       properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/DefaultRouterConfigResponse'
+        nickname:
+          minLength: 1
+          type: string
+          description: File name of uploaded file
+        fileContentId:
+          minLength: 1
+          type: string
+          description: File id to go in router config HTTPS server FileContentId field
+        fileContentHash:
+          minLength: 1
+          type: string
+          description: File MD5 hash to go in router config HTTPS server FileContentHash field
+      additionalProperties: false
+    TlsConfigResponseV2:
+      type: object
+      properties:
+        certificateBase64Pem:
+          type: string
+          description: TLS certificate in PEM format, base64 encoded.
+        notBefore:
+          type: string
+          description: Certificate invalid before this date.
+          format: date-time
+        notAfter:
+          type: string
+          description: Certificate invalid after this date.
+          format: date-time
       additionalProperties: false
     ServiceResponse:
       type: object
@@ -988,51 +816,6 @@ components:
           type: integer
           format: int32
       additionalProperties: false
-    RouterConfigResponseV2ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/RouterConfigResponseV2'
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     RouterResponseV2ServiceResponse:
       type: object
       properties:
@@ -1063,18 +846,14 @@ components:
         content:
           $ref: '#/components/schemas/RouterResponseV2'
       additionalProperties: false
-    RouterConfigResponseV2:
+    DefaultRouterConfigResponse:
       type: object
       properties:
         configId:
-          type: string
-          description: Config Id.
-        nickname:
-          type: string
-          description: Nickname for this config. Must be less than 100 characters.
-        routerConfigJson:
-          type: string
-          description: Config in JSON format.
+          type:
+          - string
+          - 'null'
+          description: Router configId that will be assigned to routers when they are first added to this account. Does not affect routers that are assigned no config.
       additionalProperties: false
     RouterConfigRequest:
       required:
@@ -1091,30 +870,134 @@ components:
           type: string
           description: Router config json contents
       additionalProperties: false
-    DefaultRouterConfigResponse:
+    DefaultRouterConfigResponseServiceResponse:
       type: object
       properties:
-        configId:
+        errors:
           type:
-          - string
+          - array
           - 'null'
-          description: Router configId that will be assigned to routers when they are first added to this account. Does not affect routers that are assigned no config.
-      additionalProperties: false
-    AssignRoutersConfigRequest:
-      required:
-      - routerIds
-      type: object
-      properties:
-        configId:
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
           type:
-          - string
+          - array
           - 'null'
-          description: Config id (or none) to assign to routers
-        routerIds:
-          type: array
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
           items:
             type: string
-          description: RouterIds to immediately update
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/DefaultRouterConfigResponse'
+      additionalProperties: false
+    RouterLocalContentResponse:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: Uploaded file name
+        uploadDate:
+          type: string
+          description: Upload timestamp
+          format: date-time
+        fileContentId:
+          type: string
+          description: Id of uploaded local content file, used in router config HTTPS server
+        fileContentHash:
+          type: string
+          description: MD5 hash of the uploaded file used to verify integrity when router downloads the file for hosting. Used in router config HTTPS server
+      additionalProperties: false
+    SandboxClientResponse:
+      type: object
+      properties:
+        clientId:
+          type:
+          - string
+          - 'null'
+        sandboxId:
+          type: integer
+          format: int32
+        expiry:
+          type: string
+          format: date-time
+      additionalProperties: false
+    DeleteTlsConfigRequest:
+      required:
+      - certificateBase64Pem
+      type: object
+      properties:
+        certificateBase64Pem:
+          minLength: 1
+          type: string
+          description: Certificate base64 encoded pem string to match on for deletion of the corresponding certificate and key pair
+      additionalProperties: false
+    RouterConfigResponseV2:
+      type: object
+      properties:
+        configId:
+          type: string
+          description: Config Id.
+        nickname:
+          type: string
+          description: Nickname for this config. Must be less than 100 characters.
+        routerConfigJson:
+          type: string
+          description: Config in JSON format.
+      additionalProperties: false
+    TlsConfigCreateRequestV2:
+      required:
+      - certificateBase64Pem
+      - keyBase64Pem
+      type: object
+      properties:
+        certificateBase64Pem:
+          minLength: 1
+          type: string
+          description: TLS certificate in PEM format, base64 encoded.
+        keyBase64Pem:
+          minLength: 1
+          type: string
+          description: TLS key in PEM format, base64 encoded. Must match the public key of the certificate.
+      additionalProperties: false
+    SandboxClientResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/SandboxClientResponsePaginated'
       additionalProperties: false
     SandboxClientResponsePaginated:
       type: object
@@ -1136,4 +1019,186 @@ components:
         totalCount:
           type: integer
           format: int32
+      additionalProperties: false
+    TlsConfigResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/TlsConfigResponseV2Paginated'
+      additionalProperties: false
+    RouterResponseV2:
+      type: object
+      properties:
+        routerId:
+          type: string
+          description: Router Id.
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname of the router.
+        userTerminalId:
+          type: string
+          description: User terminal Id this router is bonded to.
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Router config this router is assigned to, or null if no config assigned.
+        hardwareVersion:
+          type:
+          - string
+          - 'null'
+          description: Deprecated field. Value will always be null
+        lastBonded:
+          type:
+          - string
+          - 'null'
+          description: Deprecated field. Value will always be null
+          format: date-time
+      additionalProperties: false
+    RouterConfigResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/RouterConfigResponseV2'
+      additionalProperties: false
+    RouterConfigResponseV2Paginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RouterConfigResponseV2'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AddRouterLocalContentResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddRouterLocalContentResponseV2'
+      additionalProperties: false
+    SandboxHeartbeatRequest:
+      required:
+      - healthy
+      type: object
+      properties:
+        healthy:
+          type: boolean
+          description: True if client systems are healthy, false otherwise.
+      additionalProperties: false
+    AssignRoutersConfigRequest:
+      required:
+      - routerIds
+      type: object
+      properties:
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Config id (or none) to assign to routers
+        routerIds:
+          type: array
+          items:
+            type: string
+          description: RouterIds to immediately update
       additionalProperties: false

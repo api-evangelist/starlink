@@ -50,41 +50,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateManagedCustomerRequest:
-      required:
-      - email
-      - firstName
-      - lastName
-      - locale
-      - phone
-      type: object
-      properties:
-        firstName:
-          minLength: 1
-          type: string
-          description: First name.
-        lastName:
-          minLength: 1
-          type: string
-          description: Last name.
-        email:
-          minLength: 1
-          type: string
-          description: Email address.
-        phone:
-          minLength: 1
-          type: string
-          description: Phone number.
-        locale:
-          minLength: 1
-          type: string
-          description: ISO 639-1 language code.
-        businessName:
-          type:
-          - string
-          - 'null'
-          description: Business name only required for enterprise customers.
-      additionalProperties: false
     CreateManagedCustomerResponseServiceResponse:
       type: object
       properties:
@@ -131,21 +96,6 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     ServiceResponse:
       type: object
       properties:
@@ -173,4 +123,54 @@ components:
         isValid:
           type: boolean
           readOnly: true
+      additionalProperties: false
+    CreateManagedCustomerRequest:
+      required:
+      - email
+      - firstName
+      - lastName
+      - locale
+      - phone
+      type: object
+      properties:
+        firstName:
+          minLength: 1
+          type: string
+          description: First name.
+        lastName:
+          minLength: 1
+          type: string
+          description: Last name.
+        email:
+          minLength: 1
+          type: string
+          description: Email address.
+        phone:
+          minLength: 1
+          type: string
+          description: Phone number.
+        locale:
+          minLength: 1
+          type: string
+          description: ISO 639-1 language code.
+        businessName:
+          type:
+          - string
+          - 'null'
+          description: Business name only required for enterprise customers.
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
       additionalProperties: false

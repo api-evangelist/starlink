@@ -114,187 +114,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    AccountBalanceResponse:
-      type: object
-      properties:
-        balances:
-          type: array
-          items:
-            $ref: '#/components/schemas/CurrencyBalanceResponse'
-          description: The account balance for each currency owed. If nothing is owed, a single zero balance in the account's currency is returned.
-      additionalProperties: false
-    AccountBalanceResponseServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/AccountBalanceResponse'
-      additionalProperties: false
-    InvoiceLineDetailResponse:
-      type: object
-      properties:
-        productReferenceId:
-          type: string
-          description: The product identifier
-        productDescription:
-          type: string
-          description: The product description
-        serviceName:
-          type:
-          - string
-          - 'null'
-          description: The service name
-        serviceLineNumbers:
-          type: array
-          items:
-            type: string
-          description: The service line numbers this line applies to
-        quantity:
-          type: number
-          description: The quantity billed
-          format: double
-        unitPrice:
-          type: number
-          description: The unit price, before tax
-          format: double
-        taxAmount:
-          type: number
-          description: The total tax
-          format: double
-        subTotal:
-          type: number
-          description: The line total, before tax
-          format: double
-        servicePeriodStartDate:
-          type:
-          - string
-          - 'null'
-          description: The start of the service period
-          format: date-time
-        servicePeriodEndDate:
-          type:
-          - string
-          - 'null'
-          description: The end of the service period
-          format: date-time
-      additionalProperties: false
-    InvoiceSummaryResponsePaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/InvoiceSummaryResponsePaginated'
-      additionalProperties: false
-    InvoiceSummaryResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/InvoiceSummaryResponse'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     InvoiceSummaryResponse:
       type: object
       properties:
@@ -328,7 +147,7 @@ components:
         status:
           $ref: '#/components/schemas/PublicInvoiceStatus'
       additionalProperties: false
-    InvoiceDetailResponseServiceResponse:
+    InvoiceSummaryResponsePaginatedServiceResponse:
       type: object
       properties:
         errors:
@@ -356,7 +175,7 @@ components:
           type: boolean
           readOnly: true
         content:
-          $ref: '#/components/schemas/InvoiceDetailResponse'
+          $ref: '#/components/schemas/InvoiceSummaryResponsePaginated'
       additionalProperties: false
     PublicInvoiceStatus:
       enum:
@@ -411,6 +230,64 @@ components:
             $ref: '#/components/schemas/InvoiceLineDetailResponse'
           description: The line items on the invoice
       additionalProperties: false
+    InvoiceSummaryResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InvoiceSummaryResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    AccountBalanceResponse:
+      type: object
+      properties:
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyBalanceResponse'
+          description: The account balance for each currency owed. If nothing is owed, a single zero balance in the account's currency is returned.
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
     CurrencyBalanceResponse:
       type: object
       properties:
@@ -421,4 +298,127 @@ components:
           type: number
           description: The amount due
           format: double
+      additionalProperties: false
+    AccountBalanceResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AccountBalanceResponse'
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    InvoiceLineDetailResponse:
+      type: object
+      properties:
+        productReferenceId:
+          type: string
+          description: The product identifier
+        productDescription:
+          type: string
+          description: The product description
+        serviceName:
+          type:
+          - string
+          - 'null'
+          description: The service name
+        serviceLineNumbers:
+          type: array
+          items:
+            type: string
+          description: The service line numbers this line applies to
+        quantity:
+          type: number
+          description: The quantity billed
+          format: double
+        unitPrice:
+          type: number
+          description: The unit price, before tax
+          format: double
+        taxAmount:
+          type: number
+          description: The total tax
+          format: double
+        subTotal:
+          type: number
+          description: The line total, before tax
+          format: double
+        servicePeriodStartDate:
+          type:
+          - string
+          - 'null'
+          description: The start of the service period
+          format: date-time
+        servicePeriodEndDate:
+          type:
+          - string
+          - 'null'
+          description: The end of the service period
+          format: date-time
+      additionalProperties: false
+    InvoiceDetailResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/InvoiceDetailResponse'
       additionalProperties: false

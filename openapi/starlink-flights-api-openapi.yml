@@ -90,21 +90,18 @@ components:
           description: Optional Metadata. Exclude this flight from Starlink SLA commitments. Default is false.
           default: false
       additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
+    EventType:
+      enum:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
+      type: string
+      x-enumNames:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
     ServiceResponse:
       type: object
       properties:
@@ -151,15 +148,18 @@ components:
           - 'null'
           description: 4 character string representing airport code in ICAO format.
       additionalProperties: false
-    EventType:
-      enum:
-      - EventUnknown
-      - Departure
-      - Arrival
-      - MetadataUpdate
-      type: string
-      x-enumNames:
-      - EventUnknown
-      - Departure
-      - Arrival
-      - MetadataUpdate
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false

@@ -177,86 +177,58 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AddressResponseServiceResponse:
+    AddressResponse:
       type: object
       properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
+        addressReferenceId:
+          type: string
+          description: 'Reference identifier for address. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
+          format: uuid
+        addressLines:
+          type: array
           items:
             type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/AddressResponse'
-      additionalProperties: false
-    AddressResponsePaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
+          description: 'The address lines for the address. Example: 1 Rocket Road'
+        locality:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
+          description: 'The town/locality of the address. Example: Hawthorne'
+        administrativeArea:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
+          description: 'The administrative area of the address. Example: California'
+        administrativeAreaCode:
+          type: string
+          description: 'The administrative area code of the address. Example: CA'
+        region:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/AddressResponsePaginated'
-      additionalProperties: false
-    AddressResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
+          description: 'The region of the address. Example: United States'
+        regionCode:
+          type: string
+          description: 'The region code of the address. Example: US'
+        postalCode:
+          type: string
+          description: 'The postal code of the address. Example: 90250'
+        metadata:
           type:
-          - array
+          - string
           - 'null'
-          items:
-            $ref: '#/components/schemas/AddressResponse'
-        totalCount:
-          type: integer
-          format: int32
+          description: Optional field that can be used to store information about the address for external purposes
+        formattedAddress:
+          type: string
+          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
+        latitude:
+          type: number
+          description: 'The latitude of the address: Example 33.92'
+          format: double
+        longitude:
+          type: number
+          description: 'The longitude of the address. Example: -118.32'
+          format: double
       additionalProperties: false
     AddressCreateRequest:
       required:
@@ -321,6 +293,64 @@ components:
           description: 'The required longitude of the address. Example: -118.32'
           format: double
       additionalProperties: false
+    AddressResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddressResponsePaginated'
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
     ValidationResult:
       type: object
       properties:
@@ -335,59 +365,6 @@ components:
           type:
           - string
           - 'null'
-      additionalProperties: false
-    AddressResponse:
-      type: object
-      properties:
-        addressReferenceId:
-          type: string
-          description: 'Reference identifier for address. Example: 55ec6574-10d8-bd9c-1951-d4184f4ae467'
-          format: uuid
-        addressLines:
-          type: array
-          items:
-            type: string
-          description: 'The address lines for the address. Example: 1 Rocket Road'
-        locality:
-          type:
-          - string
-          - 'null'
-          description: 'The town/locality of the address. Example: Hawthorne'
-        administrativeArea:
-          type:
-          - string
-          - 'null'
-          description: 'The administrative area of the address. Example: California'
-        administrativeAreaCode:
-          type: string
-          description: 'The administrative area code of the address. Example: CA'
-        region:
-          type:
-          - string
-          - 'null'
-          description: 'The region of the address. Example: United States'
-        regionCode:
-          type: string
-          description: 'The region code of the address. Example: US'
-        postalCode:
-          type: string
-          description: 'The postal code of the address. Example: 90250'
-        metadata:
-          type:
-          - string
-          - 'null'
-          description: Optional field that can be used to store information about the address for external purposes
-        formattedAddress:
-          type: string
-          description: 'A user readable address. Example: 1 Rocket Road, Hawthorne, CA 90250-6844, US'
-        latitude:
-          type: number
-          description: 'The latitude of the address: Example 33.92'
-          format: double
-        longitude:
-          type: number
-          description: 'The longitude of the address. Example: -118.32'
-          format: double
       additionalProperties: false
     AddressUpdateRequestV2:
       required:
@@ -452,7 +429,7 @@ components:
           description: 'The required longitude of the address. Example: -118.32'
           format: double
       additionalProperties: false
-    ServiceResponse:
+    AddressResponseServiceResponse:
       type: object
       properties:
         errors:
@@ -479,4 +456,27 @@ components:
         isValid:
           type: boolean
           readOnly: true
+        content:
+          $ref: '#/components/schemas/AddressResponse'
+      additionalProperties: false
+    AddressResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/AddressResponse'
+        totalCount:
+          type: integer
+          format: int32
       additionalProperties: false

@@ -183,6 +183,72 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    UpdateContactOnAccountRequest:
+      type: object
+      properties:
+        roles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Contact roles on the account.
+        phoneNumber:
+          type:
+          - string
+          - 'null'
+          description: Contact phone number.
+      additionalProperties: false
+    UserResponse:
+      required:
+      - email
+      - roles
+      - subjectId
+      type: object
+      properties:
+        subjectId:
+          minLength: 1
+          type: string
+          description: Unique subject ID given to this user.
+        email:
+          minLength: 1
+          type: string
+          description: User email.
+        roles:
+          type: array
+          items:
+            type: string
+          description: List of User roles which map to permissions on the specified account.
+      additionalProperties: false
+    FeaturePermission:
+      required:
+      - featureAccess
+      - permission
+      type: object
+      properties:
+        featureAccess:
+          $ref: '#/components/schemas/FeatureAccess'
+        permission:
+          $ref: '#/components/schemas/Permission'
+      additionalProperties: false
+    UserLacksRequiredPermission:
+      type: object
+      properties:
+        accountId:
+          type:
+          - string
+          - 'null'
+        requiredPermission:
+          $ref: '#/components/schemas/FeaturePermission'
+        featureAccessString:
+          type:
+          - string
+          - 'null'
+        permissionString:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
     CreateContactOnAccountRequest:
       required:
       - email
@@ -219,27 +285,15 @@ components:
           type: string
           description: Contact locale.
       additionalProperties: false
-    UserResponse:
-      required:
-      - email
-      - roles
-      - subjectId
-      type: object
-      properties:
-        subjectId:
-          minLength: 1
-          type: string
-          description: Unique subject ID given to this user.
-        email:
-          minLength: 1
-          type: string
-          description: User email.
-        roles:
-          type: array
-          items:
-            type: string
-          description: List of User roles which map to permissions on the specified account.
-      additionalProperties: false
+    Permission:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+      x-enumNames:
+      - View
+      - Edit
     UserResponsePaginatedServiceResponse:
       type: object
       properties:
@@ -269,102 +323,6 @@ components:
           readOnly: true
         content:
           $ref: '#/components/schemas/UserResponsePaginated'
-      additionalProperties: false
-    FeaturePermission:
-      required:
-      - featureAccess
-      - permission
-      type: object
-      properties:
-        featureAccess:
-          $ref: '#/components/schemas/FeatureAccess'
-        permission:
-          $ref: '#/components/schemas/Permission'
-      additionalProperties: false
-    UserResponseServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/UserResponse'
-      additionalProperties: false
-    UserLacksRequiredPermissionServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/UserLacksRequiredPermission'
-      additionalProperties: false
-    Permission:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-      x-enumNames:
-      - View
-      - Edit
-    UpdateContactOnAccountRequest:
-      type: object
-      properties:
-        roles:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          description: Contact roles on the account.
-        phoneNumber:
-          type:
-          - string
-          - 'null'
-          description: Contact phone number.
       additionalProperties: false
     FeatureAccess:
       enum:
@@ -423,38 +381,26 @@ components:
       - GatedFeature__Installer
       - GatedFeature__LawEnforcementAgency
       - GatedFeature__StarlinkMobileData
-    UserLacksRequiredPermission:
+    UserResponsePaginated:
       type: object
       properties:
-        accountId:
-          type:
-          - string
-          - 'null'
-        requiredPermission:
-          $ref: '#/components/schemas/FeaturePermission'
-        featureAccessString:
-          type:
-          - string
-          - 'null'
-        permissionString:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
           type:
           - array
           - 'null'
           items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
+            $ref: '#/components/schemas/UserResponse'
+        totalCount:
+          type: integer
+          format: int32
       additionalProperties: false
     ServiceResponse:
       type: object
@@ -484,24 +430,78 @@ components:
           type: boolean
           readOnly: true
       additionalProperties: false
-    UserResponsePaginated:
+    ValidationResult:
       type: object
       properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
+        memberNames:
           type:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/UserResponse'
-        totalCount:
-          type: integer
-          format: int32
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    UserLacksRequiredPermissionServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/UserLacksRequiredPermission'
+      additionalProperties: false
+    UserResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/UserResponse'
       additionalProperties: false

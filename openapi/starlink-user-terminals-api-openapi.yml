@@ -289,22 +289,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AssignUserTerminalsConfigRequest:
-      required:
-      - userTerminalIds
-      type: object
-      properties:
-        configId:
-          type:
-          - string
-          - 'null'
-          description: Config id (or none) to assign to user terminals
-        userTerminalIds:
-          type: array
-          items:
-            type: string
-          description: UserTerminalIds to immediately update
-      additionalProperties: false
     UserTerminalResponseV2Paginated:
       type: object
       properties:
@@ -325,36 +309,6 @@ components:
         totalCount:
           type: integer
           format: int32
-      additionalProperties: false
-    UserTerminalResponseV2PaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/UserTerminalResponseV2Paginated'
       additionalProperties: false
     L2VpnCircuitDefinition:
       type: object
@@ -391,37 +345,68 @@ components:
           description: Traffic tagged with the specified customer VLAN will have that VLAN tag remapped en-route to the value of customerVlanRemap if present. Value is null if no remapping.
           format: int32
       additionalProperties: false
-    DeviceIdRequest:
-      required:
-      - deviceId
+    UserTerminalResponseV2:
       type: object
       properties:
-        deviceId:
-          minLength: 1
+        userTerminalId:
           type: string
-          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
-      additionalProperties: false
-    L2VpnCircuitResponse:
-      type: object
-      properties:
-        circuitId:
+          description: 'User Terminal ID. This ID is not printed anywhere on the kit or hardware. Example: 00020900-002220cc-225b9199'
+        nickname:
           type:
           - string
           - 'null'
-          description: 'Deprecated: Use CircuitIds instead. Value will be first circuitId for redundant circuit groups.'
-          deprecated: true
-        circuitIds:
+          description: Nickname of the user terminal.
+        kitSerialNumber:
+          type: string
+          description: 'Kit Serial Number. This ID can be found on the box that the hardware came in. Example: KIT00142069'
+        dishSerialNumber:
+          type: string
+          description: 'Dish Serial Number. This ID can be found on the dish itself. Example: 2DHT00542069'
+        serviceLineNumber:
+          type:
+          - string
+          - 'null'
+          description: 'The service line the user terminal is associated with if it has service, Example: AST-511274-31364-54'
+        l2VpnCircuits:
+          type: array
+          items:
+            $ref: '#/components/schemas/L2VpnCircuitDefinition'
+          description: List of L2VPN circuits and associated VLANs configured for this terminal.
+        routers:
+          type: array
+          items:
+            $ref: '#/components/schemas/RouterResponseV2'
+          description: Routers currently bonded to this UT.
+      additionalProperties: false
+    UserTerminalResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
           type:
           - array
           - 'null'
           items:
             type: string
-          description: Starlink generated Ids of L2VPN circuits in this group. If multiple circuitIds are present then they are functioning as a redundant group. CircuitIds present in redundant groups cannot be used individually.
-        popName:
-          type:
-          - string
-          - 'null'
-          description: Starlink PoP associated with this circuit.
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/UserTerminalResponseV2Paginated'
       additionalProperties: false
     L2VpnSetCircuitRequest:
       required:
@@ -458,6 +443,34 @@ components:
           description: Traffic tagged with the specified customer VLAN will have that VLAN tag remapped en-route to the value of customerVlanRemap if present. If remapping is occurring then CustomerVlans must contain a single value. Set value to null or 0 for no remapping.
           format: int32
       additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
     L2VpnCircuitResponseListServiceResponse:
       type: object
       properties:
@@ -492,66 +505,15 @@ components:
           items:
             $ref: '#/components/schemas/L2VpnCircuitResponse'
       additionalProperties: false
-    ServiceResponse:
+    DeviceIdRequest:
+      required:
+      - deviceId
       type: object
       properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    UserTerminalResponseV2:
-      type: object
-      properties:
-        userTerminalId:
+        deviceId:
+          minLength: 1
           type: string
-          description: 'User Terminal ID. This ID is not printed anywhere on the kit or hardware. Example: 00020900-002220cc-225b9199'
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname of the user terminal.
-        kitSerialNumber:
-          type: string
-          description: 'Kit Serial Number. This ID can be found on the box that the hardware came in. Example: KIT00142069'
-        dishSerialNumber:
-          type: string
-          description: 'Dish Serial Number. This ID can be found on the dish itself. Example: 2DHT00542069'
-        serviceLineNumber:
-          type:
-          - string
-          - 'null'
-          description: 'The service line the user terminal is associated with if it has service, Example: AST-511274-31364-54'
-        l2VpnCircuits:
-          type: array
-          items:
-            $ref: '#/components/schemas/L2VpnCircuitDefinition'
-          description: List of L2VPN circuits and associated VLANs configured for this terminal.
-        routers:
-          type: array
-          items:
-            $ref: '#/components/schemas/RouterResponseV2'
-          description: Routers currently bonded to this UT.
+          description: 'User terminal Id, kit serial number, or dish serial number. Ex: 12345678-12345678-12345678'
       additionalProperties: false
     RouterResponseV2:
       type: object
@@ -598,4 +560,42 @@ components:
           type:
           - string
           - 'null'
+      additionalProperties: false
+    AssignUserTerminalsConfigRequest:
+      required:
+      - userTerminalIds
+      type: object
+      properties:
+        configId:
+          type:
+          - string
+          - 'null'
+          description: Config id (or none) to assign to user terminals
+        userTerminalIds:
+          type: array
+          items:
+            type: string
+          description: UserTerminalIds to immediately update
+      additionalProperties: false
+    L2VpnCircuitResponse:
+      type: object
+      properties:
+        circuitId:
+          type:
+          - string
+          - 'null'
+          description: 'Deprecated: Use CircuitIds instead. Value will be first circuitId for redundant circuit groups.'
+          deprecated: true
+        circuitIds:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          description: Starlink generated Ids of L2VPN circuits in this group. If multiple circuitIds are present then they are functioning as a redundant group. CircuitIds present in redundant groups cannot be used individually.
+        popName:
+          type:
+          - string
+          - 'null'
+          description: Starlink PoP associated with this circuit.
       additionalProperties: false

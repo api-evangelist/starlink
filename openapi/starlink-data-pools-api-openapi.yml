@@ -165,6 +165,57 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    DataBlockType:
+      enum:
+      - IncludedWithBaseSubscription
+      - RecurringPerBillingCycle
+      - Overage
+      - OneTimePurchase
+      type: string
+      x-enumNames:
+      - IncludedWithBaseSubscription
+      - RecurringPerBillingCycle
+      - Overage
+      - OneTimePurchase
+    DataPoolResponseV2:
+      type: object
+      properties:
+        dataPoolId:
+          type: string
+          description: Data pool ID.
+        nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname of the data pool.
+        automaticTopUpEnabled:
+          type: boolean
+          description: If the data pool is opted-in to overage top-ups.
+        restricted:
+          type: boolean
+          description: If the data pool and service lines on it are restricted due to exhausting their data
+        dataProductType:
+          $ref: '#/components/schemas/DataProductType'
+        dataBlocks:
+          type: array
+          items:
+            $ref: '#/components/schemas/DataBlockResponseV2'
+          description: Active data blocks on the data pool.
+        productId:
+          type: string
+          description: Product ID of the data pool.
+      additionalProperties: false
+    DataBlockServiceLineUsagePublicResponseV2:
+      type: object
+      properties:
+        serviceLineNumber:
+          type: string
+          description: Service line number.
+        consumedAmountGB:
+          type: number
+          description: GB amount that the service line consumed from the block.
+          format: double
+      additionalProperties: false
     DataPoolUsageResponseV2:
       type: object
       properties:
@@ -205,106 +256,6 @@ components:
           description: GB capacity per individual block.
           format: double
       additionalProperties: false
-    DataPoolUsageResponseV2PaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/DataPoolUsageResponseV2Paginated'
-      additionalProperties: false
-    DataPoolUsageResponseV2Paginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/DataPoolUsageResponseV2'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    DataBlockServiceLineUsagePublicResponseV2:
-      type: object
-      properties:
-        serviceLineNumber:
-          type: string
-          description: Service line number.
-        consumedAmountGB:
-          type: number
-          description: GB amount that the service line consumed from the block.
-          format: double
-      additionalProperties: false
-    DataPoolResponseV2:
-      type: object
-      properties:
-        dataPoolId:
-          type: string
-          description: Data pool ID.
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname of the data pool.
-        automaticTopUpEnabled:
-          type: boolean
-          description: If the data pool is opted-in to overage top-ups.
-        restricted:
-          type: boolean
-          description: If the data pool and service lines on it are restricted due to exhausting their data
-        dataProductType:
-          $ref: '#/components/schemas/DataProductType'
-        dataBlocks:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataBlockResponseV2'
-          description: Active data blocks on the data pool.
-        productId:
-          type: string
-          description: Product ID of the data pool.
-      additionalProperties: false
-    DataProductType:
-      enum:
-      - Ocean
-      - Land
-      - Aviation
-      type: string
-      x-enumNames:
-      - Ocean
-      - Land
-      - Aviation
     DataBlockUsageResponseV2:
       type: object
       properties:
@@ -365,6 +316,27 @@ components:
             $ref: '#/components/schemas/DataBlockServiceLineUsagePublicResponseV2'
           description: Montly usage breakdown by service lines.
       additionalProperties: false
+    DataPoolResponseV2Paginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/DataPoolResponseV2'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
     ServiceResponse:
       type: object
       properties:
@@ -393,7 +365,22 @@ components:
           type: boolean
           readOnly: true
       additionalProperties: false
-    DataPoolResponseV2Paginated:
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    DataPoolUsageResponseV2Paginated:
       type: object
       properties:
         pageIndex:
@@ -409,37 +396,50 @@ components:
           - array
           - 'null'
           items:
-            $ref: '#/components/schemas/DataPoolResponseV2'
+            $ref: '#/components/schemas/DataPoolUsageResponseV2'
         totalCount:
           type: integer
           format: int32
       additionalProperties: false
-    DataBlockType:
+    DataProductType:
       enum:
-      - IncludedWithBaseSubscription
-      - RecurringPerBillingCycle
-      - Overage
-      - OneTimePurchase
+      - Ocean
+      - Land
+      - Aviation
       type: string
       x-enumNames:
-      - IncludedWithBaseSubscription
-      - RecurringPerBillingCycle
-      - Overage
-      - OneTimePurchase
-    ValidationResult:
+      - Ocean
+      - Land
+      - Aviation
+    DataPoolUsageResponseV2PaginatedServiceResponse:
       type: object
       properties:
-        memberNames:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
           type:
           - array
           - 'null'
           items:
             type: string
           readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/DataPoolUsageResponseV2Paginated'
       additionalProperties: false
     DataPoolResponseV2PaginatedServiceResponse:
       type: object

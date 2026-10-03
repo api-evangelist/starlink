@@ -122,62 +122,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    AccountQueryResponseV2KeyPaginatedString:
-      type: object
-      properties:
-        nextKey:
-          type:
-          - string
-          - 'null'
-          description: The next key that should be provided to the cursor parameter to fetch the next page, or null if this is the last page.
-        results:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountQueryResponseV2'
-          description: Results for this page.
-      additionalProperties: false
-    ManagedAccountTreeResponseV2:
-      type: object
-      properties:
-        rootAccountNumber:
-          type: string
-          description: The root account number
-        tree:
-          type: object
-          additionalProperties:
-            $ref: '#/components/schemas/ManagedAccountTreeNodeResponseV2'
-          description: Dictionary mapping account numbers to tree nodes
-      additionalProperties: false
-    ManagedAccountTreeResponseV2ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/ManagedAccountTreeResponseV2'
-      additionalProperties: false
     AccountQueryResponseV2KeyPaginatedStringServiceResponse:
       type: object
       properties:
@@ -208,6 +152,31 @@ components:
         content:
           $ref: '#/components/schemas/AccountQueryResponseV2KeyPaginatedString'
       additionalProperties: false
+    ManagedAccountTreeResponseV2:
+      type: object
+      properties:
+        rootAccountNumber:
+          type: string
+          description: The root account number
+        tree:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ManagedAccountTreeNodeResponseV2'
+          description: Dictionary mapping account numbers to tree nodes
+      additionalProperties: false
+    AccountQueryResponseV2:
+      type: object
+      properties:
+        accountNumber:
+          type: string
+          description: 'The Account Number. Example: ACC-511274-31364-54'
+        regionCode:
+          type: string
+          description: 'The region code of the account. Example: US'
+        accountName:
+          type: string
+          description: The name of the account
+      additionalProperties: false
     ServiceResponse:
       type: object
       properties:
@@ -236,18 +205,19 @@ components:
           type: boolean
           readOnly: true
       additionalProperties: false
-    AccountQueryResponseV2:
+    AccountQueryResponseV2KeyPaginatedString:
       type: object
       properties:
-        accountNumber:
-          type: string
-          description: 'The Account Number. Example: ACC-511274-31364-54'
-        regionCode:
-          type: string
-          description: 'The region code of the account. Example: US'
-        accountName:
-          type: string
-          description: The name of the account
+        nextKey:
+          type:
+          - string
+          - 'null'
+          description: The next key that should be provided to the cursor parameter to fetch the next page, or null if this is the last page.
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountQueryResponseV2'
+          description: Results for this page.
       additionalProperties: false
     ValidationResult:
       type: object
@@ -263,6 +233,36 @@ components:
           type:
           - string
           - 'null'
+      additionalProperties: false
+    ManagedAccountTreeResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/ManagedAccountTreeResponseV2'
       additionalProperties: false
     ManagedAccountTreeNodeResponseV2:
       type: object

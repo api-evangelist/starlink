@@ -50,6 +50,34 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
     CreateManagedCustomerResponseServiceResponse:
       type: object
       properties:
@@ -79,50 +107,6 @@ components:
           readOnly: true
         content:
           $ref: '#/components/schemas/CreateManagedCustomerResponse'
-      additionalProperties: false
-    CreateManagedCustomerResponse:
-      type: object
-      properties:
-        accountNumber:
-          type:
-          - string
-          - 'null'
-        serviceAccountClientId:
-          type:
-          - string
-          - 'null'
-        serviceAccountSecret:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
       additionalProperties: false
     CreateManagedCustomerRequest:
       required:
@@ -158,6 +142,22 @@ components:
           - string
           - 'null'
           description: Business name only required for enterprise customers.
+      additionalProperties: false
+    CreateManagedCustomerResponse:
+      type: object
+      properties:
+        accountNumber:
+          type:
+          - string
+          - 'null'
+        serviceAccountClientId:
+          type:
+          - string
+          - 'null'
+        serviceAccountSecret:
+          type:
+          - string
+          - 'null'
       additionalProperties: false
     ValidationResult:
       type: object

@@ -638,111 +638,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    RouterResponseV2ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/RouterResponseV2'
-      additionalProperties: false
-    SandboxClientResponse:
-      type: object
-      properties:
-        clientId:
-          type:
-          - string
-          - 'null'
-        sandboxId:
-          type: integer
-          format: int32
-        expiry:
-          type: string
-          format: date-time
-      additionalProperties: false
-    TlsConfigResponseV2:
-      type: object
-      properties:
-        certificateBase64Pem:
-          type: string
-          description: TLS certificate in PEM format, base64 encoded.
-        notBefore:
-          type: string
-          description: Certificate invalid before this date.
-          format: date-time
-        notAfter:
-          type: string
-          description: Certificate invalid after this date.
-          format: date-time
-      additionalProperties: false
-    UpdateDefaultConfigRequest:
-      required:
-      - configId
-      type: object
-      properties:
-        configId:
-          minLength: 1
-          type: string
-          description: ConfigId or none to set as account default config. Use empty string to clear default config setting.
-      additionalProperties: false
-    TlsConfigCreateRequestV2:
-      required:
-      - certificateBase64Pem
-      - keyBase64Pem
-      type: object
-      properties:
-        certificateBase64Pem:
-          minLength: 1
-          type: string
-          description: TLS certificate in PEM format, base64 encoded.
-        keyBase64Pem:
-          minLength: 1
-          type: string
-          description: TLS key in PEM format, base64 encoded. Must match the public key of the certificate.
-      additionalProperties: false
-    RouterConfigResponseV2Paginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/RouterConfigResponseV2'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
     RouterResponseV2:
       type: object
       properties:
@@ -774,55 +669,20 @@ components:
           description: Deprecated field. Value will always be null
           format: date-time
       additionalProperties: false
-    TlsConfigResponseV2PaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/TlsConfigResponseV2Paginated'
-      additionalProperties: false
-    AddRouterLocalContentResponseV2:
+    RouterConfigRequest:
       required:
-      - fileContentHash
-      - fileContentId
-      - nickname
+      - routerConfigJson
       type: object
       properties:
         nickname:
+          type:
+          - string
+          - 'null'
+          description: Nickname
+        routerConfigJson:
           minLength: 1
           type: string
-          description: File name of uploaded file
-        fileContentId:
-          minLength: 1
-          type: string
-          description: File id to go in router config HTTPS server FileContentId field
-        fileContentHash:
-          minLength: 1
-          type: string
-          description: File MD5 hash to go in router config HTTPS server FileContentHash field
+          description: Router config json contents
       additionalProperties: false
     ValidationResult:
       type: object
@@ -839,7 +699,22 @@ components:
           - string
           - 'null'
       additionalProperties: false
-    AddRouterLocalContentResponseV2ServiceResponse:
+    TlsConfigResponseV2:
+      type: object
+      properties:
+        certificateBase64Pem:
+          type: string
+          description: TLS certificate in PEM format, base64 encoded.
+        notBefore:
+          type: string
+          description: Certificate invalid before this date.
+          format: date-time
+        notAfter:
+          type: string
+          description: Certificate invalid after this date.
+          format: date-time
+      additionalProperties: false
+    DefaultRouterConfigResponseServiceResponse:
       type: object
       properties:
         errors:
@@ -867,24 +742,7 @@ components:
           type: boolean
           readOnly: true
         content:
-          $ref: '#/components/schemas/AddRouterLocalContentResponseV2'
-      additionalProperties: false
-    RouterLocalContentResponse:
-      type: object
-      properties:
-        nickname:
-          type: string
-          description: Uploaded file name
-        uploadDate:
-          type: string
-          description: Upload timestamp
-          format: date-time
-        fileContentId:
-          type: string
-          description: Id of uploaded local content file, used in router config HTTPS server
-        fileContentHash:
-          type: string
-          description: MD5 hash of the uploaded file used to verify integrity when router downloads the file for hosting. Used in router config HTTPS server
+          $ref: '#/components/schemas/DefaultRouterConfigResponse'
       additionalProperties: false
     SandboxHeartbeatRequest:
       required:
@@ -894,87 +752,6 @@ components:
         healthy:
           type: boolean
           description: True if client systems are healthy, false otherwise.
-      additionalProperties: false
-    RouterConfigResponseV2ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/RouterConfigResponseV2'
-      additionalProperties: false
-    SandboxClientResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/SandboxClientResponse'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    SandboxClientResponsePaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/SandboxClientResponsePaginated'
       additionalProperties: false
     DefaultRouterConfigResponse:
       type: object
@@ -997,128 +774,6 @@ components:
         routerConfigJson:
           type: string
           description: Config in JSON format.
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    DeleteTlsConfigRequest:
-      required:
-      - certificateBase64Pem
-      type: object
-      properties:
-        certificateBase64Pem:
-          minLength: 1
-          type: string
-          description: Certificate base64 encoded pem string to match on for deletion of the corresponding certificate and key pair
-      additionalProperties: false
-    RouterConfigResponseV2PaginatedServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/RouterConfigResponseV2Paginated'
-      additionalProperties: false
-    UpdateBatchSandboxClientRequest:
-      required:
-      - clientId
-      - expiry
-      - sandboxId
-      type: object
-      properties:
-        clientId:
-          minLength: 1
-          type: string
-          description: Identifier of the client to add or remove from a sandbox.
-        sandboxId:
-          type: integer
-          description: Identifier used to separate sandbox environments. Per-client sandboxing is shared within the same SandboxId.
-          format: int32
-        expiry:
-          type: string
-          description: Expiry of the sandbox state as a UTC date time.
-          format: date-time
-      additionalProperties: false
-    RouterLocalContentResponseListServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/RouterLocalContentResponse'
       additionalProperties: false
     TlsConfigResponseV2Paginated:
       type: object
@@ -1157,22 +812,7 @@ components:
             type: string
           description: RouterIds to immediately update
       additionalProperties: false
-    RouterConfigRequest:
-      required:
-      - routerConfigJson
-      type: object
-      properties:
-        nickname:
-          type:
-          - string
-          - 'null'
-          description: Nickname
-        routerConfigJson:
-          minLength: 1
-          type: string
-          description: Router config json contents
-      additionalProperties: false
-    DefaultRouterConfigResponseServiceResponse:
+    RouterResponseV2ServiceResponse:
       type: object
       properties:
         errors:
@@ -1200,5 +840,365 @@ components:
           type: boolean
           readOnly: true
         content:
-          $ref: '#/components/schemas/DefaultRouterConfigResponse'
+          $ref: '#/components/schemas/RouterResponseV2'
+      additionalProperties: false
+    UpdateDefaultConfigRequest:
+      required:
+      - configId
+      type: object
+      properties:
+        configId:
+          minLength: 1
+          type: string
+          description: ConfigId or none to set as account default config. Use empty string to clear default config setting.
+      additionalProperties: false
+    SandboxClientResponse:
+      type: object
+      properties:
+        clientId:
+          type:
+          - string
+          - 'null'
+        sandboxId:
+          type: integer
+          format: int32
+        expiry:
+          type: string
+          format: date-time
+      additionalProperties: false
+    SandboxClientResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SandboxClientResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    TlsConfigCreateRequestV2:
+      required:
+      - certificateBase64Pem
+      - keyBase64Pem
+      type: object
+      properties:
+        certificateBase64Pem:
+          minLength: 1
+          type: string
+          description: TLS certificate in PEM format, base64 encoded.
+        keyBase64Pem:
+          minLength: 1
+          type: string
+          description: TLS key in PEM format, base64 encoded. Must match the public key of the certificate.
+      additionalProperties: false
+    DeleteTlsConfigRequest:
+      required:
+      - certificateBase64Pem
+      type: object
+      properties:
+        certificateBase64Pem:
+          minLength: 1
+          type: string
+          description: Certificate base64 encoded pem string to match on for deletion of the corresponding certificate and key pair
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    RouterLocalContentResponse:
+      type: object
+      properties:
+        nickname:
+          type: string
+          description: Uploaded file name
+        uploadDate:
+          type: string
+          description: Upload timestamp
+          format: date-time
+        fileContentId:
+          type: string
+          description: Id of uploaded local content file, used in router config HTTPS server
+        fileContentHash:
+          type: string
+          description: MD5 hash of the uploaded file used to verify integrity when router downloads the file for hosting. Used in router config HTTPS server
+      additionalProperties: false
+    AddRouterLocalContentResponseV2:
+      required:
+      - fileContentHash
+      - fileContentId
+      - nickname
+      type: object
+      properties:
+        nickname:
+          minLength: 1
+          type: string
+          description: File name of uploaded file
+        fileContentId:
+          minLength: 1
+          type: string
+          description: File id to go in router config HTTPS server FileContentId field
+        fileContentHash:
+          minLength: 1
+          type: string
+          description: File MD5 hash to go in router config HTTPS server FileContentHash field
+      additionalProperties: false
+    RouterLocalContentResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RouterLocalContentResponse'
+      additionalProperties: false
+    RouterConfigResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/RouterConfigResponseV2Paginated'
+      additionalProperties: false
+    SandboxClientResponsePaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/SandboxClientResponsePaginated'
+      additionalProperties: false
+    TlsConfigResponseV2PaginatedServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/TlsConfigResponseV2Paginated'
+      additionalProperties: false
+    AddRouterLocalContentResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/AddRouterLocalContentResponseV2'
+      additionalProperties: false
+    RouterConfigResponseV2Paginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/RouterConfigResponseV2'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    RouterConfigResponseV2ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/RouterConfigResponseV2'
+      additionalProperties: false
+    UpdateBatchSandboxClientRequest:
+      required:
+      - clientId
+      - expiry
+      - sandboxId
+      type: object
+      properties:
+        clientId:
+          minLength: 1
+          type: string
+          description: Identifier of the client to add or remove from a sandbox.
+        sandboxId:
+          type: integer
+          description: Identifier used to separate sandbox environments. Per-client sandboxing is shared within the same SandboxId.
+          format: int32
+        expiry:
+          type: string
+          description: Expiry of the sandbox state as a UTC date time.
+          format: date-time
       additionalProperties: false

@@ -1,22 +1,20 @@
-# Kin Score artifact — starlink — 2026-08-27T094438
+# Kin Score artifact — starlink — 2026-09-24T161608
 # The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
 ---
 kin_score:
   slug: starlink
-  schema_version: 0.15.1
-  scored_at: '2026-08-27'
-  run_ts: 2026-08-27T094438
-  composite: 46.3
+  schema_version: 0.22.0
+  scored_at: '2026-09-24'
+  run_ts: 2026-09-24T161608
+  composite: 47.1
   band: developing
   facets:
-    discoverability: 83.3
-    contract_quality: 55.0
-    governance: 16.7
+    discoverability: 66.7
+    contract_quality: 56.4
+    contract_governance: 4.5
     operational_transparency: 59.2
     developer_ergonomics: 47.0
-    commercial_clarity: 0.0
-    contract_governance: 16.7
-    access_clarity: 0.0
+    access_clarity: 21.1
   agent_readiness:
     score: 38.3
     band: agent-ready
@@ -52,7 +50,7 @@ kin_score:
     agentic_access: derived
     conformance: derived
     contracts:
-      total: 1
+      total: 12
       derived: 0
       coverage: 0.0
       callable: 0.0

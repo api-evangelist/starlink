@@ -57,6 +57,67 @@ components:
       - Departure
       - Arrival
       - MetadataUpdate
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    AirportCode:
+      type: object
+      properties:
+        airportIataCode:
+          maxLength: 3
+          minLength: 3
+          type:
+          - string
+          - 'null'
+          description: 3 character string representing airport code in IATA format.
+        airportIcaoCode:
+          maxLength: 4
+          minLength: 4
+          type:
+          - string
+          - 'null'
+          description: 4 character string representing airport code in ICAO format.
+      additionalProperties: false
     StarlinkFlightRequest:
       required:
       - eventType
@@ -101,65 +162,4 @@ components:
           type: boolean
           description: Optional Metadata. Exclude this flight from Starlink SLA commitments. Default is false.
           default: false
-      additionalProperties: false
-    AirportCode:
-      type: object
-      properties:
-        airportIataCode:
-          maxLength: 3
-          minLength: 3
-          type:
-          - string
-          - 'null'
-          description: 3 character string representing airport code in IATA format.
-        airportIcaoCode:
-          maxLength: 4
-          minLength: 4
-          type:
-          - string
-          - 'null'
-          description: 4 character string representing airport code in ICAO format.
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
       additionalProperties: false

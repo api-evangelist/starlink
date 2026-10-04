@@ -114,109 +114,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    PublicInvoiceStatus:
-      enum:
-      - Unknown
-      - Paid
-      - Cancelled
-      - Overdue
-      - DueSoon
-      - Outstanding
-      type: string
-      description: The status of an invoice
-      x-enumNames:
-      - Unknown
-      - Paid
-      - Cancelled
-      - Overdue
-      - DueSoon
-      - Outstanding
-    AccountBalanceResponse:
-      type: object
-      properties:
-        balances:
-          type: array
-          items:
-            $ref: '#/components/schemas/CurrencyBalanceResponse'
-          description: The account balance for each currency owed. If nothing is owed, a single zero balance in the account's currency is returned.
-      additionalProperties: false
-    InvoiceDetailResponse:
-      type: object
-      properties:
-        invoiceId:
-          type: string
-          description: 'The invoice identifier. Example: INV-DF-US-1234ABCD'
-        orderReferenceId:
-          type: string
-          description: The order this invoice was generated from
-        currency:
-          type: string
-          description: 'The ISO 4217 alphabetic currency code of the invoice. Example: USD'
-        dueAmount:
-          type: number
-          description: The amount still owed on the invoice
-          format: double
-        paidAmount:
-          type: number
-          description: The amount already paid on the invoice
-          format: double
-        invoiceDate:
-          type: string
-          description: The date the invoice was issued
-          format: date-time
-        dueDate:
-          type:
-          - string
-          - 'null'
-          description: The date payment is due
-          format: date-time
-        invoiceLines:
-          type: array
-          items:
-            $ref: '#/components/schemas/InvoiceLineDetailResponse'
-          description: The line items on the invoice
-      additionalProperties: false
-    CurrencyBalanceResponse:
-      type: object
-      properties:
-        currency:
-          type: string
-          description: 'The ISO 4217 alphabetic currency code of the balance. Example: USD'
-        dueAmount:
-          type: number
-          description: The amount due
-          format: double
-      additionalProperties: false
-    InvoiceDetailResponseServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/InvoiceDetailResponse'
-      additionalProperties: false
     InvoiceLineDetailResponse:
       type: object
       properties:
@@ -265,55 +162,6 @@ components:
           description: The end of the service period
           format: date-time
       additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    InvoiceSummaryResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/InvoiceSummaryResponse'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
     AccountBalanceResponseServiceResponse:
       type: object
       properties:
@@ -344,21 +192,6 @@ components:
         content:
           $ref: '#/components/schemas/AccountBalanceResponse'
       additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     InvoiceSummaryResponsePaginatedServiceResponse:
       type: object
       properties:
@@ -388,6 +221,162 @@ components:
           readOnly: true
         content:
           $ref: '#/components/schemas/InvoiceSummaryResponsePaginated'
+      additionalProperties: false
+    InvoiceDetailResponse:
+      type: object
+      properties:
+        invoiceId:
+          type: string
+          description: 'The invoice identifier. Example: INV-DF-US-1234ABCD'
+        orderReferenceId:
+          type: string
+          description: The order this invoice was generated from
+        currency:
+          type: string
+          description: 'The ISO 4217 alphabetic currency code of the invoice. Example: USD'
+        dueAmount:
+          type: number
+          description: The amount still owed on the invoice
+          format: double
+        paidAmount:
+          type: number
+          description: The amount already paid on the invoice
+          format: double
+        invoiceDate:
+          type: string
+          description: The date the invoice was issued
+          format: date-time
+        dueDate:
+          type:
+          - string
+          - 'null'
+          description: The date payment is due
+          format: date-time
+        invoiceLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceLineDetailResponse'
+          description: The line items on the invoice
+      additionalProperties: false
+    PublicInvoiceStatus:
+      enum:
+      - Unknown
+      - Paid
+      - Cancelled
+      - Overdue
+      - DueSoon
+      - Outstanding
+      type: string
+      description: The status of an invoice
+      x-enumNames:
+      - Unknown
+      - Paid
+      - Cancelled
+      - Overdue
+      - DueSoon
+      - Outstanding
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    AccountBalanceResponse:
+      type: object
+      properties:
+        balances:
+          type: array
+          items:
+            $ref: '#/components/schemas/CurrencyBalanceResponse'
+          description: The account balance for each currency owed. If nothing is owed, a single zero balance in the account's currency is returned.
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    InvoiceDetailResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/InvoiceDetailResponse'
+      additionalProperties: false
+    InvoiceSummaryResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/InvoiceSummaryResponse'
+        totalCount:
+          type: integer
+          format: int32
       additionalProperties: false
     InvoiceSummaryResponse:
       type: object
@@ -421,4 +410,15 @@ components:
           format: date-time
         status:
           $ref: '#/components/schemas/PublicInvoiceStatus'
+      additionalProperties: false
+    CurrencyBalanceResponse:
+      type: object
+      properties:
+        currency:
+          type: string
+          description: 'The ISO 4217 alphabetic currency code of the balance. Example: USD'
+        dueAmount:
+          type: number
+          description: The amount due
+          format: double
       additionalProperties: false

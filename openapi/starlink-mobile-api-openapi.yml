@@ -149,64 +149,7 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    MobileMapResponse:
-      type: object
-      properties:
-        trackingAreaCode:
-          type: integer
-          description: Tracking area code
-          format: int32
-        broadcastPublicLandMobileNumber:
-          type: integer
-          description: Broadcast Public Land Mobile Number of serving network
-          format: int32
-        timestamp:
-          type: string
-          description: Timestamp in UTC of the start of the returned hour of data
-          format: date-time
-        accessType:
-          type: string
-          description: Network Access Type - home or reciprocal users
-        deviceType:
-          type: string
-          description: Device Type - commercial (phone/user equipment) or Internet of Things (IOT) device
-        serviceType:
-          type: string
-          description: Service Type - Commercial or Emergency
-        gapTimeSecondsByTrackingAreaCodeAverage:
-          type: number
-          description: Average duration of gaps in satellite coverage in seconds per tracking area code
-          format: double
-        gapTimeSecondsByTrackingAreaCodeP90:
-          type: number
-          description: 90th percentile duration of gaps in satellite coverage in seconds per tracking area code
-          format: double
-        gapTimeSecondsByTrackingAreaCodeP50:
-          type: number
-          description: 50th percentile duration of gaps in satellite coverage in seconds per tracking area code
-          format: double
-        trackingAreaCodeBeamAvailabilitySeconds:
-          type: number
-          description: Total time of beam coverage/placement in seconds per tracking area code (0-3600)
-          format: double
-        totalShortMessageServiceMessages:
-          type: integer
-          description: Total number of Mobile Originated (MO) and Mobile Terminated (MT) Short Message Services sent per tracking area code
-          format: int32
-        uniqueInternationalMobileSubscriberIdentities:
-          type: integer
-          description: Unique International Mobile Subscriber Identity (IMSI) count of users that connect with 'NAS_ATTACH_COMPLETE' message received per tracking area code
-          format: int32
-        upLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
-          type: number
-          description: Average value of uplink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
-          format: double
-        downLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
-          type: number
-          description: Average value of downlink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
-          format: double
-      additionalProperties: false
-    ServiceResponse:
+    MobileMapResponseListServiceResponse:
       type: object
       properties:
         errors:
@@ -233,6 +176,12 @@ components:
         isValid:
           type: boolean
           readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileMapResponse'
       additionalProperties: false
     MobileRanResponse:
       type: object
@@ -350,6 +299,174 @@ components:
           description: Maximum uplink data throughput at eNode-B kilobits per second
           format: float
       additionalProperties: false
+    MobileMapResponse:
+      type: object
+      properties:
+        trackingAreaCode:
+          type: integer
+          description: Tracking area code
+          format: int32
+        broadcastPublicLandMobileNumber:
+          type: integer
+          description: Broadcast Public Land Mobile Number of serving network
+          format: int32
+        timestamp:
+          type: string
+          description: Timestamp in UTC of the start of the returned hour of data
+          format: date-time
+        accessType:
+          type: string
+          description: Network Access Type - home or reciprocal users
+        deviceType:
+          type: string
+          description: Device Type - commercial (phone/user equipment) or Internet of Things (IOT) device
+        serviceType:
+          type: string
+          description: Service Type - Commercial or Emergency
+        gapTimeSecondsByTrackingAreaCodeAverage:
+          type: number
+          description: Average duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        gapTimeSecondsByTrackingAreaCodeP90:
+          type: number
+          description: 90th percentile duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        gapTimeSecondsByTrackingAreaCodeP50:
+          type: number
+          description: 50th percentile duration of gaps in satellite coverage in seconds per tracking area code
+          format: double
+        trackingAreaCodeBeamAvailabilitySeconds:
+          type: number
+          description: Total time of beam coverage/placement in seconds per tracking area code (0-3600)
+          format: double
+        totalShortMessageServiceMessages:
+          type: integer
+          description: Total number of Mobile Originated (MO) and Mobile Terminated (MT) Short Message Services sent per tracking area code
+          format: int32
+        uniqueInternationalMobileSubscriberIdentities:
+          type: integer
+          description: Unique International Mobile Subscriber Identity (IMSI) count of users that connect with 'NAS_ATTACH_COMPLETE' message received per tracking area code
+          format: int32
+        upLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
+          type: number
+          description: Average value of uplink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
+          format: double
+        downLinkDataConsumedMegabytesPerTrackingAreaCodeAverage:
+          type: number
+          description: Average value of downlink data consumed measured at serving gateway (SGw) in megabytes per tracking area code
+          format: double
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    MobileTimeSeriesResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileTimeSeriesResponse'
+      additionalProperties: false
+    MobileRanResponseListServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/MobileRanResponse'
+      additionalProperties: false
     MobileTimeSeriesResponse:
       type: object
       properties:
@@ -410,121 +527,4 @@ components:
           type: number
           description: Total downlink data consumed in megabytes measured at serving gateway (SGw)
           format: float
-      additionalProperties: false
-    MobileTimeSeriesResponseListServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/MobileTimeSeriesResponse'
-      additionalProperties: false
-    MobileMapResponseListServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/MobileMapResponse'
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    MobileRanResponseListServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/MobileRanResponse'
       additionalProperties: false

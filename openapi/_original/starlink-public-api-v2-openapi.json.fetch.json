@@ -1,0 +1,12 @@
+{
+ "url": "https://starlink.com/api/public/swagger/v2/swagger.json",
+ "requested_url": "https://starlink.com/api/public/swagger/v2/swagger.json",
+ "status": 200,
+ "content_type": "application/json;charset=utf-8",
+ "bytes": 275546,
+ "sha256": "cf406538747bdae2928e25f5c1d96ec7f2e620b19588a8ac049ab100d6055059",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.94), but the bytes differ, so the archive is an earlier or reformatted copy."
+}

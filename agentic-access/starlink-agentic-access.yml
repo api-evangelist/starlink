@@ -1,22 +1,27 @@
-generated: '2026-07-25'
+generated: '2026-09-23'
 method: generated
-source: openapi/starlink-public-api-v2-openapi.json
+source: openapi/starlink-account-api-openapi.yml, openapi/starlink-addresses-api-openapi.yml,
+  openapi/starlink-billing-api-openapi.yml, openapi/starlink-contacts-api-openapi.yml, openapi/starlink-data-pools-api-openapi.yml,
+  openapi/starlink-flights-api-openapi.yml, openapi/starlink-managed-accounts-api-openapi.yml,
+  openapi/starlink-managed-api-openapi.yml, openapi/starlink-mobile-api-openapi.yml, openapi/starlink-routers-api-openapi.yml,
+  openapi/starlink-service-lines-api-openapi.yml, openapi/starlink-user-terminals-api-openapi.yml
 description: Recommended x-agentic-access execution contracts, classified heuristically from
   the OpenAPI. A governance starting point for exposing this API to AI agents — review and bind
   audience per deployment. See research/curity/agentic-governance/.
 summary:
   operations: 63
   by_action_class:
-    connected: 27
-    acting: 36
+    connected: 28
+    acting: 35
   by_consequence:
-    read: 27
-    write: 33
+    read: 28
+    write: 32
     safety-critical: 3
   human_in_the_loop_required: 3
 operations:
 - path: /public/v2/account
   method: get
+  operationId: getPublicV2Account
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -26,21 +31,17 @@ operations:
     audit: none
 - path: /public/v2/data-usage/query
   method: post
+  operationId: postPublicV2DataUsageQuery
   x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
+    action-class: connected
+    consequence: read
+    subject: optional
     token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
+      max-ttl: 3600
+    audit: none
 - path: /public/v2/products
   method: get
+  operationId: getPublicV2Products
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -50,6 +51,7 @@ operations:
     audit: none
 - path: /public/v2/addresses
   method: get
+  operationId: getPublicV2Addresses
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -59,6 +61,7 @@ operations:
     audit: none
 - path: /public/v2/addresses
   method: post
+  operationId: postPublicV2Addresses
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -74,6 +77,7 @@ operations:
     audit: required
 - path: /public/v2/addresses/{addressReferenceId}
   method: get
+  operationId: getPublicV2AddressesByAddressReferenceId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -83,6 +87,7 @@ operations:
     audit: none
 - path: /public/v2/addresses/{addressReferenceId}
   method: put
+  operationId: putPublicV2AddressesByAddressReferenceId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -98,6 +103,7 @@ operations:
     audit: required
 - path: /public/v2/billing/invoices
   method: get
+  operationId: getPublicV2BillingInvoices
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -107,6 +113,7 @@ operations:
     audit: none
 - path: /public/v2/billing/invoices/{invoiceId}
   method: get
+  operationId: getPublicV2BillingInvoicesByInvoiceId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -116,6 +123,7 @@ operations:
     audit: none
 - path: /public/v2/billing/balance
   method: get
+  operationId: getPublicV2BillingBalance
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -125,6 +133,7 @@ operations:
     audit: none
 - path: /public/v2/contacts
   method: get
+  operationId: getPublicV2Contacts
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -134,6 +143,7 @@ operations:
     audit: none
 - path: /public/v2/contacts
   method: post
+  operationId: postPublicV2Contacts
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -149,6 +159,7 @@ operations:
     audit: required
 - path: /public/v2/contacts/{subjectId}
   method: delete
+  operationId: deletePublicV2ContactsBySubjectId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -164,6 +175,7 @@ operations:
     audit: required
 - path: /public/v2/contacts/{subjectId}
   method: put
+  operationId: putPublicV2ContactsBySubjectId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -179,6 +191,7 @@ operations:
     audit: required
 - path: /public/v2/data-pools
   method: get
+  operationId: getPublicV2DataPools
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -188,6 +201,7 @@ operations:
     audit: none
 - path: /public/v2/data-pools/usage
   method: get
+  operationId: getPublicV2DataPoolsUsage
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -197,6 +211,7 @@ operations:
     audit: none
 - path: /public/v2/data-pools/{dataPoolId}/set-automatic-top-up
   method: post
+  operationId: postPublicV2DataPoolsByDataPoolIdSetAutomaticTopUp
   x-agentic-access:
     action-class: acting
     consequence: safety-critical
@@ -212,21 +227,7 @@ operations:
     audit: required
 - path: /public/v2/flights/status
   method: post
-  x-agentic-access:
-    action-class: acting
-    consequence: write
-    subject: required
-    audience: null
-    token:
-      max-ttl: 900
-    escalation:
-      human-in-the-loop: conditional
-      triggers:
-      - abnormal
-      - high-value
-    audit: required
-- path: /public/v2/managed/customers
-  method: post
+  operationId: postPublicV2FlightsStatus
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -242,6 +243,7 @@ operations:
     audit: required
 - path: /public/v2/managed/accounts/tree
   method: get
+  operationId: getPublicV2ManagedAccountsTree
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -251,6 +253,7 @@ operations:
     audit: none
 - path: /public/v2/managed/accounts
   method: get
+  operationId: getPublicV2ManagedAccounts
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -258,8 +261,25 @@ operations:
     token:
       max-ttl: 3600
     audit: none
+- path: /public/v2/managed/customers
+  method: post
+  operationId: postPublicV2ManagedCustomers
+  x-agentic-access:
+    action-class: acting
+    consequence: write
+    subject: required
+    audience: null
+    token:
+      max-ttl: 900
+    escalation:
+      human-in-the-loop: conditional
+      triggers:
+      - abnormal
+      - high-value
+    audit: required
 - path: /public/v2/mobile/radio-access-network/{timestamp}
   method: get
+  operationId: getPublicV2MobileRadioAccessNetworkByTimestamp
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -269,6 +289,7 @@ operations:
     audit: none
 - path: /public/v2/mobile/timeseries/{timestamp}
   method: get
+  operationId: getPublicV2MobileTimeseriesByTimestamp
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -278,6 +299,7 @@ operations:
     audit: none
 - path: /public/v2/mobile/map/{timestamp}
   method: get
+  operationId: getPublicV2MobileMapByTimestamp
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -287,6 +309,7 @@ operations:
     audit: none
 - path: /public/v2/routers/{routerId}
   method: get
+  operationId: getPublicV2RoutersByRouterId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -296,6 +319,7 @@ operations:
     audit: none
 - path: /public/v2/routers/configs
   method: get
+  operationId: getPublicV2RoutersConfigs
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -305,6 +329,7 @@ operations:
     audit: none
 - path: /public/v2/routers/configs
   method: post
+  operationId: postPublicV2RoutersConfigs
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -320,6 +345,7 @@ operations:
     audit: required
 - path: /public/v2/routers/configs/{configId}
   method: get
+  operationId: getPublicV2RoutersConfigsByConfigId
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -329,6 +355,7 @@ operations:
     audit: none
 - path: /public/v2/routers/configs/{configId}
   method: put
+  operationId: putPublicV2RoutersConfigsByConfigId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -344,6 +371,7 @@ operations:
     audit: required
 - path: /public/v2/routers/configs/assign
   method: put
+  operationId: putPublicV2RoutersConfigsAssign
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -359,6 +387,7 @@ operations:
     audit: required
 - path: /public/v2/routers/configs/default
   method: get
+  operationId: getPublicV2RoutersConfigsDefault
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -368,6 +397,7 @@ operations:
     audit: none
 - path: /public/v2/routers/configs/default
   method: put
+  operationId: putPublicV2RoutersConfigsDefault
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -383,6 +413,7 @@ operations:
     audit: required
 - path: /public/v2/routers/configs/tls
   method: get
+  operationId: getPublicV2RoutersConfigsTls
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -392,6 +423,7 @@ operations:
     audit: none
 - path: /public/v2/routers/configs/tls
   method: post
+  operationId: postPublicV2RoutersConfigsTls
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -407,6 +439,7 @@ operations:
     audit: required
 - path: /public/v2/routers/configs/tls
   method: delete
+  operationId: deletePublicV2RoutersConfigsTls
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -422,6 +455,7 @@ operations:
     audit: required
 - path: /public/v2/routers/local-content
   method: post
+  operationId: postPublicV2RoutersLocalContent
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -437,6 +471,7 @@ operations:
     audit: required
 - path: /public/v2/routers/local-content
   method: get
+  operationId: getPublicV2RoutersLocalContent
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -446,6 +481,7 @@ operations:
     audit: none
 - path: /public/v2/routers/sandbox/clients
   method: get
+  operationId: getPublicV2RoutersSandboxClients
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -455,6 +491,7 @@ operations:
     audit: none
 - path: /public/v2/routers/sandbox/clients
   method: post
+  operationId: postPublicV2RoutersSandboxClients
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -470,6 +507,7 @@ operations:
     audit: required
 - path: /public/v2/routers/sandbox/heartbeat
   method: put
+  operationId: putPublicV2RoutersSandboxHeartbeat
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -485,6 +523,7 @@ operations:
     audit: required
 - path: /public/v2/routers/{routerId}/reboot
   method: post
+  operationId: postPublicV2RoutersByRouterIdReboot
   x-agentic-access:
     action-class: acting
     consequence: safety-critical
@@ -500,6 +539,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}
   method: get
+  operationId: getPublicV2ServiceLinesByServiceLineNumber
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -509,6 +549,7 @@ operations:
     audit: none
 - path: /public/v2/service-lines/{serviceLineNumber}
   method: delete
+  operationId: deletePublicV2ServiceLinesByServiceLineNumber
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -524,6 +565,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines
   method: get
+  operationId: getPublicV2ServiceLines
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -533,6 +575,7 @@ operations:
     audit: none
 - path: /public/v2/service-lines
   method: post
+  operationId: postPublicV2ServiceLines
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -548,6 +591,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/nickname
   method: put
+  operationId: putPublicV2ServiceLinesByServiceLineNumberNickname
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -563,6 +607,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/product
   method: put
+  operationId: putPublicV2ServiceLinesByServiceLineNumberProduct
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -578,6 +623,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/public-ip
   method: put
+  operationId: putPublicV2ServiceLinesByServiceLineNumberPublicIp
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -593,6 +639,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/data/opt-in
   method: post
+  operationId: postPublicV2ServiceLinesByServiceLineNumberDataOptIn
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -608,6 +655,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/data/opt-out
   method: post
+  operationId: postPublicV2ServiceLinesByServiceLineNumberDataOptOut
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -623,6 +671,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/user-terminals
   method: post
+  operationId: postPublicV2ServiceLinesByServiceLineNumberUserTerminals
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -638,6 +687,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/user-terminals/{deviceId}
   method: delete
+  operationId: deletePublicV2ServiceLinesByServiceLineNumberUserTerminalsByDeviceId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -653,6 +703,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/data/recurring
   method: put
+  operationId: putPublicV2ServiceLinesByServiceLineNumberDataRecurring
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -668,6 +719,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/data/top-up
   method: post
+  operationId: postPublicV2ServiceLinesByServiceLineNumberDataTopUp
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -683,6 +735,7 @@ operations:
     audit: required
 - path: /public/v2/service-lines/{serviceLineNumber}/billing-cycles/partial-periods
   method: get
+  operationId: getPublicV2ServiceLinesByServiceLineNumberBillingCyclesPartialPeriods
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -692,6 +745,7 @@ operations:
     audit: none
 - path: /public/v2/service-lines/{serviceLineNumber}/consume-from-pool
   method: patch
+  operationId: patchPublicV2ServiceLinesByServiceLineNumberConsumeFromPool
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -707,6 +761,7 @@ operations:
     audit: required
 - path: /public/v2/user-terminals
   method: get
+  operationId: getPublicV2UserTerminals
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -716,6 +771,7 @@ operations:
     audit: none
 - path: /public/v2/user-terminals
   method: post
+  operationId: postPublicV2UserTerminals
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -731,6 +787,7 @@ operations:
     audit: required
 - path: /public/v2/user-terminals/{deviceId}
   method: delete
+  operationId: deletePublicV2UserTerminalsByDeviceId
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -746,6 +803,7 @@ operations:
     audit: required
 - path: /public/v2/user-terminals/{deviceId}/reboot
   method: post
+  operationId: postPublicV2UserTerminalsByDeviceIdReboot
   x-agentic-access:
     action-class: acting
     consequence: safety-critical
@@ -761,6 +819,7 @@ operations:
     audit: required
 - path: /public/v2/user-terminals/configs/assign
   method: put
+  operationId: putPublicV2UserTerminalsConfigsAssign
   x-agentic-access:
     action-class: acting
     consequence: write
@@ -776,6 +835,7 @@ operations:
     audit: required
 - path: /public/v2/user-terminals/l2vpn
   method: get
+  operationId: getPublicV2UserTerminalsL2vpn
   x-agentic-access:
     action-class: connected
     consequence: read
@@ -785,6 +845,7 @@ operations:
     audit: none
 - path: /public/v2/user-terminals/{deviceId}/l2vpn
   method: put
+  operationId: putPublicV2UserTerminalsByDeviceIdL2vpn
   x-agentic-access:
     action-class: acting
     consequence: write

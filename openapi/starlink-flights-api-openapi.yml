@@ -45,61 +45,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    EventType:
-      enum:
-      - EventUnknown
-      - Departure
-      - Arrival
-      - MetadataUpdate
-      type: string
-      x-enumNames:
-      - EventUnknown
-      - Departure
-      - Arrival
-      - MetadataUpdate
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
     AirportCode:
       type: object
       properties:
@@ -162,4 +107,59 @@ components:
           type: boolean
           description: Optional Metadata. Exclude this flight from Starlink SLA commitments. Default is false.
           default: false
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    EventType:
+      enum:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
+      type: string
+      x-enumNames:
+      - EventUnknown
+      - Departure
+      - Arrival
+      - MetadataUpdate
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
       additionalProperties: false

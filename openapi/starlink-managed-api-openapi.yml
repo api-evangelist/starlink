@@ -50,22 +50,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    CreateManagedCustomerResponse:
-      type: object
-      properties:
-        accountNumber:
-          type:
-          - string
-          - 'null'
-        serviceAccountClientId:
-          type:
-          - string
-          - 'null'
-        serviceAccountSecret:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
     CreateManagedCustomerRequest:
       required:
       - email
@@ -101,6 +85,36 @@ components:
           - 'null'
           description: Business name only required for enterprise customers.
       additionalProperties: false
+    CreateManagedCustomerResponseServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/CreateManagedCustomerResponse'
+      additionalProperties: false
     ValidationResult:
       type: object
       properties:
@@ -112,6 +126,22 @@ components:
             type: string
           readOnly: true
         errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    CreateManagedCustomerResponse:
+      type: object
+      properties:
+        accountNumber:
+          type:
+          - string
+          - 'null'
+        serviceAccountClientId:
+          type:
+          - string
+          - 'null'
+        serviceAccountSecret:
           type:
           - string
           - 'null'
@@ -143,34 +173,4 @@ components:
         isValid:
           type: boolean
           readOnly: true
-      additionalProperties: false
-    CreateManagedCustomerResponseServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/CreateManagedCustomerResponse'
       additionalProperties: false

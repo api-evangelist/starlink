@@ -183,45 +183,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    UserLacksRequiredPermissionServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-        content:
-          $ref: '#/components/schemas/UserLacksRequiredPermission'
-      additionalProperties: false
-    Permission:
-      enum:
-      - 0
-      - 1
-      type: integer
-      format: int32
-      x-enumNames:
-      - View
-      - Edit
     UpdateContactOnAccountRequest:
       type: object
       properties:
@@ -238,71 +199,7 @@ components:
           - 'null'
           description: Contact phone number.
       additionalProperties: false
-    UserResponsePaginated:
-      type: object
-      properties:
-        pageIndex:
-          type: integer
-          format: int32
-        limit:
-          type: integer
-          format: int32
-        isLastPage:
-          type: boolean
-        results:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/UserResponse'
-        totalCount:
-          type: integer
-          format: int32
-      additionalProperties: false
-    ValidationResult:
-      type: object
-      properties:
-        memberNames:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        errorMessage:
-          type:
-          - string
-          - 'null'
-      additionalProperties: false
-    ServiceResponse:
-      type: object
-      properties:
-        errors:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        warnings:
-          type:
-          - array
-          - 'null'
-          items:
-            $ref: '#/components/schemas/ValidationResult'
-          readOnly: true
-        information:
-          type:
-          - array
-          - 'null'
-          items:
-            type: string
-          readOnly: true
-        isValid:
-          type: boolean
-          readOnly: true
-      additionalProperties: false
-    UserResponsePaginatedServiceResponse:
+    UserResponseServiceResponse:
       type: object
       properties:
         errors:
@@ -330,7 +227,43 @@ components:
           type: boolean
           readOnly: true
         content:
-          $ref: '#/components/schemas/UserResponsePaginated'
+          $ref: '#/components/schemas/UserResponse'
+      additionalProperties: false
+    CreateContactOnAccountRequest:
+      required:
+      - email
+      - firstName
+      - lastName
+      - locale
+      - phoneNumber
+      - roles
+      type: object
+      properties:
+        firstName:
+          minLength: 1
+          type: string
+          description: Contact first name.
+        lastName:
+          minLength: 1
+          type: string
+          description: Contact last name.
+        roles:
+          type: array
+          items:
+            type: string
+          description: Contact roles on account.
+        email:
+          minLength: 1
+          type: string
+          description: Contact email.
+        phoneNumber:
+          minLength: 1
+          type: string
+          description: Contact phone number.
+        locale:
+          minLength: 1
+          type: string
+          description: Contact locale.
       additionalProperties: false
     FeatureAccess:
       enum:
@@ -389,7 +322,81 @@ components:
       - GatedFeature__Installer
       - GatedFeature__LawEnforcementAgency
       - GatedFeature__StarlinkMobileData
-    UserResponseServiceResponse:
+    UserResponsePaginated:
+      type: object
+      properties:
+        pageIndex:
+          type: integer
+          format: int32
+        limit:
+          type: integer
+          format: int32
+        isLastPage:
+          type: boolean
+        results:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/UserResponse'
+        totalCount:
+          type: integer
+          format: int32
+      additionalProperties: false
+    FeaturePermission:
+      required:
+      - featureAccess
+      - permission
+      type: object
+      properties:
+        featureAccess:
+          $ref: '#/components/schemas/FeatureAccess'
+        permission:
+          $ref: '#/components/schemas/Permission'
+      additionalProperties: false
+    ValidationResult:
+      type: object
+      properties:
+        memberNames:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        errorMessage:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    Permission:
+      enum:
+      - 0
+      - 1
+      type: integer
+      format: int32
+      x-enumNames:
+      - View
+      - Edit
+    UserLacksRequiredPermission:
+      type: object
+      properties:
+        accountId:
+          type:
+          - string
+          - 'null'
+        requiredPermission:
+          $ref: '#/components/schemas/FeaturePermission'
+        featureAccessString:
+          type:
+          - string
+          - 'null'
+        permissionString:
+          type:
+          - string
+          - 'null'
+      additionalProperties: false
+    UserLacksRequiredPermissionServiceResponse:
       type: object
       properties:
         errors:
@@ -417,72 +424,65 @@ components:
           type: boolean
           readOnly: true
         content:
-          $ref: '#/components/schemas/UserResponse'
+          $ref: '#/components/schemas/UserLacksRequiredPermission'
       additionalProperties: false
-    UserLacksRequiredPermission:
+    UserResponsePaginatedServiceResponse:
       type: object
       properties:
-        accountId:
+        errors:
           type:
-          - string
+          - array
           - 'null'
-        requiredPermission:
-          $ref: '#/components/schemas/FeaturePermission'
-        featureAccessString:
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
           type:
-          - string
+          - array
           - 'null'
-        permissionString:
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
           type:
-          - string
+          - array
           - 'null'
-      additionalProperties: false
-    FeaturePermission:
-      required:
-      - featureAccess
-      - permission
-      type: object
-      properties:
-        featureAccess:
-          $ref: '#/components/schemas/FeatureAccess'
-        permission:
-          $ref: '#/components/schemas/Permission'
-      additionalProperties: false
-    CreateContactOnAccountRequest:
-      required:
-      - email
-      - firstName
-      - lastName
-      - locale
-      - phoneNumber
-      - roles
-      type: object
-      properties:
-        firstName:
-          minLength: 1
-          type: string
-          description: Contact first name.
-        lastName:
-          minLength: 1
-          type: string
-          description: Contact last name.
-        roles:
-          type: array
           items:
             type: string
-          description: Contact roles on account.
-        email:
-          minLength: 1
-          type: string
-          description: Contact email.
-        phoneNumber:
-          minLength: 1
-          type: string
-          description: Contact phone number.
-        locale:
-          minLength: 1
-          type: string
-          description: Contact locale.
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
+        content:
+          $ref: '#/components/schemas/UserResponsePaginated'
+      additionalProperties: false
+    ServiceResponse:
+      type: object
+      properties:
+        errors:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        warnings:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/ValidationResult'
+          readOnly: true
+        information:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          readOnly: true
+        isValid:
+          type: boolean
+          readOnly: true
       additionalProperties: false
     UserResponse:
       required:

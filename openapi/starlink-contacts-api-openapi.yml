@@ -505,3 +505,9 @@ components:
             type: string
           description: List of User roles which map to permissions on the specified account.
       additionalProperties: false
+x-provenance:
+  method: harvested
+  publisher: Starlink
+  source: https://starlink.com/api/public/swagger/v2/swagger.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
